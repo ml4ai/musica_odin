@@ -1,0 +1,15 @@
+
+rules:
+    - name: any-entity
+      label: NounPhrase
+      priority: ${rulepriority}
+      type: token
+      pattern: |
+        [entity=/(B|I)-NP/]+
+
+    - name: NN
+      label: NounPhrase
+      priority: ${rulepriority}
+      type: token
+      pattern: |
+        [tag=/^NN/]

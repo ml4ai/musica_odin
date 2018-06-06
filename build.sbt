@@ -26,3 +26,9 @@ libraryDependencies ++= {
 }
 
 
+lazy val core = project in file(".")
+
+lazy val webapp = project
+  .enablePlugins(PlayScala)
+  .aggregate(core)
+  .dependsOn(core)

@@ -1,0 +1,24 @@
+taxonomy: org/clulab/musica/grammars/taxonomy.yml
+
+vars: org/clulab/musica/grammars/triggers.yml
+
+  #correlation_triggers: "associat|correlat"
+  #other_triggers: "accept|direct|necess|overexpress|potenti|re-express|rescu|"
+
+rules:
+
+
+  # Extract the entities
+  - import: org/clulab/musica/grammars/entities.yml
+    vars:
+      rulepriority: "1"
+
+  # Extract the events
+
+  - import: org/clulab/musica/grammars/template.yml
+    vars:
+      rulepriority: "6"
+      addlabel: "Transpose"
+      label: Transpose
+      trigger: ${transpose_triggers}
+

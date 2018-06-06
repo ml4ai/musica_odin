@@ -1,0 +1,33 @@
+vars:
+  agents: "nsubj|'nsubj:xsubj'|'nsubjpass:xsubj'|nsubjpass|csubj|csubjpass|<acl"  #Comment:  nsubjpass for cause should not be there in an ideal world; but it does show up in practice
+  conjunctions: "appos|conj|conj_|cc"
+  complements: "xcomp|ccomp"
+  adverbial_clause: "advcl"
+  noun_modifiers: "amod|compound|dep|name"
+  negTriggers: "not"
+  objects: "dobj"
+  preps: "nmod_of|nmod_in|nmod_to|nmod_over|nmod_for"
+  prep_dobjs: "nmod"
+  quant_modifiers: "amod|advmod"
+  passive_agents: "nmod_by|nmod_agent|agent"
+  # Todo: nmod_from "X will follow from Y"
+
+rules:
+
+
+
+#
+# The rest of the rules here are PORTED FROM pos-reg_template.yml from REACH grammar
+# NB: These rules are mostly the same as the pos-reg rules, except that all instances of "auxtriggers" in the pattern trigger have been deleted.
+#
+
+  - name: ported_syntax_1_verb-${addlabel}
+    priority: ${ rulepriority }
+    #example: "The water quality caused an increase in poverty and a decrease in poverty."
+    example: "improved economic performance expected to cause a shift from agriculture to service industry."
+    label: ${ label }
+    pattern: |
+      trigger = [word=/(?i)^(${ trigger })/ & tag=/^V/] # original rule had RB as possible tag
+      # Previous -- removed the complements because they were over matching
+      cause: Entity = </${adverbial_clause}/? (${ agents }) /nmod_than|${ objects }|${ conjunctions }|${ noun_modifiers}/{,2} ([word=/(?i)^(${ trigger })/] /${ preps }/{,2})?
+      effect: Entity = prepc_by? (${objects} | ${complements}) /${ noun_modifiers }|${ preps }/{,2} ([word=/(?i)^(${ trigger })/] /${ preps }/{,2})?

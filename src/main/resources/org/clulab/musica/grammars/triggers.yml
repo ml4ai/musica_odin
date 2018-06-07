@@ -1,6 +1,7 @@
 transpose_triggers: "move|shift"
 
-move_triggers: ""
+move_triggers: "move"
+
 #  - Add
 #  - Delete
 #  - Copy

@@ -1,4 +1,13 @@
 - Entity:
-  - NounPhrase
+  - Note
+  - Rest
+  - Measure
+  - Beat
 - Event:
   - Transpose
+  - Move
+  - Add
+  - Delete
+  - Copy
+  #- Put
+

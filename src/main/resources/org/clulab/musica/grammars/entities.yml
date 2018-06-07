@@ -1,5 +1,15 @@
+vars:
+  notes: "A|B|C|D|E|F|G"
+
 
 rules:
+    - name: numbers
+      label: Ordinal
+      priority: 1
+      type: token
+      pattern: |
+        [entity=/ORDINAL/]
+
     - name: any-entity
       label: NounPhrase
       priority: ${rulepriority}
@@ -7,9 +17,17 @@ rules:
       pattern: |
         [entity=/(B|I)-NP/]+
 
-    - name: NN
-      label: NounPhrase
+    - name: notes_token
+      label: Note
       priority: ${rulepriority}
       type: token
       pattern: |
-        [tag=/^NN/]
+        [lemma=/(?i)note|${notes}/ & tag=/^NN/]+
+
+    - name: notes_token_syntax
+      label: Note
+      priority: 2
+      pattern: |
+        trigger = [lemma=/(?i)note|${notes}/ & tag=/^NN/]+
+        ordinal: Ordinal = >amod
+

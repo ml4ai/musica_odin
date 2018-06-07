@@ -16,9 +16,13 @@ and point a browser to `localhost:9000`
 - Requires Java 1.8 (Java 8)
 
 - IntelliJ
+
 ..- Open project, select project root (containing build.sbt)
+
 ..- Dialog box:
+
 ....- Select options: (a) download sbt sources and (b) using sbt console
+
 ....- Ensure you're using Java 1.8 JDK and JRE
 
 - First run will take a while as it downloads all related packages

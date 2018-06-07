@@ -17,11 +17,11 @@ and point a browser to `localhost:9000`
 
 - IntelliJ
 
-..- Open project, select project root (containing build.sbt)
+-- Open project, select project root (containing build.sbt)
 
-..- Dialog box:
+-- Dialog box:
 
-....- Select options: (a) download sbt sources and (b) using sbt console
+--- Select options: (a) download sbt sources and (b) using sbt console
 
 ....- Ensure you're using Java 1.8 JDK and JRE
 

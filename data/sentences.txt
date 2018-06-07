@@ -1,0 +1,9 @@
+Move the third note over a beat.
+Add a blank measure after measure three.
+Put a C4 in the quarter note rest.
+Put the G on beat two.
+Delete the note on the third upbeat.
+Put the C on top of the Eb.
+Add a G next to the half note.
+Delete what's below the F#.
+Copy measure two into measure four.

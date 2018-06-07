@@ -16,16 +16,12 @@ and point a browser to `localhost:9000`
 - Requires Java 1.8 (Java 8)
 
 - IntelliJ
-
--- Open project, select project root (containing build.sbt)
-
--- Dialog box:
-
---- Select options: (a) download sbt sources and (b) using sbt console
-
-....- Ensure you're using Java 1.8 JDK and JRE
+    - Open project, select project root (containing build.sbt)
+    - Dialog box:
+        - Select options: (a) download sbt sources and (b) using sbt console
+        - Ensure you're using Java 1.8 JDK and JRE
 
 - First run will take a while as it downloads all related packages
--- The following maintain the project-specific sbt and scala
---- ~/.ivy2  # storage of package cache ; ends up about 1.6G
---- ~/.sbt   # storage of sbt and scala versions
+    - The following maintain the project-specific sbt and scala
+        - `~/.ivy2`  # storage of package cache ; ends up about 1.6G
+        - `~/.sbt`   # storage of sbt and scala versions

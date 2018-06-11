@@ -54,14 +54,13 @@ class MusicaEngine (val config: Config = ConfigFactory.load("musica")) extends C
   def reload() = loadableAttributes = LoadableAttributes()
 
 
-
   // MAIN PIPELINE METHOD
   def extractFromText(text: String, keepText: Boolean = false): Seq[Mention] = {
-    val doc = annotate(text, keepText)
-    val odinMentions = extractFrom(doc)
+    val doc = annotate(text, keepText)   // CTM: processors runs (sentence splitting, tokenization, POS, dependency parse, NER, chunking)
+    val odinMentions = extractFrom(doc)  // CTM: runs the Odin grammar
     //println(s"\nodinMentions() -- entities : \n\t${odinMentions.map(m => m.text).sorted.mkString("\n\t")}")
 
-    odinMentions
+    odinMentions  // CTM: collection of mentions ; to be converted to some form (json)
   }
 
 

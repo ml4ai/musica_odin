@@ -14,6 +14,7 @@ and point a browser to `localhost:9000`
 ### Mac (High Sierra 10.13.5)
 
 - Requires Java 1.8 (Java 8)
+    - http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 
 - IntelliJ
     - Open project, select project root (containing build.sbt)

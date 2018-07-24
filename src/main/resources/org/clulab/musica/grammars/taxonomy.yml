@@ -1,8 +1,20 @@
 - Entity:
   - Note
+  - Whole-note
+  - Dotted-half-note
+  - Half-note
+  - Sixteenth-note
+  - Thirtysecond-note
   - Rest
+  - Whole-rest
+  - Dotted-half-rest
+  - Half-rest
+  - Sixteenth-rest
+  - Thirtysecond-rest
   - Measure
   - Beat
+  - Upbeat
+  - Downbeat
   - NounPhrase
   - CD
   - Ordinal
@@ -12,4 +24,5 @@
   - Add
   - Delete
   - Copy
+  - Describe
   #- Put

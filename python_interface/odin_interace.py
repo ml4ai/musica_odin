@@ -172,8 +172,12 @@ def perform_single_dependency_parse(sentence: str):
 
 def html_table_template(rows: str) -> str:
     """
-
-    :return:
+    Provides and outer html table template with particular CSS formatting.
+    Intended to work with html_row_template().
+    NOTE: I used this very helpful web-widget to author the structure:
+        https://www.tablesgenerator.com/
+    :param rows: str, a single string representing all of the rows that will appear in the table.
+    :return: str of html table code
     """
     return """<style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
@@ -189,6 +193,14 @@ def html_table_template(rows: str) -> str:
 
 
 def html_row_template(label: str, cell1: str, cell2: str) -> str:
+    """
+    Fills in html code for single, particularly formatted table row.
+    Intended to work with html_table_template().
+    :param label: str, Intended to be the left-hand label for the row (an integer)
+    :param cell1: str, Upper row cell content
+    :param cell2: str, Lower row cell content
+    :return:
+    """
     return """  <tr>
     <th class="tg-us36" rowspan="2">{0}</th>
     <th class="tg-3nwm">{1}</th>
@@ -200,6 +212,12 @@ def html_row_template(label: str, cell1: str, cell2: str) -> str:
 
 
 def html_img(src_path):
+    """
+    Fills in html code for an html img tag, assuming particular image height.
+    Could generalize in the future.
+    :param src_path: str, path to image source
+    :return:
+    """
     return '<img src="{0}" alt="{0}" height="300">'.format(src_path)
 
 

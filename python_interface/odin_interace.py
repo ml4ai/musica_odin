@@ -272,5 +272,5 @@ def batch_odin_parse(corpus_file_path: str, dest_root=None, generate_html_p=True
             print('DONE batch_odin_parse().')
 
 
-batch_odin_parse(SENTENCE_CORPUS_PATH, generate_html_p=True, verbose_p=True)
+# batch_odin_parse(SENTENCE_CORPUS_PATH, generate_html_p=True, verbose_p=True)
 

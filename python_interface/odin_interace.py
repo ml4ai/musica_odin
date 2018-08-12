@@ -236,6 +236,8 @@ def batch_odin_parse(corpus_file_path: str, dest_root=None, generate_html_p=True
     start_time = datetime.datetime.now()
     if verbose_p:
         print('EXEC batch_odin_parse():')
+
+    # Check if corpus source file is found
     if not os.path.isfile(corpus_file_path):
         print('ERROR batch_odin_parse(): Could not find file:')
         print('    ', corpus_file_path)
@@ -246,17 +248,20 @@ def batch_odin_parse(corpus_file_path: str, dest_root=None, generate_html_p=True
         if dest_root is None:
             dest_root = os.path.join('../data/', get_timestamp())
 
+        # Check if dest_root can be created
         if os.path.exists(dest_root):
             print('ERROR batch_odin_parse(): dest_root already exists:')
             print('    ', dest_root)
             sys.exit()
         else:
+            # Main body of batch processing
             if verbose_p:
                 print('Creating dest_root: {0}'.format(dest_root))
             os.mkdir(dest_root)
 
             html_rows = list()
 
+            # Issue Odin requests, extract dependency parses, graph dep parses
             with open(corpus_file_path) as fin:
                 for i, line in enumerate(fin.readlines()):
                     sentence = line.strip()
@@ -268,6 +273,7 @@ def batch_odin_parse(corpus_file_path: str, dest_root=None, generate_html_p=True
                     dest_path = os.path.join(dest_root, dparse_graph_filename)
                     graph_dependency_parse(dparse, dest_path)
 
+                    # Gather html rows, if applicable
                     if generate_html_p:
                         html_rows += html_row_template('{0}'.format(i),
                                                        '{0}'.format(sentence),
@@ -278,6 +284,7 @@ def batch_odin_parse(corpus_file_path: str, dest_root=None, generate_html_p=True
             if verbose_p:
                 print(duration_string)
 
+            # Optionally generate index.html summary file
             if generate_html_p:
                 if verbose_p:
                     print('Generating index.html')

@@ -26,3 +26,17 @@ and point a browser to `localhost:9000`
     - The following maintain the project-specific sbt and scala
         - `~/.ivy2`  # storage of package cache ; ends up about 1.6G
         - `~/.sbt`   # storage of sbt and scala versions
+
+## Prerequistes for using Python interface
+
+The Python interface depends on pygraphviz to render plots of the dependency parse, 
+and this in turn depends on graphviz.
+
+### Mac (High Sierra 10.13.5)
+
+If you have installed graphviz using Homebrew 
+and you are then installing pygraphviz using pip, you need to do the following:
+```bash
+pip install --install-option="--include-path=/usr/local/include/" \
+            --install-option="--library-path=/usr/local/lib" pygraphviz
+```

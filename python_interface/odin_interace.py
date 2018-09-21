@@ -26,7 +26,8 @@ import pygraphviz
 
 
 # NOTE: you'll need to update the root to your own location of MUSICA Google Drive contents
-SENTENCE_CORPUS_ROOT = '/Users/claytonm/Google Drive/MUSICA/DataSets/Sentences/'
+#SENTENCE_CORPUS_ROOT = '/Users/claytonm/Google Drive/MUSICA/DataSets/Sentences/'
+SENTENCE_CORPUS_ROOT = '/home/elision/MUSICA/musica/sandbox/matsuura/sentences/'
 SENTENCE_CORPUS_PATH = os.path.join(SENTENCE_CORPUS_ROOT, 'sentences.txt')
 
 
@@ -163,7 +164,8 @@ def perform_single_dependency_parse(sentence: str):
     print('DONE')
 
 
-# perform_single_dependency_parse('Change the first quarter note to an F')
+#perform_single_dependency_parse('Change the first quarter note to an F')
+
 
 
 # ------------------------------------------------------------------------
@@ -304,7 +306,7 @@ def batch_odin_parse(corpus_file_path: str, dest_root=None,
             print('DONE batch_odin_parse().')
 
 
-# batch_odin_parse(SENTENCE_CORPUS_PATH, generate_html_p=True, verbose_p=True)
+batch_odin_parse(SENTENCE_CORPUS_PATH, dest_root="/home/elision/MUSICA/musica/sandbox/matsuura/odin_batch-{}".format(datetime.datetime.now()), generate_html_p=True, verbose_p=True)
 
 # batch_odin_parse(SENTENCE_CORPUS_PATH, show_sentence=False, generate_html_p=True, verbose_p=True)
 

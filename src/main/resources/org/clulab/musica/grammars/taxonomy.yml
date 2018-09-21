@@ -1,4 +1,5 @@
 - Entity:
+  - Everything
   - Note
   - Whole-note
   - Dotted-half-note
@@ -18,11 +19,18 @@
   - NounPhrase
   - CD
   - Ordinal
+  - Style
+  - Chorale
+  - Phrase
 - Event:
   - Transpose
   - Move
+  - Change
+  - Reverse
+  - Generate
   - Add
   - Delete
   - Copy
+  - What
   - Describe
   #- Put

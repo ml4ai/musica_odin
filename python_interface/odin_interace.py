@@ -221,7 +221,10 @@ def html_img(src_path):
     return '<img src="{0}" alt="{0}" height="300">'.format(src_path)
 
 
-def batch_odin_parse(corpus_file_path: str, dest_root=None, generate_html_p=True, verbose_p=False):
+def batch_odin_parse(corpus_file_path: str, dest_root=None,
+                     generate_html_p=True,
+                     show_sentence=True,
+                     verbose_p=False):
     """
     Given a path <corpus_file_path> to a single text file containing a set of sentences,
     one on each line, essentially execute the perform_single_dependency_parse script
@@ -246,7 +249,7 @@ def batch_odin_parse(corpus_file_path: str, dest_root=None, generate_html_p=True
         print('Corpus file path:', corpus_file_path)
 
         if dest_root is None:
-            dest_root = os.path.join('../data/', get_timestamp())
+            dest_root = os.path.join('../data/', 'odin_' + get_timestamp())
 
         # Check if dest_root can be created
         if os.path.exists(dest_root):
@@ -273,10 +276,14 @@ def batch_odin_parse(corpus_file_path: str, dest_root=None, generate_html_p=True
                     dest_path = os.path.join(dest_root, dparse_graph_filename)
                     graph_dependency_parse(dparse, dest_path)
 
+                    sentence_text = ''
+                    if show_sentence:
+                        sentence_text = sentence
+
                     # Gather html rows, if applicable
                     if generate_html_p:
                         html_rows += html_row_template('{0}'.format(i),
-                                                       '{0}'.format(sentence),
+                                                       '{0}'.format(sentence_text),
                                                        '{0}'.format(html_img(dparse_graph_filename)))
 
             duration = datetime.datetime.now() - start_time
@@ -299,3 +306,7 @@ def batch_odin_parse(corpus_file_path: str, dest_root=None, generate_html_p=True
 
 # batch_odin_parse(SENTENCE_CORPUS_PATH, generate_html_p=True, verbose_p=True)
 
+# batch_odin_parse(SENTENCE_CORPUS_PATH, show_sentence=False, generate_html_p=True, verbose_p=True)
+
+## NOTE:
+## add: 'Work on measures 1 to 5'

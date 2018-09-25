@@ -1,14 +1,14 @@
 transpose_triggers: "move|shift"
 
-move_triggers: "move | mov | put | place | change | reverse"
+move_triggers: "move|mov|put|place|change|reverse"
 
-add_triggers: "add | insert | generate | work"
+insert_triggers: "add|insert|generate|work"
 
-delete_triggers: "delete | del | remove"
+delete_triggers: "delete|del|remove"
 
-copy_triggers: "copy |cp | duplicate"
+copy_triggers: "copy|cp|duplicate"
 
-describe_triggers: "describe | desc | what"
+describe_triggers: "describe|desc|what"
 
 #  - Add
 #  - Delete

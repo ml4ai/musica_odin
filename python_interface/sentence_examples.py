@@ -39,7 +39,9 @@ perform_single_dependency_parse('Insert a C4 quarter note on beat 1 of measure 3
 # Insert(MusicEntity(Specifier(A, 1, None),
 #                    Note(C4, (0, 1) <dur: measure, beat>, (2, 0) <onset: measure, beat>)))
 
-
+Insert a C4 quarter note on beat 1 of measure 3.
+Insert a C4 quarter note on measure 3 beat 1.
+Insert a C4 quarter note on measure 3, beat 1.
 """
 perform_single_dependency_parse('Transpose everything up 5 half steps')  # easier  # new (not in original list)
 # Transpose(MusicEntity(Specifier(All, None, None),

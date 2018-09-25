@@ -1,6 +1,7 @@
 - Entity:
 #  - Everything
   - Note
+  - Specifier
   - Pitch:
     - PitchClass:
       - A
@@ -17,15 +18,16 @@
     - Sixteenth-rest
     - Thirtysecond-rest
   - Metrical:
-    - Duration:
-      - Whole-note
-      - Dotted-half-note
-      - Quarter-Note
-      - Eigth-Note
-      - Half-note
-      - Sixteenth-note
-      - Thirtysecond-note
+    - Duration
+#      - Whole-note
+#      - Dotted-half-note
+#      - Quarter-Note
+#      - Eigth-Note
+#      - Half-note
+#      - Sixteenth-note
+#      - Thirtysecond-note
     - Measure
+    - Onset
     - Beat:
       - Upbeat
       - Downbeat
@@ -37,6 +39,7 @@
 #  - Phrase
 - Event:
   - Transpose
+  - Insert
 #  - Move
 #  - Change
 #  - Reverse
@@ -53,7 +56,6 @@
   - ECIAction:
     - ECIInsert
     - ECIDelete
-  - Specifier
   - MusicEntity:
     - ECINote
     - ECIMeasure

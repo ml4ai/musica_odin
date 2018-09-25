@@ -1,61 +1,53 @@
 vars:
       notes: "A|A#|B|C|C#|D|D#|E|F|F#|G|G#"
-
+      durations: "eight|quarter|half|whole"
 
 rules:
-#    - name: numbers
-#      label: Ordinal
-#      priority: 1
-#      type: token
-#      pattern: |
-#        [entity=/ORDINAL/]
-#
-#    - name: any-entity
-#      label: NounPhrase
-#      priority: ${rulepriority}
-#      type: token
-#      pattern: |
-#        [entity=/(B|I)-NP/]+
-#
-#    - name: notes_token
-#      label: Note
-#      priority: ${rulepriority}
-#      type: token
-#      pattern: |
-#        [lemma=/(?i)note|${notes}/ & tag=/^NN/]+
-#
-#    - name: notes_token_syntax
-#      label: Note
-#      priority: 2
-#      pattern: |
-#        trigger = [lemma=/(?i)note|${notes}/ & tag=/^NN/]+
-#        ordinal: Ordinal = >amod
 
-#perform_single_dependency_parse('Insert a C4 quarter note on beat 1 of measure 3')  #
-## Insert(MusicEntity(Specifier(A, 1, None),
-##                    Note(C4, (0, 1) <dur: measure, beat>, (2, 0) <onset: measure, beat>)))
-
-    - name: duration-QN
-      label: Quarter-Note
+## --------------------------------------------
+              # Atomic things
+## --------------------------------------------
+    - name: duration
+      label: Duration
       priority: 1
       type: token  # surface rule
       pattern: |
-        [word=/^(quarter|1\/4)/]
+        [word=/(?i)^(${durations})/]
 
-    - name: duration-EN
-      label: Eigth-Note
-      priority: 1
-      type: token  # surface rule
-      pattern: |
-        [word=/^(eigth|1\/8)/]
-
+    # todo: fix
     - name: pitch-1
       label: Pitch
       priority: 1
       type: token  # surface rule
-      action: processPitch
       pattern: |
         [word=/^(A|B|C|D|E|F|G)[0-9]*/]
+
+    - name: specifier-1
+      label: Specifier
+      priority: 1
+      type: token  # surface rule
+      pattern: |
+        [tag=/^DT/]
+
+
+    - name: beat-1
+      label: Beat
+      priority: 1
+      type: token  # surface rule
+      pattern: |
+        (?<trigger>[word=/^beat/]) (?<cardinality> [tag=/CD/])
+
+    - name: measure-1
+      label: Measure
+      priority: 1
+      type: token  # surface rule
+      pattern: |
+        (?<trigger>[word=/^measure/]) (?<cardinality> [tag=/CD/])
+
+
+## --------------------------------------------
+              # Simple Events
+## --------------------------------------------
 
 
     # no "type" so it's a syntax rule
@@ -66,15 +58,25 @@ rules:
         trigger = [word=/(?i)^note/]
         duration: Duration? = >/(amod|compound)/
         pitch: Pitch? = >/(amod|compound)/
+        specifier: Specifier? = >det
 
 
-    - name: beat-1
-      label: Beat
-      priority: 1
-      type: token  # surface rule
+    - name: onset-1
+      label: Onset
+      priority: 2
+      type: token
       pattern: |
-        (?<trigger>[word=/^beat/]) (?<cardinality> [tag=/CD/])
+          (@measure:Measure? []? @beat:Beat |
+          @measure:Measure []? @beat:Beat? |
+          @beat:Beat? []? @measure:Measure |
+          @beat:Beat []? @measure:Measure?)
 
-# produces: EventMention, trigger: "beat", arguments: Map[String, Seq[Mention]]
-# arguments here contains: ("cardinality", Seq(TextBoundMention("1")))
+    - name: onset-2
+      label: Onset
+      priority: 2
+      type: token
+      pattern: |
+        @measure:Measure []? @beat:Beat
+
+
 

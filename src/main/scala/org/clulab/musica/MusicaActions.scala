@@ -13,28 +13,28 @@ case class PitchInfo(pitch: String, octave: Option[Int], accidental: Option[Stri
 
 class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
-  // every action muct have a specific format:
-  // mentions are the mentions extracted by THIS rule THIS time through the odin cascade
-  def processPitch(mentions: Seq[Mention], state: State): Seq[Mention] = {
-
-    // todo: smarter splitring (with a regex prob)
-    def splitOctave(m: Mention): (String, Option[Int], Option[String]) = {
-
-      val (accidentals, other) = m.text.partition(char => MusicaActions.ACCIDENTALS.contains(char))
-      val (octave, pitchClass) = other.partition(char => MusicaActions.NUMBERS.contains(char))
-
-      val octaveOption = if (octave != "") Some(octave.toInt) else None
-      val accidentalOption = if (accidentals != "") Some(accidentals) else None
-
-      (pitchClass, octaveOption, accidentalOption)
-    }
-
-    for {
-      m <- mentions
-      (pitch, octave, accidentals) = splitOctave(m)
-      pitchAttachment = PitchInfo(pitch, octave, accidentals)
-    } yield m.withAttachment(pitchAttachment)
-  }
+//  // every action muct have a specific format:
+//  // mentions are the mentions extracted by THIS rule THIS time through the odin cascade
+//  def processPitch(mentions: Seq[Mention], state: State): Seq[Mention] = {
+//
+//    // todo: smarter splitring (with a regex prob)
+//    def splitOctave(m: Mention): (String, Option[Int], Option[String]) = {
+//
+//      val (accidentals, other) = m.text.partition(char => MusicaActions.ACCIDENTALS.contains(char))
+//      val (octave, pitchClass) = other.partition(char => MusicaActions.NUMBERS.contains(char))
+//
+//      val octaveOption = if (octave != "") Some(octave.toInt) else None
+//      val accidentalOption = if (accidentals != "") Some(accidentals) else None
+//
+//      (pitchClass, octaveOption, accidentalOption)
+//    }
+//
+//    for {
+//      m <- mentions
+//      (pitch, octave, accidentals) = splitOctave(m)
+//      pitchAttachment = PitchInfo(pitch, octave, accidentals)
+//    } yield m.withAttachment(pitchAttachment)
+//  }
 
 
 

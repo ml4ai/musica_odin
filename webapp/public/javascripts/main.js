@@ -270,20 +270,20 @@ var collData = {
      },
      {
        "type": "Measure",
-       "labels":  ["Measure_AGROVOC"],
+       "labels":  ["Measure"],
        "bgColor": "orange",
        "borderColor": "darken"
      },
      {
-       "type": "Natural",
-       "labels":  ["Natural_AGROVOC"],
-       "bgColor": "orange",
+       "type": "Duration",
+       "labels":  ["Duration"],
+       "bgColor": "green",
        "borderColor": "darken"
      },
      {
-       "type": "Plant",
-       "labels":  ["Plant_AGROVOC"],
-       "bgColor": "orange",
+       "type": "Note",
+       "labels":  ["Note"],
+       "bgColor": "purple",
        "borderColor": "darken"
      },
      {

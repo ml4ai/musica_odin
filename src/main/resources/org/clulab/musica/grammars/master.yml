@@ -18,7 +18,13 @@ rules:
   - import: org/clulab/musica/grammars/template.yml
     vars:
       rulepriority: "6"
-      addlabel: "Transpose"
-      label: Transpose
-      trigger: ${transpose_triggers}
+      addlabel: "Insert"
+      label: Insert
+      trigger: ${insert_triggers}
 
+  - import: org/clulab/musica/grammars/template.yml
+    vars:
+      rulepriority: "6"
+      addlabel: "Delete"
+      label: Delete
+      trigger: ${delete_triggers}

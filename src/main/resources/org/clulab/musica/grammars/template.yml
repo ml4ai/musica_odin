@@ -21,13 +21,26 @@ rules:
 # NB: These rules are mostly the same as the pos-reg rules, except that all instances of "auxtriggers" in the pattern trigger have been deleted.
 #
 
-  - name: ported_syntax_1_verb-${addlabel}
-    priority: ${ rulepriority }
-    #example: "The water quality caused an increase in poverty and a decrease in poverty."
-    example: "improved economic performance expected to cause a shift from agriculture to service industry."
-    label: ${ label }
-    pattern: |
-      trigger = [word=/(?i)^(${ trigger })/ & tag=/^V/] # original rule had RB as possible tag
-      # Previous -- removed the complements because they were over matching
-      cause: Entity = </${adverbial_clause}/? (${ agents }) /nmod_than|${ objects }|${ conjunctions }|${ noun_modifiers}/{,2} ([word=/(?i)^(${ trigger })/] /${ preps }/{,2})?
-      effect: Entity = prepc_by? (${objects} | ${complements}) /${ noun_modifiers }|${ preps }/{,2} ([word=/(?i)^(${ trigger })/] /${ preps }/{,2})?
+#  - name: ported_syntax_1_verb-${addlabel}
+#    priority: ${ rulepriority }
+#    #example: "The water quality caused an increase in poverty and a decrease in poverty."
+#    example: "improved economic performance expected to cause a shift from agriculture to service industry."
+#    label: ${ label }
+#    pattern: |
+#      trigger = [word=/(?i)^(${ trigger })/ & tag=/^V/] # original rule had RB as possible tag
+#      # Previous -- removed the complements because they were over matching
+#      cause: Entity = </${adverbial_clause}/? (${ agents }) /nmod_than|${ objects }|${ conjunctions }|${ noun_modifiers}/{,2} ([word=/(?i)^(${ trigger })/] /${ preps }/{,2})?
+#      effect: Entity = prepc_by? (${objects} | ${complements}) /${ noun_modifiers }|${ preps }/{,2} ([word=/(?i)^(${ trigger })/] /${ preps }/{,2})?
+
+## --------------------------------------------
+              # Complexer Events
+## --------------------------------------------
+
+ # no "type" so it's a syntax rule
+    - name: ${addlabel}-rule-1
+      label: ${label}
+      priority: ${rulepriority}
+      pattern: |
+        trigger = [word=/(?i)^(${trigger})/]
+        note: Note = >dobj
+        onset: Onset = >dobj nmod_on

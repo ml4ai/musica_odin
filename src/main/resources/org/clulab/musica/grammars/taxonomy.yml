@@ -1,36 +1,60 @@
 - Entity:
-  - Everything
+#  - Everything
   - Note
-  - Whole-note
-  - Dotted-half-note
-  - Half-note
-  - Sixteenth-note
-  - Thirtysecond-note
-  - Rest
-  - Whole-rest
-  - Dotted-half-rest
-  - Half-rest
-  - Sixteenth-rest
-  - Thirtysecond-rest
-  - Measure
-  - Beat
-  - Upbeat
-  - Downbeat
-  - NounPhrase
-  - CD
-  - Ordinal
-  - Style
-  - Chorale
-  - Phrase
+  - Pitch:
+    - PitchClass:
+      - A
+      - B
+      - C
+      - D
+      - E
+      - F
+      - G
+  - Rest:
+    - Whole-rest
+    - Dotted-half-rest
+    - Half-rest
+    - Sixteenth-rest
+    - Thirtysecond-rest
+  - Metrical:
+    - Duration:
+      - Whole-note
+      - Dotted-half-note
+      - Quarter-Note
+      - Eigth-Note
+      - Half-note
+      - Sixteenth-note
+      - Thirtysecond-note
+    - Measure
+    - Beat:
+      - Upbeat
+      - Downbeat
+#  - NounPhrase
+#  - CD
+#  - Ordinal
+#  - Style
+#  - Chorale
+#  - Phrase
 - Event:
   - Transpose
-  - Move
-  - Change
-  - Reverse
-  - Generate
-  - Add
+#  - Move
+#  - Change
+#  - Reverse
+#  - Generate
+#  - Add
   - Delete
-  - Copy
-  - What
-  - Describe
+#  - Copy
+#  - What
+#  - Describe
   #- Put
+- Quantifier:
+  - Everything
+- ECI:
+  - ECIAction:
+    - ECIInsert
+    - ECIDelete
+  - Specifier
+  - MusicEntity:
+    - ECINote
+    - ECIMeasure
+

@@ -13,6 +13,18 @@ case class PitchInfo(pitch: String, octave: Option[Int], accidental: Option[Stri
 
 class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
+  /** Keeps the longest mention for each group of overlapping mentions **/
+  def keepLongest(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+    val mns: Iterable[Mention] = for {
+      // find mentions of the same label and sentence overlap
+      (k, v) <- mentions.groupBy(m => (m.sentence, m.label))
+      m <- v
+      // for overlapping mentions starting at the same token, keep only the longest
+      longest = v.filter(_.tokenInterval.overlaps(m.tokenInterval)).maxBy(m => m.end - m.start)
+    } yield longest
+    mns.toVector.distinct
+  }
+
 //  // every action muct have a specific format:
 //  // mentions are the mentions extracted by THIS rule THIS time through the odin cascade
 //  def processPitch(mentions: Seq[Mention], state: State): Seq[Mention] = {

@@ -69,7 +69,7 @@ class MusicaEngine (val config: Config = ConfigFactory.load("musica")) extends C
     //println(s"In extractFrom() -- res : ${res.map(m => m.text).mkString(",\t")}")
 
     // todo: some appropriate version of "keepMostComplete"
-    events
+    loadableAttributes.actions.keepLongest(events).toVector
   }
 
   // ---------- Helper Methods -----------

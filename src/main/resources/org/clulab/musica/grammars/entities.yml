@@ -76,7 +76,6 @@ rules:
       priority: 2
       type: token
       pattern: |
-        @measure:Measure []? @beat:Beat
-
-
+        @measure:Measure []? @beat:Beat |
+        @beat:Beat []? @measure:Measure
 

@@ -41,84 +41,9 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok(views.html.index())
   }
 
-//  case class GroundedEntity(sentence: String,
-//                            quantifier: Quantifier,
-//                            entity: Entity,
-//                            predictedDelta: Option[Double],
-//                            mean: Option[Double],
-//                            stdev: Option[Double])
 
 
-
-  // Return the sorted Quantification, Increase, and Decrease modifications
-//  def separateAttachments(m: Mention): (Set[Attachment], Set[Attachment], Set[Attachment]) = {
-//    val attachments = m.attachments
-//    (attachments.filter(_.isInstanceOf[Quantification]),
-//      attachments.filter(_.isInstanceOf[Increase]),
-//      attachments.filter(_.isInstanceOf[Decrease]))
-//  }
-  
-//  def groundEntity(mention: Mention, quantifier: Quantifier, ieSystem: EidosSystem): GroundedEntity = {
-//    // add the calculation
-//    println("loaded domain params:" + ieSystem.domainParams.toString())
-//    println(s"\tkeys: ${ieSystem.domainParams.keys.mkString(", ")}")
-//    println(s"getting details for: ${mention.text}")
-//
-//    val paramDetails = ieSystem.domainParams.get(DomainParams.DEFAULT_DOMAIN_PARAM).get
-//    val paramMean = paramDetails.get(DomainParams.PARAM_MEAN).get
-//    val paramStdev = paramDetails.get(DomainParams.PARAM_STDEV).get
-//    val grounding = ieSystem.groundAdjective(mention, quantifier)
-//    val predictedDelta = grounding.predictDelta(paramMean, paramStdev)
-//
-//    GroundedEntity(mention.document.sentences(mention.sentence).getSentenceText(), quantifier, mention.text, predictedDelta, grounding.mu, grounding.sigma)
-//  }
-
-
-//  def groundEntities(ieSystem: EidosSystem, mentions: Seq[Mention]): Vector[GroundedEntity] = {
-//    val gms = for {
-//      m <- mentions
-//      (quantifications, increases, decreases) = separateAttachments(m)
-//
-//      groundedQuantifications = for {
-//        q <- quantifications
-//        quantTrigger = q.asInstanceOf[Quantification].quantifier
-//      } yield groundEntity(m, quantTrigger, ieSystem)
-//
-//      groundedIncreases = for {
-//        inc <- increases
-//        quantTrigger <- inc.asInstanceOf[Increase].quantifiers.getOrElse(Seq.empty[Quantifier])
-//      } yield groundEntity(m, quantTrigger, ieSystem)
-//
-//      groundedDecreases = for {
-//        dec <- decreases
-//        quantTrigger <- dec.asInstanceOf[Decrease].quantifiers.getOrElse(Seq.empty[Quantifier])
-//      } yield groundEntity(m, quantTrigger, ieSystem)
-//
-//
-//      } yield groundedQuantifications ++ groundedIncreases ++ groundedDecreases
-//
-//    gms.flatten.toVector
-//  }
-  
-  
-  // fixme
-  def getEntityLinkerEvents(mentions: Vector[Mention]): Vector[(Trigger, Map[String, String])] = {
-    val events = mentions.filter(_ matches "Event")
-    val entityLinkingEvents = events.map { e =>
-      val event = e.asInstanceOf[EventMention]
-      val trigger = event.trigger.text
-      val arguments = event.arguments.map { a =>
-        val name = a._1
-        val arg_mentions = a._2.map(_.text).mkString(" ")
-        (name, arg_mentions)
-      }
-      (trigger, arguments)
-    }
-
-    entityLinkingEvents
-  }
-  
-  def processPlaySentence(ieSystem: MusicaEngine, text: String): (Document, Vector[Mention], Vector[(Trigger, Map[String, String])]) = {
+  def processPlaySentence(ieSystem: MusicaEngine, text: String): (Document, Vector[Mention]) = {
     // preprocessing
     println(s"Processing sentence : ${text}" )
     val doc = ieSystem.annotate(text)
@@ -134,18 +59,17 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
 //    val groundedEntities = groundEntities(ieSystem, mentions)
 
     println(s"Getting entity linking events ... ")
-    val events = getEntityLinkerEvents(mentions)
 
     println("DONE .... ")
 //    println(s"Grounded Adjectives : ${groundedAdjectives.size}")
     // return the sentence and all the mentions extracted ... TODO: fix it to process all the sentences in the doc
-    (doc, mentions.sortBy(_.start), events)
+    (doc, mentions.sortBy(_.start))
   }
 
   def parseSentence(text: String) = Action {
-    val (doc, eidosMentions, causalEvents) = processPlaySentence(ieSystem, text)
+    val (doc, eidosMentions) = processPlaySentence(ieSystem, text)
     println(s"Sentence returned from processPlaySentence : ${doc.sentences.head.getSentenceText()}")
-    val json = mkJson(text, doc, eidosMentions, causalEvents) // we only handle a single sentence
+    val json = mkJson(text, doc, eidosMentions) // we only handle a single sentence
     Ok(json)
   }
 
@@ -188,7 +112,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
       sb.toString
   }
 
-  def mkJson(text: String, doc: Document, mentions: Vector[Mention], causalEvents: Vector[(String, Map[String, String])] ): JsValue = {
+  def mkJson(text: String, doc: Document, mentions: Vector[Mention]): JsValue = {
     println("Found mentions (in mkJson):")
     mentions.foreach(DisplayUtils.displayMention)
 
@@ -199,7 +123,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
         "relations" -> mkJsonFromDependencies(doc)
       )
     val eidosJsonObj = mkJsonForEidos(text, sent, mentions)
-    val groundedAdjObj = mkGroundedObj(mentions, causalEvents)
+    val groundedAdjObj = mkGroundedObj(mentions)
     val parseObj = mkParseObj(doc)
 
     // These print the html and it's a mess to look at...
@@ -213,8 +137,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     )
   }
 
-  def mkGroundedObj(mentions: Vector[Mention],
-                    causalEvents: Vector[(String, Map[String, String])]): String = {
+  def mkGroundedObj(mentions: Vector[Mention]): String = {
     var objectToReturn = ""
 
     // Entities
@@ -226,6 +149,11 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
       }
     }
 
+    // collect relation mentions for display
+    val relations = mentions.flatMap {
+      case m: RelationMention => Some(m)
+      case _ => None
+    }
 
     val events = mentions.filter(_ matches "Event")
     if (events.nonEmpty) {
@@ -249,6 +177,11 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
       case m: EventMention => Some(m)
       case _ => None
     }
+    // collect relation mentions for display
+    val relations = mentions.flatMap {
+      case m: RelationMention => Some(m)
+      case _ => None
+    }
     // collect triggers for event mentions
     val triggers = events.flatMap { e =>
       val argTriggers = for {
@@ -259,7 +192,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     }
     // collect event arguments as text bound mentions
     val entities = for {
-      e <- events
+      e <- events ++ relations
       a <- e.arguments.values.flatten
     } yield a match {
       case m: TextBoundMention => m
@@ -268,7 +201,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     }
     // generate id for each textbound mention
     val tbMentionToId = (entities ++ triggers ++ topLevelTBM)
-        .distinct
+      .distinct
       .zipWithIndex
       .map { case (m, i) => (m, i + 1) }
       .toMap
@@ -277,7 +210,8 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
       "text" -> sentenceText,
       "entities" -> mkJsonFromEntities(entities ++ topLevelTBM, tbMentionToId),
       "triggers" -> mkJsonFromEntities(triggers, tbMentionToId),
-      "events" -> mkJsonFromEventMentions(events, tbMentionToId)
+      "events" -> mkJsonFromEventMentions(events, tbMentionToId),
+      "relations" -> mkJsonFromRelationMentions(relations, tbMentionToId)
     )
   }
 
@@ -310,6 +244,40 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
       Json.arr(mkArgMentions(ev, tbmToId): _*)
     )
   }
+
+  def mkJsonFromRelationMentions(rr: Seq[RelationMention], tbmToId: Map[TextBoundMention, Int]): Json.JsValueWrapper = {
+    var i = 0
+    val jsonRelations = for (r <- rr) yield {
+      i += 1
+      mkJsonFromRelationMention(r, i, tbmToId)
+    }
+    Json.arr(jsonRelations: _*)
+  }
+
+  def getArg(r: RelationMention, name: String): TextBoundMention = r.arguments(name).head match {
+    case m: TextBoundMention => m
+    case m: EventMention => m.trigger
+    case m: RelationMention => ???
+  }
+
+  def mkJsonFromRelationMention(r: RelationMention, i: Int, tbmToId: Map[TextBoundMention, Int]): Json.JsValueWrapper = {
+    val relationArgNames = r.arguments.keys.toSeq
+    val head = relationArgNames.head
+    val last = relationArgNames.last
+
+    assert(relationArgNames.length < 3, "More than three args, webapp will need to be updated to handle!")
+    Json.arr(
+      s"R$i",
+      r.label,
+      // arguments are hardcoded to ensure the direction (controller -> controlled)
+      Json.arr(
+        Json.arr(head, "T" + tbmToId(getArg(r, head))),
+        Json.arr(last, "T" + tbmToId(getArg(r, last)))
+      )
+    )
+  }
+
+
 
   def mkArgMentions(ev: EventMention, tbmToId: Map[TextBoundMention, Int]): Seq[Json.JsValueWrapper] = {
     val args = for {

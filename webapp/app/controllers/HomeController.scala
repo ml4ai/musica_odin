@@ -42,6 +42,14 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
   }
 
 
+  def getMentions(text: String) = Action {
+    val (doc, eidosMentions) = processPlaySentence(ieSystem, text)
+    println(s"Sentence returned from processPlaySentence : ${doc.sentences.head.getSentenceText()}")
+    val json = JsonUtils.mkJsonFromMentions(eidosMentions)
+    Ok(json)
+  }
+
+
 
   def processPlaySentence(ieSystem: MusicaEngine, text: String): (Document, Vector[Mention]) = {
     // preprocessing

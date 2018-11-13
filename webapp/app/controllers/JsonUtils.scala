@@ -30,7 +30,8 @@ object JsonUtils {
     Json.obj(
       "labels" -> m.labels,
       "words" -> m.words,
-      "attachments" -> mkJson(m.attachments)
+      "attachments" -> mkJson(m.attachments),
+      "foundBy" -> m.foundBy
     )
   }
 
@@ -38,7 +39,8 @@ object JsonUtils {
     Json.obj(
       "labels" -> m.labels,
       "arguments" -> mkJson(m.arguments),
-      "attachments" -> mkJson(m.attachments)
+      "attachments" -> mkJson(m.attachments),
+      "foundBy" -> m.foundBy
     )
   }
 
@@ -47,7 +49,8 @@ object JsonUtils {
       "labels" -> m.labels,
       "trigger" -> mkJson(m.trigger),
       "arguments" -> mkJson(m.arguments),
-      "attachments" -> mkJson(m.attachments)
+      "attachments" -> mkJson(m.attachments),
+      "foundBy" -> m.foundBy
     )
   }
 

@@ -45,15 +45,14 @@ object JsonUtils {
   def mkJson(m: EventMention): Json.JsValueWrapper = {
     Json.obj(
       "labels" -> m.labels,
-      "trigger" -> m.trigger.words,
+      "trigger" -> mkJson(m.trigger),
       "arguments" -> mkJson(m.arguments),
       "attachments" -> mkJson(m.attachments)
     )
   }
 
   def mkJson(arguments: Map[String, Seq[Mention]]): Json.JsValueWrapper = {
-    val args = arguments.mapValues(mkJson).toSeq
-    Json.obj(args: _*)
+    Json.obj(arguments.mapValues(mkJson).toSeq: _*)
   }
 
   def mkJson(attachments: Set[Attachment]): Json.JsValueWrapper = {

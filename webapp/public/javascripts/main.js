@@ -7,8 +7,14 @@ var decreaseNounPhraseColor = '#FC5C38';
 var quantifierColor = '#AED6F1';
 var quantifiedNounPhraseColor = '#85C1E9';
 // fixme: whatever events we have in this project...
-var insertEventColor = '#BB8FCE';
+var insertEventColor = '#fdff36';
 var correlationEventColor = '#F7DC6F';
+var stepColor = "#a6dfeb";
+var onsetColor = "#6baac4";
+var beatColor = "#16c6f4";
+var directionColor = "#b7bd1c";
+var transposeColor = "#fd9040";
+
 
 
 head.js(
@@ -104,7 +110,42 @@ var collData = {
        "bgColor": "#ceb1db",
        "borderColor": "darken"
      },
-
+       {
+            "type": "Step",
+            "labels":  ["Step"],
+            "bgColor": stepColor,
+            "borderColor": "darken"
+          },
+        {
+             "type": "Onset",
+             "labels":  ["Onset"],
+             "bgColor": onsetColor,
+             "borderColor": "darken"
+           },
+ {
+             "type": "Direction",
+             "labels":  ["Dir"],
+             "bgColor": directionColor,
+             "borderColor": "darken"
+           },
+            {
+            "type": "Beat",
+            "labels":  ["Beat"],
+            "bgColor": beatColor,
+            "borderColor": "darken"
+          },
+           {
+              "type": "Cardinality",
+              "labels":  ["CD"],
+              "bgColor": "#ffffff",
+              "borderColor": "darken"
+            },
+            {
+              "type": "Specifier",
+              "labels":  ["Spec"],
+              "bgColor": "#ffffff",
+              "borderColor": "darken"
+            },
     ],
 //    relation_types: [{
 //                         type     : 'Note',
@@ -156,13 +197,15 @@ var collData = {
       },
 
       {
-        "type": "Correlation",
-        "labels": ["CORRELATION"],
-        "bgColor": correlationEventColor,
+        "type": "Transpose",
+        "labels": ["TRANSPOSE"],
+        "bgColor": transposeColor,
         "borderColor": "darken",
         "arcs": [
-          {"type": "cause", "labels": ["cause"], "borderColor": "darken", "bgColor":"pink"},
-          {"type": "effect", "labels": ["effect"], "borderColor": "darken", "bgColor":"pink"}
+          {"type": "note", "labels": ["note"], "borderColor": "darken", "bgColor":"pink"},
+          {"type": "onset", "labels": ["onset"], "borderColor": "darken", "bgColor":"pink"},
+          {"type": "direction", "labels": ["direction"], "borderColor": "darken", "bgColor":"pink"},
+          {"type": "step", "labels": ["step"], "borderColor": "darken", "bgColor":"pink"}
          ]
       }
     ]

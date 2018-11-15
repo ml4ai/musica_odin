@@ -20,14 +20,16 @@ rules:
       priority: 1
       type: token  # surface rule
       pattern: |   # replace with ${notes} var?
-        [word=/^(${notes})[0-9]*/]
+        [word=/^(${notes})[0-9]*\.?$/]
+        # Note -- the \. is to handle cases that don't tokenize correctly, like "Delete the second G."  Here, the period
+        # is included in the G token.
 
     - name: specifier-1
       label: Specifier
       priority: 1
       type: token  # surface rule
       pattern: |
-        [tag=/^DT/]
+        (?<quantifier>[tag=/^(DT|PDT)/]) (?<cardinality> [tag=/CD/ | entity=/ORDINAL/])?
 
 
     - name: beat-1
@@ -35,14 +37,14 @@ rules:
       priority: 1
       type: token  # surface rule
       pattern: |   # what does ^ indicate? ; where is cardinality def'd?
-        (?<trigger>[word=/^beat/]) (?<cardinality> [tag=/CD/])
+        (?<trigger>[word=/^beat/]) (?<cardinality> [tag=/CD/ | entity=/ORDINAL/])
 
     - name: measure-1
       label: Measure
       priority: 1
       type: token  # surface rule
       pattern: |
-        (?<trigger>[word=/^measure/]) (?<cardinality> [tag=/CD/])
+        (?<trigger>[word=/^measure/]) (?<cardinality> [tag=/CD/ | entity=/ORDINAL/])
 
 
 ## --------------------------------------------
@@ -58,7 +60,16 @@ rules:
         trigger = [word=/(?i)^note/]
         duration: Duration? = >/(amod|compound)/
         pitch: Pitch? = >/(amod|compound)/
-        specifier: Specifier? = >det
+        specifier: Specifier? = >/^det/
+
+    # no "type" so it's a syntax rule
+    - name: note-2-underspecified
+      label: Note
+      priority: 2
+      type: token
+      pattern: |  # what is amod or compound?
+        (@specifier:Specifier []{,2})? @pitch:Pitch
+
 
 
     - name: onset-1

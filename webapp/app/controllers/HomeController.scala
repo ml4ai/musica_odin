@@ -265,7 +265,13 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
   def getArg(r: RelationMention, name: String): TextBoundMention = r.arguments(name).head match {
     case m: TextBoundMention => m
     case m: EventMention => m.trigger
-    case m: RelationMention => ???
+    case m: RelationMention => prioritizedArg(r)
+  }
+
+  def prioritizedArg(r: RelationMention): TextBoundMention = {
+    val priorityArgs = Seq("pitch", "beat")
+    val prioritized = r.arguments.filter(a => priorityArgs.contains(a._1)).values.flatten.headOption
+    prioritized.getOrElse(r.arguments.values.flatten.head).asInstanceOf[TextBoundMention] //fixme
   }
 
   def mkJsonFromRelationMention(r: RelationMention, i: Int, tbmToId: Map[TextBoundMention, Int]): Json.JsValueWrapper = {

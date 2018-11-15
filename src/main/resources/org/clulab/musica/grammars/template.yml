@@ -10,6 +10,7 @@ vars:
   prep_dobjs: "nmod"
   quant_modifiers: "amod|advmod"
   passive_agents: "nmod_by|nmod_agent|agent"
+  location_preps: "nmod_at|nmod_in|nmod_on"
   # Todo: nmod_from "X will follow from Y"
 
 rules:
@@ -42,5 +43,5 @@ rules:
       priority: ${rulepriority}
       pattern: |
         trigger = [word=/(?i)^(${trigger})/]
-        note: Note = >dobj
-        onset: Onset = >dobj? >nmod_on
+        note: Note? = >dobj
+        onset: Onset? = >dobj? >/(${location_preps})/

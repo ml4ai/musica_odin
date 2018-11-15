@@ -74,10 +74,10 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     (doc, mentions.sortBy(_.start))
   }
 
-  def parseSentence(text: String) = Action {
+  def parseSentence(text: String, showEverything: Boolean) = Action {
     val (doc, eidosMentions) = processPlaySentence(ieSystem, text)
     println(s"Sentence returned from processPlaySentence : ${doc.sentences.head.getSentenceText()}")
-    val json = mkJson(text, doc, eidosMentions) // we only handle a single sentence
+    val json = mkJson(text, doc, eidosMentions, showEverything) // we only handle a single sentence
     Ok(json)
   }
 
@@ -120,7 +120,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
       sb.toString
   }
 
-  def mkJson(text: String, doc: Document, mentions: Vector[Mention]): JsValue = {
+  def mkJson(text: String, doc: Document, mentions: Vector[Mention], showEverything: Boolean): JsValue = {
     println("Found mentions (in mkJson):")
     mentions.foreach(DisplayUtils.displayMention)
 
@@ -130,7 +130,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
         "entities" -> mkJsonFromTokens(doc),
         "relations" -> mkJsonFromDependencies(doc)
       )
-    val eidosJsonObj = mkJsonForEidos(text, sent, mentions)
+    val eidosJsonObj = mkJsonForEidos(text, sent, mentions, showEverything)
     val groundedAdjObj = mkGroundedObj(mentions)
     val parseObj = mkParseObj(doc)
 
@@ -175,7 +175,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     objectToReturn
   }
 
-  def mkJsonForEidos(sentenceText: String, sent: Sentence, mentions: Vector[Mention]): Json.JsValueWrapper = {
+  def mkJsonForEidos(sentenceText: String, sent: Sentence, mentions: Vector[Mention], showEverything: Boolean): Json.JsValueWrapper = {
     val topLevelTBM = mentions.flatMap {
       case m: TextBoundMention => Some(m)
       case _ => None

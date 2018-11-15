@@ -29,6 +29,13 @@ rules:
       label: Delete
       trigger: ${delete_triggers}
 
+  - import: org/clulab/musica/grammars/template.yml
+    vars:
+      rulepriority: "6"
+      addlabel: "Reverse"
+      label: Reverse
+      trigger: ${reverse_triggers}
+
   - import: org/clulab/musica/grammars/transpose.yml
     vars:
       rulepriority: "6"

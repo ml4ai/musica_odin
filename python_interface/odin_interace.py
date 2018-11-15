@@ -98,6 +98,56 @@ def filter_actions(mentions: dict):
 def process_action_mention(action_mention: dict):
     if 'Insert' in action_mention['labels']:
         return 'Insert', handle_insert(action_mention)
+    if 'Delete' in action_mention['labels']:
+        return 'Delete', handle_delete(action_mention)
+    if 'Reverse' in action_mention['labels']:
+        return 'Reverse', handle_delete(action_mention)
+
+
+def handle_reverse(mention: dict):
+    onset = get_onset(mention)
+    note = get_note(mention)
+
+    if note['onset'] is None and onset is not None:
+        note['onset'] = onset
+    else:
+        if note['onset'] is None and onset is None:
+            pass
+        else:
+            print('UNHANDLED CASE: handle_reverse() onset:', mention)
+            sys.exit()
+
+    specifier = None
+    if note['specifier'] is not None:
+        specifier = note['specifier']
+
+    return {'MusicEntity': {'Specifier': specifier,
+                            'Note': {'Pitch': note['pitch'],
+                                     'Onset': note['onset'],
+                                     'Duration': note['duration']}}}
+
+
+def handle_delete(mention: dict):
+    onset = get_onset(mention)
+    note = get_note(mention)
+
+    if note['onset'] is None and onset is not None:
+        note['onset'] = onset
+    else:
+        if note['onset'] is None and onset is None:
+            pass
+        else:
+            print('UNHANDLED CASE: handle_delete() onset:', mention)
+            sys.exit()
+
+    specifier = None
+    if note['specifier'] is not None:
+        specifier = note['specifier']
+
+    return {'MusicEntity': {'Specifier': specifier,
+                            'Note': {'Pitch': note['pitch'],
+                                     'Onset': note['onset'],
+                                     'Duration': note['duration']}}}
 
 
 def handle_insert(mention: dict):
@@ -109,6 +159,7 @@ def handle_insert(mention: dict):
     else:
         print('UNHANDLED CASE: handle_insert() onset:', mention)
         sys.exit()
+
 
     specifier = None
     if note['specifier'] is not None:
@@ -192,8 +243,10 @@ def get_note(mention: dict):
                 'specifier': specifier_info}
 
     else:
-        print('NO Note')
-        return None
+        return {'pitch': None,
+                'onset': None,
+                'duration': None,
+                'specifier': None}
 
 
 def parse_duration(duration_info):
@@ -218,10 +271,9 @@ def parse_duration(duration_info):
 
 def parse_pitch(raw_pitch_info):
     pitch_info = raw_pitch_info.strip('s')  # strip 's' for plural
-    pitch_info = pitch_info.strip('.')  # strip '.' in token for "initials": 'G.' short for 'George'
     pitch_info = re.split('(\d+)', pitch_info)
 
-    pitch_class = pitch_info[0]
+    pitch_class = pitch_info[0].strip('.')  # strip '.' in token for "initials": 'G.' short for 'George'
 
     octave = None
     if len(pitch_info) > 1:
@@ -301,6 +353,7 @@ def perform_single_dependency_parse(sentence: str, verbose=False):
     return actions
 
 
+'''
 pprint.pprint(perform_single_dependency_parse(sentence="Insert a C4 quarter note on beat 1 of measure 3."))
 pprint.pprint(perform_single_dependency_parse(sentence="Insert a C4 quarter note on measure 1 beat 1"))
 pprint.pprint(perform_single_dependency_parse(sentence="Insert a C4 quarter note on measure 1, beat 1"))
@@ -308,3 +361,20 @@ pprint.pprint(perform_single_dependency_parse(sentence="Insert a G4 half note on
 pprint.pprint(perform_single_dependency_parse(sentence="Insert a C4 quarter note at beat 1 of measure 1"))
 pprint.pprint(perform_single_dependency_parse(sentence="Insert a G4 half note on beat 1 of measure 1"))
 pprint.pprint(perform_single_dependency_parse(sentence="Insert an F4 whole note on beat 1 of measure 3"))
+'''
+
+'''
+pprint.pprint(perform_single_dependency_parse(sentence="Delete the C in measure 1"))
+pprint.pprint(perform_single_dependency_parse(sentence="Delete the Cs in measure 1"))
+pprint.pprint(perform_single_dependency_parse(sentence="Delete all the notes in measure 2"))
+pprint.pprint(perform_single_dependency_parse(sentence="Delete the second G"))
+pprint.pprint(perform_single_dependency_parse(sentence="Delete all the notes"))
+pprint.pprint(perform_single_dependency_parse(sentence="Delete all the Fs"))
+'''
+
+'''
+pprint.pprint(perform_single_dependency_parse(sentence="Reverse all the notes"))
+pprint.pprint(perform_single_dependency_parse(sentence="Reverse all the G"))
+'''
+pprint.pprint(perform_single_dependency_parse(sentence="Reverse all the notes in measure 1", verbose=True))
+

@@ -259,6 +259,10 @@ def get_specifier(mention: dict):
     if 'set_choice' in specifier_args:
         set_choice = get_property_value(specifier_args, 'set_choice')
 
+    if quantifier == 'a' or quantifier == 'an':
+        quantifier = 'a'
+        cardinality = 1
+
     return quantifier, cardinality, set_choice
 
 
@@ -269,6 +273,9 @@ def perform_single_dependency_parse(sentence: str, verbose=False):
     :param sentence: str representing sentence to be parsed
     :return:
     """
+
+    print(sentence)
+
     r = odin_request(sentence)
     if verbose:
         print(r)
@@ -295,5 +302,9 @@ def perform_single_dependency_parse(sentence: str, verbose=False):
 
 
 pprint.pprint(perform_single_dependency_parse(sentence="Insert a C4 quarter note on beat 1 of measure 3."))
-# perform_single_dependency_parse(sentence="Insert a C4 quarter note on beat 1 of measure 3.")
-
+pprint.pprint(perform_single_dependency_parse(sentence="Insert a C4 quarter note on measure 1 beat 1"))
+pprint.pprint(perform_single_dependency_parse(sentence="Insert a C4 quarter note on measure 1, beat 1"))
+pprint.pprint(perform_single_dependency_parse(sentence="Insert a G4 half note on beat 3 of measure 2"))
+pprint.pprint(perform_single_dependency_parse(sentence="Insert a C4 quarter note at beat 1 of measure 1"))
+pprint.pprint(perform_single_dependency_parse(sentence="Insert a G4 half note on beat 1 of measure 1"))
+pprint.pprint(perform_single_dependency_parse(sentence="Insert an F4 whole note on beat 1 of measure 3"))

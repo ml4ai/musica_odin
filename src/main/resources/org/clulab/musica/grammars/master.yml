@@ -28,3 +28,9 @@ rules:
       addlabel: "Delete"
       label: Delete
       trigger: ${delete_triggers}
+
+  - import: org/clulab/musica/grammars/transpose.yml
+    vars:
+      rulepriority: "6"
+      label: Transpose
+

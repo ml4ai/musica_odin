@@ -5,6 +5,7 @@
   - Amount:
     - Proportion
     - Cardinality
+  - Direction
   - Unit:
     - Step
   - Pitch:

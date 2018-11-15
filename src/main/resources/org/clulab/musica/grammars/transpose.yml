@@ -1,0 +1,9 @@
+
+rules:
+
+   - name: Transpose-rule-1
+     label: ${label}
+     priority: ${rulepriority}
+     type: token
+     pattern: |
+       (?<trigger>[word=/(?i)^transpose/]) @note:Note []? @onset:Onset @direction:Direction @step:Step

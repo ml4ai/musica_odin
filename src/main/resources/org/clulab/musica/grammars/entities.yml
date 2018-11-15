@@ -7,19 +7,41 @@ rules:
 ## --------------------------------------------
               # Atomic things
 ## --------------------------------------------
+    - name: direction
+      label: Direction
+      priority: 1
+      type: token  # surface rule
+      pattern: |
+        [word=/(up|down)/]
+
+
+    - name: cardinality
+      label: Cardinality
+      priority: 1
+      type: token  # surface rule
+      pattern: |
+        [tag=/CD/ | entity=/ORDINAL/]
+
     - name: proportion
       label: Proportion
       priority: 1
       type: token  # surface rule
       pattern: |
-        [word=/(?i)^(${proportions})/]   # what does ?i mean?
+        [word=/(?i)^(${proportions})/]
 
-    - name: step
+    - name: step-trigger
       label: Step
-      priority: 1
+      priority: 2
       type: token  # surface rule
       pattern: |
-        [word=/(?i)^(step)/]   # what does ?i mean?
+        (@cardinality:Cardinality)? (@proportion: Proportion)? (?<trigger>[word=/^step/])
+
+    - name: step-underspecified
+      label: Step
+      priority: 2
+      type: token  # surface rule
+      pattern: |
+        (?<= /(?i)^(up|down)$/) (@cardinality:Cardinality)
 
     # todo: fix
     - name: pitch-1
@@ -33,25 +55,25 @@ rules:
 
     - name: specifier-1
       label: Specifier
-      priority: 1
+      priority: 2
       type: token  # surface rule
       pattern: |
-        (?<quantifier>[tag=/^(DT|PDT)/]) (?<cardinality> [tag=/CD/ | entity=/ORDINAL/])?
+        (?<quantifier>[tag=/^(DT|PDT)/]) (@cardinality:Cardinality)?
 
 
     - name: beat-1
       label: Beat
-      priority: 1
+      priority: 2
       type: token  # surface rule
       pattern: |   # what does ^ indicate? ; where is cardinality def'd?
-        (?<trigger>[word=/^beat/]) (?<cardinality> [tag=/CD/ | entity=/ORDINAL/])
+        (?<trigger>[word=/^beat/]) @cardinality:Cardinality
 
     - name: measure-1
       label: Measure
-      priority: 1
+      priority: 2
       type: token  # surface rule
       pattern: |
-        (?<trigger>[word=/^measure/]) (?<cardinality> [tag=/CD/ | entity=/ORDINAL/])
+        (?<trigger>[word=/^measure/]) @cardinality:Cardinality
 
 
 
@@ -64,7 +86,7 @@ rules:
     # no "type" so it's a syntax rule
     - name: note-1
       label: Note
-      priority: 2
+      priority: 3
       pattern: |  # what is amod or compound?
         trigger = [word=/(?i)^note/]
         duration: Proportion? = >/(amod|compound)/
@@ -74,7 +96,7 @@ rules:
     # no "type" so it's a syntax rule
     - name: note-2-underspecified
       label: Note
-      priority: 2
+      priority: 3
       type: token
       pattern: |  # what is amod or compound?
         (@specifier:Specifier []{,2})? @pitch:Pitch
@@ -83,19 +105,19 @@ rules:
 
     - name: onset-1
       label: Onset
-      priority: 2
+      priority: 3
       type: token
       pattern: |  # what does []? indicate?
-          (@measure:Measure? []? @beat:Beat |
-          @measure:Measure []? @beat:Beat? |
-          @beat:Beat? []? @measure:Measure |
-          @beat:Beat []? @measure:Measure?)
+          ((@measure:Measure []?)? @beat:Beat |
+          @measure:Measure ([]? @beat:Beat)? |
+          (@beat:Beat []?)? @measure:Measure |
+          @beat:Beat ([]? @measure:Measure)?)
 
 
 
     - name: onset-2
       label: Onset
-      priority: 2
+      priority: 3
       type: token
       pattern: |
         @measure:Measure []? @beat:Beat |

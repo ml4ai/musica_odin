@@ -219,7 +219,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
       "entities" -> mkJsonFromEntities(entities ++ topLevelTBM, tbMentionToId),
       "triggers" -> mkJsonFromEntities(triggers, tbMentionToId),
       "events" -> mkJsonFromEventMentions(events, tbMentionToId),
-      "relations" -> mkJsonFromRelationMentions(relations, tbMentionToId)
+      "relations" -> (if (showEverything) mkJsonFromRelationMentions(relations, tbMentionToId) else Array[String]())
     )
   }
 

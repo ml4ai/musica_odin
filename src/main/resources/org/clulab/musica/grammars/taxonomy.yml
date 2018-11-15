@@ -40,20 +40,21 @@
 #  - Style
 #  - Chorale
 #  - Phrase
-- Action:
-  - Insert
-  - Delete
-  - Transpose
-  - Reverse
-#  - Move
-#  - Change
-#  - Reverse
-#  - Generate
-#  - Add
-#  - Copy
-#  - What
-#  - Describe
-#  - Put
+- Event:
+  - Action:
+    - Insert
+    - Delete
+    - Transpose
+    - Reverse
+  #  - Move
+  #  - Change
+  #  - Reverse
+  #  - Generate
+  #  - Add
+  #  - Copy
+  #  - What
+  #  - Describe
+  #  - Put
 - Quantifier:
   - An
   - The

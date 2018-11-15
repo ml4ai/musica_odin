@@ -2,9 +2,11 @@
 #  - Everything
   - Note
   - Specifier
-  - Amount
+  - Amount:
     - Proportion
     - Cardinality
+  - Unit:
+    - Step
   - Pitch:
     - PitchClass:
       - A

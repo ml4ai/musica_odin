@@ -14,6 +14,13 @@ rules:
       pattern: |
         [word=/(?i)^(${proportions})/]   # what does ?i mean?
 
+    - name: step
+      label: Step
+      priority: 1
+      type: token  # surface rule
+      pattern: |
+        [word=/(?i)^(step)/]   # what does ?i mean?
+
     # todo: fix
     - name: pitch-1
       label: Pitch
@@ -45,6 +52,8 @@ rules:
       type: token  # surface rule
       pattern: |
         (?<trigger>[word=/^measure/]) (?<cardinality> [tag=/CD/ | entity=/ORDINAL/])
+
+
 
 
 ## --------------------------------------------

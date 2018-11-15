@@ -11,6 +11,9 @@
       - E
       - F
       - G
+    - Accidental:
+      - Sharp
+      - Flat
   - Rest:
     - Whole-rest
     - Dotted-half-rest
@@ -18,7 +21,9 @@
     - Sixteenth-rest
     - Thirtysecond-rest
   - Metrical:
+    - Measure
     - Duration
+    - Onset
 #      - Whole-note
 #      - Dotted-half-note
 #      - Quarter-Note
@@ -26,8 +31,6 @@
 #      - Half-note
 #      - Sixteenth-note
 #      - Thirtysecond-note
-    - Measure
-    - Onset
     - Beat:
       - Upbeat
       - Downbeat
@@ -37,26 +40,33 @@
 #  - Style
 #  - Chorale
 #  - Phrase
-- Event:
-  - Transpose
+- Action:
   - Insert
+  - Delete
+  - Transpose
+  - Reverse
 #  - Move
 #  - Change
 #  - Reverse
 #  - Generate
 #  - Add
-  - Delete
 #  - Copy
 #  - What
 #  - Describe
-  #- Put
+#  - Put
 - Quantifier:
-  - Everything
-- ECI:
-  - ECIAction:
-    - ECIInsert
-    - ECIDelete
-  - MusicEntity:
-    - ECINote
-    - ECIMeasure
+  - An
+  - The
+  - All
+
+#- ECI:
+#  - ECISpecifier
+#  - ECIAction:
+#    - ECIInsert
+#    - ECIDelete
+#    - ECITranspose
+#    - ECIReverse
+#  - ECIMusicEntity:
+#    - ECINote
+#    - ECIMeasure
 

@@ -75,6 +75,7 @@ object DisplayUtils {
       case (argName, ms) =>
         ms foreach { v =>
           sb.append(s"$tab $argName ${v.labels.mkString("(", ", ", ")")} => ${v.text} $nl")
+//          sb.append(s"${mentionToDisplayString(v)}")
           if (v.attachments.nonEmpty) sb.append(s"$tab  * Attachments: ${attachmentsString(v.attachments)} $nl")
         }
     }

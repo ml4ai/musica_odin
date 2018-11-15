@@ -43,4 +43,4 @@ rules:
       pattern: |
         trigger = [word=/(?i)^(${trigger})/]
         note: Note = >dobj
-        onset: Onset = >dobj nmod_on
+        onset: Onset = >dobj? >nmod_on

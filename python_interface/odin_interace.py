@@ -2,6 +2,7 @@ from typing import List
 import re
 import os
 import sys
+import json
 import pprint
 import datetime
 from collections import OrderedDict
@@ -26,8 +27,8 @@ import pygraphviz
 
 
 # NOTE: you'll need to update the root to your own location of MUSICA Google Drive contents
-#SENTENCE_CORPUS_ROOT = '/Users/claytonm/Google Drive/MUSICA/DataSets/Sentences/'
-SENTENCE_CORPUS_ROOT = '/home/elision/MUSICA/musica/sandbox/matsuura/sentences/'
+SENTENCE_CORPUS_ROOT = '/Users/claytonm/Google Drive/MUSICA/DataSets/Sentences/'
+# SENTENCE_CORPUS_ROOT = '/home/elision/MUSICA/musica/sandbox/matsuura/sentences/'
 SENTENCE_CORPUS_PATH = os.path.join(SENTENCE_CORPUS_ROOT, 'sentences.txt')
 
 
@@ -64,10 +65,28 @@ def get_timestamp() -> str:
 # ------------------------------------------------------------------------
 # Single Odin processing request functionality
 
+# def odin_request(sentence: str,
+#                  host='localhost:9000/getMentions') -> requests.Response:
+#     """
+#
+#     :param sentence:
+#     :param host:
+#     :return:
+#     """
+#     try:
+#         r = requests.get(host, params={'sent': sentence})
+#         return r
+#     except requests.exceptions.ConnectionError as ce:
+#         print('ERROR odin_request(): Could not connect to Odin: ', str(ce))
+#         sys.exit()
+#     except Exception as e:
+#         print('ERROR odin_request(): Something went wrong: ', str(e))
+#         sys.exit()
+
 
 def odin_request(sentence: str,
                  host='http://localhost:9000',
-                 fn='/parseSentence') -> requests.Response:
+                 fn='/getMentions') -> requests.Response:
     """
     Send an http request to Odin host, using function fn with argument
     :param sentence: [str] sentence
@@ -76,8 +95,8 @@ def odin_request(sentence: str,
     :return: either a request.Request or str
     """
     try:
-        r = requests.get(host + fn, params={'sent': sentence})
-        # print('RESPONSE: {0}'.format(r.status_code))
+        r = requests.get(host + fn, params={'text': sentence})
+        print('RESPONSE: {0}'.format(r.status_code))
         return r
     except requests.exceptions.ConnectionError as ce:
         print('ERROR odin_request(): Could not connect to Odin: ', str(ce))
@@ -87,67 +106,133 @@ def odin_request(sentence: str,
         sys.exit()
 
 
-def graph_dependency_parse(relations: List, dest_path=None):
+def filter_actions(mentions: dict):
+    actions = list()
+    for m in mentions['mentions']:
+        if 'labels' in m:
+            if 'Action' in m['labels']:
+                actions.append(m)
+    return actions
+
+
+def process_action_mention(action_mention: dict):
+    if 'Insert' in action_mention['labels']:
+        return 'Insert', handle_insert(action_mention)
+
+
+def handle_insert(mention: dict):
+    onset = get_onset(mention)
+    note = get_note(mention)
+
+    if note['onset'] is None and onset is not None:
+        note['onset'] = onset
+    else:
+        print('UNHANDLED CASE: handle_insert() onset:', mention)
+        sys.exit()
+
+    specifier = None
+    if note['specifier'] is not None:
+        specifier = note['specifier']
+
+    return {'specifier': specifier,
+            'note': { 'pitch': note['pitch'],
+                      'onset': note['onset'],
+                      'duration': note['duration']}}
+
+
+# TODO: generalize - really just getting a property values down one level
+def get_property_value(arguments: dict, property_name: str, value_key='words'):
     """
-    Generate a plot of the dependency graph, using pygraphviz, and save it to dest_path.
-    :param relations: List of <dependency_relation> as output from extract_odin_dependency_parse
-    :param dest_path: str representing destination file path; default = 'dep_graph_test.png'
+    assume pattern
+        { '<property_name>': [ { '<key>': [ value ] ... } ... ] ... }
+    :param arguments:
+    :param property_name:
+    :param value_key:
     :return:
     """
-    if dest_path is None:
-        dest_path = "dep_graph_test.png"
-    G = pygraphviz.AGraph(directed=True, strict=True, resolution="190")
-
-    if relations:
-        for i in range(len(relations)):
-            if i == 0:
-                G.add_edge('ROOT', relations[i][1][1], arrowType="inv")
-            # G.edge_attr['label'] = 'root'
-            G.add_edge(relations[i][1][1], relations[i][2][1], color='red', label=relations[i][0], )
-
-    G.layout(prog="dot")
-    G.draw(dest_path)
+    property_value = None
+    if property_name in arguments:
+        property_args = arguments[property_name][0]
+        if 'words' in property_args:
+            property_value = property_args[value_key][0]
+    return property_value
 
 
-def extract_odin_dependency_parse(r: requests.Response) -> List:
-    """
-    Extracts the dependency relations from an Odin dependency parse and organize into
-    easier to graph representation as a list of <dependency_relation>s, defined as follows:
-        <dependency_relation> := ( <dependency_relation_type>, <entity>:head, <entity>:tail )
-        <dependency_relation_type> := str
-        <entity> := ( [ <entity_label>, <POS_tag>, <entity_span> ] , <entity_text> )
-        <entity_label> := str  // internal ID, usually starting with 'T' followed by number
-        <POS_tag> := str  // Part of speech tag
-        <entity_span> := List of List of two Integers  // Ints represent start, end of character position in sentence
-        <entity_text> := str  // "<word> [<POS_tag>]", where <word> is original text of entity
-                              //                   from sentence (within <entity_span>)
-    :param r: [requests.Response]
-    :return: List of <dependency_relation>
-    """
-    text = re.compile(".*")
+def get_onset(mention: dict):
+    if 'onset' in mention['arguments']:
+        om = mention['arguments']['onset'][0]['arguments']
 
-    odin_ = r.json()
-    sentence = odin_['syntax']['text']
+        # find beat
+        beat = None
+        # TODO: add verbose failure conditions
+        if 'beat' in om:
+            om_beat_args = om['beat'][0]['arguments']
+            beat = get_property_value(om_beat_args, 'cardinality')
 
-    se = OrderedDict()
-    for i in range(len(odin_['syntax']['entities'])):
-        se[odin_['syntax']['entities'][i][0]] = odin_['syntax']['entities'][i]
-    words = OrderedDict([(r'T{}'.format(i + 1),
-                          text.search(sentence, list(se.values())[i][2][0][0],
-                                      list(se.values())[i][2][0][1]).group())
-                         for i in range(len(se))])
+        # find measure
+        measure = None
+        # TODO: add verbose failure conditions
+        if 'measure' in om:
+            om_measure_args = om['measure'][0]['arguments']
+            measure = get_property_value(om_measure_args, 'cardinality')
 
-    ses = OrderedDict()
-    for i in range(len(se)):
-        # word_label: "<word> [<POS>]"
-        word_label = '{0} [{1}]'.format(words[list(se.values())[i][0]], list(se.values())[i][1])
-        ses[list(se.values())[i][0]] = (list(se.values())[i], word_label)
+        return {'beat': beat, 'measure': measure}
+    else:
+        print('NO Onset')
+        return None
 
-    res = odin_['syntax']['relations']
-    resx = [(res[i][2][0][1], res[i][2][1][1]) for i in range(len(res))]
-    dparse = [(res[i][1], ses[resx[i][0]], ses[resx[i][1]]) for i in range(len(res))]
 
-    return dparse
+def get_note(mention: dict):
+    if 'note' in mention['arguments']:
+        nm = mention['arguments']['note'][0]['arguments']
+
+        pitch_info = None
+        # find pitch
+        if 'pitch' in nm:
+            # TODO: parsing pitch: token may include period
+            # (because processors may treat as name initials, e.g., 'G.' short for George)
+            # Could be handled on Odin side, but not yet, so just be aware...
+            # TODO: parsing pitch: may end in 's' for plurals
+            pitch_info = get_property_value(nm, 'pitch')
+
+        onset_info = None
+        if 'onset' in nm:
+            onset_info = get_property_value(nm, 'onset')
+
+        duration_info = None
+        if 'duration' in nm:
+            duration_info = get_property_value(nm, 'duration')
+
+        specifier_info = None
+        if 'specifier' in nm:
+            specifier_info = get_specifier(nm)
+
+        return {'pitch': pitch_info,
+                'onset': onset_info,
+                'duration': duration_info,
+                'specifier': specifier_info}
+
+    else:
+        print('NO Note')
+        return None
+
+
+def get_specifier(mention: dict):
+    specifier_args = mention['specifier'][0]['arguments']
+
+    quantifier = None
+    if 'quantifier' in specifier_args:
+        quantifier = get_property_value(specifier_args, 'quantifier')
+
+    cardinality = None
+    if 'cardinality' in specifier_args:
+        cardinality = get_property_value(specifier_args, 'cardinality')
+
+    set_choice = None
+    if 'set_choice' in specifier_args:
+        set_choice = get_property_value(specifier_args, 'set_choice')
+
+    return quantifier, cardinality, set_choice
 
 
 def perform_single_dependency_parse(sentence: str):
@@ -158,157 +243,23 @@ def perform_single_dependency_parse(sentence: str):
     :return:
     """
     r = odin_request(sentence)
+    print(r)
     pprint.pprint(r.json())
-    dparse = extract_odin_dependency_parse(r)
-    graph_dependency_parse(dparse)
+
+    filtered_actions = filter_actions(json.loads(r.text))
+
+    for filtered_action in filtered_actions:
+        print('\n================== Filtered Action')
+        pprint.pprint(filtered_action)
+        print('\n================== Actions')
+        action = process_action_mention(filtered_action)
+        pprint.pprint(action)
+
+    print('\n==================')
+
+
     print('DONE')
 
 
-#perform_single_dependency_parse('Change the first quarter note to an F')
+perform_single_dependency_parse(sentence="Insert a C4 quarter note on beat 1 of measure 3.")
 
-
-
-# ------------------------------------------------------------------------
-# Batch Odin processing request functionality
-
-
-def html_table_template(rows: str) -> str:
-    """
-    Provides and outer html table template with particular CSS formatting.
-    Intended to work with html_row_template().
-    NOTE: I used this very helpful web-widget to author the structure:
-        https://www.tablesgenerator.com/
-    :param rows: str, a single string representing all of the rows that will appear in the table.
-    :return: str of html table code
-    """
-    return """<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-.tg .tg-3nwm{font-family:"Palatino Linotype", "Book Antiqua", Palatino, serif !important;;color:#3531ff;vertical-align;text-align: left}
-.tg .tg-us36{border-color:inherit;vertical-align:top}
-.tg .tg-yw4l{vertical-align:top}
-</style>
-<table class="tg">""" + \
-           '{0}'.format(rows) + \
-           "</table>"
-
-
-def html_row_template(label: str, cell1: str, cell2: str) -> str:
-    """
-    Fills in html code for single, particularly formatted table row.
-    Intended to work with html_table_template().
-    :param label: str, Intended to be the left-hand label for the row (an integer)
-    :param cell1: str, Upper row cell content
-    :param cell2: str, Lower row cell content
-    :return:
-    """
-    return """  <tr>
-    <th class="tg-us36" rowspan="2">{0}</th>
-    <th class="tg-3nwm">{1}</th>
-  </tr>
-  <tr>
-    <td class="tg-yw4l">{2}</td>
-  </tr>
-""".format(label, cell1, cell2)
-
-
-def html_img(src_path):
-    """
-    Fills in html code for an html img tag, assuming particular image height.
-    Could generalize in the future.
-    :param src_path: str, path to image source
-    :return:
-    """
-    return '<img src="{0}" alt="{0}" height="300">'.format(src_path)
-
-
-def batch_odin_parse(corpus_file_path: str, dest_root=None,
-                     generate_html_p=True,
-                     show_sentence=True,
-                     verbose_p=False):
-    """
-    Given a path <corpus_file_path> to a single text file containing a set of sentences,
-    one on each line, essentially execute the perform_single_dependency_parse script
-    (request dep parse, save graph dep parse), and optionally create index.html summary
-    webpage displaying sentences and their dependency parses.
-    :param corpus_file_path: path to single text file containing sentences (one on each row)
-    :param dest_root: Optional root for output results directory
-    :param generate_html_p: Flag for whether to generate index.html webpage
-    :param verbose_p: Flag for whether to generate verbose output describing steps during processing
-    :return:
-    """
-    start_time = datetime.datetime.now()
-    if verbose_p:
-        print('EXEC batch_odin_parse():')
-
-    # Check if corpus source file is found
-    if not os.path.isfile(corpus_file_path):
-        print('ERROR batch_odin_parse(): Could not find file:')
-        print('    ', corpus_file_path)
-        sys.exit()
-    else:
-        print('Corpus file path:', corpus_file_path)
-
-        if dest_root is None:
-            dest_root = os.path.join('../data/', 'odin_' + get_timestamp())
-
-        # Check if dest_root can be created
-        if os.path.exists(dest_root):
-            print('ERROR batch_odin_parse(): dest_root already exists:')
-            print('    ', dest_root)
-            sys.exit()
-        else:
-            # Main body of batch processing
-            if verbose_p:
-                print('Creating dest_root: {0}'.format(dest_root))
-            os.mkdir(dest_root)
-
-            html_rows = list()
-
-            # Issue Odin requests, extract dependency parses, graph dep parses
-            with open(corpus_file_path) as fin:
-                for i, line in enumerate(fin.readlines()):
-                    sentence = line.strip()
-                    if verbose_p:
-                        print('Processing {0}: "{1}"'.format(i, sentence))
-                    r = odin_request(sentence)
-                    dparse = extract_odin_dependency_parse(r)
-                    dparse_graph_filename = 'dep_graph_{0}.png'.format(i)
-                    dest_path = os.path.join(dest_root, dparse_graph_filename)
-                    graph_dependency_parse(dparse, dest_path)
-
-                    sentence_text = ''
-                    if show_sentence:
-                        sentence_text = sentence
-
-                    # Gather html rows, if applicable
-                    if generate_html_p:
-                        html_rows += html_row_template('{0}'.format(i),
-                                                       '{0}'.format(sentence_text),
-                                                       '{0}'.format(html_img(dparse_graph_filename)))
-
-            duration = datetime.datetime.now() - start_time
-            duration_string = 'Batch job took: {0}'.format(pretty_timedelta(duration))
-            if verbose_p:
-                print(duration_string)
-
-            # Optionally generate index.html summary file
-            if generate_html_p:
-                if verbose_p:
-                    print('Generating index.html')
-                html_path = os.path.join(dest_root, 'index.html')
-                with open(html_path, 'w') as hout:
-                    hout.write(duration_string + '\n')
-                    hout.write(html_table_template(''.join(html_rows)))
-
-        if verbose_p:
-            print('DONE batch_odin_parse().')
-
-
-batch_odin_parse(SENTENCE_CORPUS_PATH, dest_root="/home/elision/MUSICA/musica/sandbox/matsuura/odin_batch-{}".format(datetime.datetime.now()), generate_html_p=True, verbose_p=True)
-
-# batch_odin_parse(SENTENCE_CORPUS_PATH, show_sentence=False, generate_html_p=True, verbose_p=True)
-
-## NOTE:
-## add: 'Work on measures 1 to 5'

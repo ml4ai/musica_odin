@@ -5,21 +5,20 @@ import sys
 import json
 import pprint
 import datetime
-from collections import OrderedDict
+# from collections import OrderedDict
 import requests
-import pygraphviz
+# import pygraphviz
 
 
 # ------------------------------------------------------------------------
-# Usage:
-# The following script contains two "top-level" functions -- see docstrings
+# Current:
 # (1) perform_single_dependency_parse()
-# (2) batch_odin_parse()
 
 
 # ------------------------------------------------------------------------
 # TODO
 # (1) Create top-level main
+# (2) batch_odin_parse()
 
 
 # ------------------------------------------------------------------------
@@ -65,25 +64,6 @@ def get_timestamp() -> str:
 # ------------------------------------------------------------------------
 # Single Odin processing request functionality
 
-# def odin_request(sentence: str,
-#                  host='localhost:9000/getMentions') -> requests.Response:
-#     """
-#
-#     :param sentence:
-#     :param host:
-#     :return:
-#     """
-#     try:
-#         r = requests.get(host, params={'sent': sentence})
-#         return r
-#     except requests.exceptions.ConnectionError as ce:
-#         print('ERROR odin_request(): Could not connect to Odin: ', str(ce))
-#         sys.exit()
-#     except Exception as e:
-#         print('ERROR odin_request(): Something went wrong: ', str(e))
-#         sys.exit()
-
-
 def odin_request(sentence: str,
                  host='http://localhost:9000',
                  fn='/getMentions') -> requests.Response:
@@ -96,7 +76,7 @@ def odin_request(sentence: str,
     """
     try:
         r = requests.get(host + fn, params={'text': sentence})
-        print('RESPONSE: {0}'.format(r.status_code))
+        # print('RESPONSE: {0}'.format(r.status_code))
         return r
     except requests.exceptions.ConnectionError as ce:
         print('ERROR odin_request(): Could not connect to Odin: ', str(ce))
@@ -134,10 +114,10 @@ def handle_insert(mention: dict):
     if note['specifier'] is not None:
         specifier = note['specifier']
 
-    return {'specifier': specifier,
-            'note': { 'pitch': note['pitch'],
-                      'onset': note['onset'],
-                      'duration': note['duration']}}
+    return {'MusicEntity': {'Specifier': specifier,
+                            'Note': {'Pitch': note['pitch'],
+                                     'Onset': note['onset'],
+                                     'Duration': note['duration']}}}
 
 
 # TODO: generalize - really just getting a property values down one level
@@ -189,19 +169,18 @@ def get_note(mention: dict):
         pitch_info = None
         # find pitch
         if 'pitch' in nm:
-            # TODO: parsing pitch: token may include period
-            # (because processors may treat as name initials, e.g., 'G.' short for George)
-            # Could be handled on Odin side, but not yet, so just be aware...
-            # TODO: parsing pitch: may end in 's' for plurals
             pitch_info = get_property_value(nm, 'pitch')
+            pitch_info = parse_pitch(pitch_info)
 
         onset_info = None
+        # I don't think this will ever happen
         if 'onset' in nm:
             onset_info = get_property_value(nm, 'onset')
 
         duration_info = None
         if 'duration' in nm:
             duration_info = get_property_value(nm, 'duration')
+            duration_info = parse_duration(duration_info)
 
         specifier_info = None
         if 'specifier' in nm:
@@ -215,6 +194,54 @@ def get_note(mention: dict):
     else:
         print('NO Note')
         return None
+
+
+def parse_duration(duration_info):
+    duration = {'measure': None, 'beat': None}
+    if duration_info == 'eighth':
+        duration['measure'] = 0
+        duration['beat'] = 0.5
+        return duration
+    if duration_info == 'quarter':
+        duration['measure'] = 0
+        duration['beat'] = 1
+        return duration
+    if duration_info == 'half':
+        duration['measure'] = 0
+        duration['beat'] = 2
+        return duration
+    if duration_info == 'whole':
+        duration['measure'] = 0
+        duration['beat'] = 4
+        return duration
+
+
+def parse_pitch(raw_pitch_info):
+    pitch_info = raw_pitch_info.strip('s')  # strip 's' for plural
+    pitch_info = pitch_info.strip('.')  # strip '.' in token for "initials": 'G.' short for 'George'
+    pitch_info = re.split('(\d+)', pitch_info)
+
+    pitch_class = pitch_info[0]
+
+    octave = None
+    if len(pitch_info) > 1:
+        octave = pitch_info[1]
+
+    return {'pitch_class': pitch_class, 'octave': octave}
+
+
+def test_parse_pitch():
+    # TODO turn into proper unit test!!
+    print(parse_pitch('C'))
+    print(parse_pitch('C#'))
+    print(parse_pitch('Cb'))
+    print(parse_pitch('C.'))
+    print(parse_pitch('Cs'))
+    print(parse_pitch('C#4'))
+    print(parse_pitch('C#43'))
+
+
+# test_parse_pitch()
 
 
 def get_specifier(mention: dict):
@@ -235,7 +262,7 @@ def get_specifier(mention: dict):
     return quantifier, cardinality, set_choice
 
 
-def perform_single_dependency_parse(sentence: str):
+def perform_single_dependency_parse(sentence: str, verbose=False):
     """
     Given a sentence, request Odin process the sentence, extract the dependency parse
     and save the graph to file (currently defaults to 'dep_graph_test.png').
@@ -243,23 +270,30 @@ def perform_single_dependency_parse(sentence: str):
     :return:
     """
     r = odin_request(sentence)
-    print(r)
-    pprint.pprint(r.json())
+    if verbose:
+        print(r)
+        pprint.pprint(r.json())
 
     filtered_actions = filter_actions(json.loads(r.text))
 
+    actions = list()
     for filtered_action in filtered_actions:
-        print('\n================== Filtered Action')
-        pprint.pprint(filtered_action)
-        print('\n================== Actions')
+        if verbose:
+            print('\n================== Filtered Action')
+            pprint.pprint(filtered_action)
+            print('\n================== Actions')
         action = process_action_mention(filtered_action)
-        pprint.pprint(action)
+        actions.append(action)
+        if verbose:
+            pprint.pprint(action)
 
-    print('\n==================')
+    if verbose:
+        print('\n==================')
+        print('DONE')
+
+    return actions
 
 
-    print('DONE')
-
-
-perform_single_dependency_parse(sentence="Insert a C4 quarter note on beat 1 of measure 3.")
+pprint.pprint(perform_single_dependency_parse(sentence="Insert a C4 quarter note on beat 1 of measure 3."))
+# perform_single_dependency_parse(sentence="Insert a C4 quarter note on beat 1 of measure 3.")
 

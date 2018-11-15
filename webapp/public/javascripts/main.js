@@ -7,7 +7,7 @@ var decreaseNounPhraseColor = '#FC5C38';
 var quantifierColor = '#AED6F1';
 var quantifiedNounPhraseColor = '#85C1E9';
 // fixme: whatever events we have in this project...
-var causalEventColor = '#BB8FCE';
+var insertEventColor = '#BB8FCE';
 var correlationEventColor = '#F7DC6F';
 
 
@@ -83,9 +83,15 @@ var collData = {
      {
        "type": "Measure",
        "labels":  ["Measure", "MEAS"],
-       "bgColor": "orange",
+       "bgColor": "#efab77",
        "borderColor": "darken"
      },
+     {
+        "type": "Specifer",
+        "labels":  ["spec"],
+        "bgColor": "#efab77",
+        "borderColor": "darken"
+      },
      {
        "type": "Duration",
        "labels":  ["Duration"],
@@ -95,43 +101,57 @@ var collData = {
      {
        "type": "Note",
        "labels":  ["Note"],
-       "bgColor": "purple",
+       "bgColor": "#ceb1db",
        "borderColor": "darken"
      },
 
     ],
+//    relation_types: [{
+//                         type     : 'Note',
+//                         labels   : ['Note', 'NOTE'],
+//                         // dashArray allows you to adjust the style of the relation arc
+//                         //dashArray: '3,3',
+//                         color    : '#ceb1db',
+//                         /* A relation takes two arguments, both are named and can be constrained
+//                             as to which types they may apply to */
+//                         args     : [
+//                             //
+//                             {role: 'Specifier', targets: ['Spec'] },
+//                             {role: 'Entity',  targets: ['Person'] }
+//                         ]
+//                     }],
 
     event_types: [
       {
-        "type": "Increase",
-        "labels": ["INC"],
+        "type": "Add",
+        "labels": ["ADD"],
         "bgColor": "lightgreen",
         "borderColor": "darken",
         "arcs": [
-            {"type": "theme", "labels": ["theme"], "borderColor": "darken", "bgColor":"violet"},
-            {"type": "quantifier", "labels": ["quant"], "borderColor": "darken", "bgColor":"violet"}
+            {"type": "node", "labels": ["note"], "borderColor": "darken", "bgColor":"violet"},
+            {"type": "onset", "labels": ["onset"], "borderColor": "darken", "bgColor":"violet"}
         ]
       },
 
       {
-        "type": "Decrease",
-        "labels": ["DEC"],
+        "type": "Delete",
+        "labels": ["DEL"],
         "bgColor": "red",
         "borderColor": "darken",
         "arcs": [
-            {"type": "theme", "labels": ["theme"], "borderColor": "darken", "bgColor":"violet"},
-            {"type": "quantifier", "labels": ["quant"], "borderColor": "darken", "bgColor":"violet"}
+            {"type": "note", "labels": ["note"], "borderColor": "darken", "bgColor":"violet"},
+            {"type": "onset", "labels": ["onset"], "borderColor": "darken", "bgColor":"violet"}
         ]
       },
 
       {
-        "type": "Causal",
-        "labels": ["CAUSAL"],
-        "bgColor": causalEventColor,
+        "type": "Insert",
+        "labels": ["INS"],
+        "bgColor": insertEventColor,
         "borderColor": "darken",
         "arcs": [
-          {"type": "cause", "labels": ["cause"], "borderColor": "darken", "bgColor":"pink"},
-          {"type": "effect", "labels": ["effect"], "borderColor": "darken", "bgColor":"pink"}
+          {"type": "note", "labels": ["note"], "borderColor": "darken", "bgColor":"pink"},
+          {"type": "onset", "labels": ["onset"], "borderColor": "darken", "bgColor":"pink"}
          ]
       },
 
@@ -171,7 +191,8 @@ head.ready(function() {
 
         // collect form data
         var formData = {
-            'sent': $('textarea[name=text]').val()
+            'sent': $('textarea[name=text]').val(),
+            'showEverything': $('input[name=showEverything]').is(':checked')
         }
 
         if (!formData.sent.trim()) {

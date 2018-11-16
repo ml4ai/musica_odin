@@ -53,4 +53,4 @@ rules:
       priority: ${rulepriority}
       type: token
       pattern: |
-        (?<trigger>[word=/(?i)^(${trigger})/]) @note:Note []{,2} @onset:Onset
+        (?<trigger>[word=/(?i)^(${trigger})/]) @note:Note (that (are|is))? []{,2} @onset:Onset

@@ -3,9 +3,9 @@
   - Note
   - Specifier
   - Amount:
-    - Proportion
+    - Proportion   # 'half' in 'half step'
     - Cardinality
-  - Direction
+  - Direction      # 'up' or 'down'
   - Unit:
     - Step
   - Pitch:

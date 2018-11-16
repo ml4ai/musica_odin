@@ -7,13 +7,13 @@ rules:
 ## --------------------------------------------
               # Atomic things
 ## --------------------------------------------
+
     - name: direction
       label: Direction
       priority: 1
       type: token  # surface rule
       pattern: |
         [word=/(up|down)/]
-
 
     - name: cardinality
       label: Cardinality
@@ -29,14 +29,14 @@ rules:
       pattern: |
         [word=/(?i)^(${proportions})/]
 
-    - name: step-trigger
+    - name: step-trigger  # handle cases like "3 half steps"
       label: Step
       priority: 2
       type: token  # surface rule
       pattern: |
         (@cardinality:Cardinality)? (@proportion: Proportion)? (?<trigger>[word=/^step/])
 
-    - name: step-underspecified
+    - name: step-underspecified  # handle cases when 'step' is elided, like "up 3"
       label: Step
       priority: 2
       type: token  # surface rule
@@ -50,8 +50,8 @@ rules:
       type: token  # surface rule
       pattern: |   # replace with ${notes} var?
         [word=/^(${notes})[0-9]*s?\.?$/]
-        # Note -- the \. is to handle cases that don't tokenize correctly, like "Delete the second G."  Here, the period
-        # is included in the G token.
+        # Note: the \. is to handle cases that don't tokenize correctly,
+        # like "Delete the second G." Here, the period is included in the G token.
 
     - name: specifier-1
       label: Specifier
@@ -60,12 +60,11 @@ rules:
       pattern: |
         (?<quantifier>[tag=/^(DT|PDT)/]) (@cardinality:Cardinality)?
 
-
     - name: beat-1
       label: Beat
       priority: 2
       type: token  # surface rule
-      pattern: |   # what does ^ indicate? ; where is cardinality def'd?
+      pattern: |
         (?<trigger>[word=/^beat/]) @cardinality:Cardinality
 
     - name: measure-1
@@ -74,8 +73,6 @@ rules:
       type: token  # surface rule
       pattern: |
         (?<trigger>[word=/^measure/]) @cardinality:Cardinality
-
-
 
 
 ## --------------------------------------------
@@ -93,12 +90,11 @@ rules:
         pitch: Pitch? = >/(amod|compound)/
         specifier: Specifier? = >/^det/
 
-    # no "type" so it's a syntax rule
     - name: note-2-underspecified
       label: Note
       priority: 3
       type: token
-      pattern: |  # what is amod or compound?
+      pattern: |
         (@specifier:Specifier []{,2})? @pitch:Pitch
 
 
@@ -112,8 +108,6 @@ rules:
           @measure:Measure ([]? @beat:Beat)? |
           (@beat:Beat []?)? @measure:Measure |
           @beat:Beat ([]? @measure:Measure)?)
-
-
 
     - name: onset-2
       label: Onset

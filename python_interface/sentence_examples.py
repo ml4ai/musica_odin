@@ -1,55 +1,48 @@
-from odin_interace import perform_single_dependency_parse
+from odin_interace import odin_sentence_to_pyeci_spec
+import pprint
 
 
-# perform_single_dependency_parse('Work on measures 1 to 5')
-# perform_single_dependency_parse('Work on measure 1')
-# perform_single_dependency_parse('Work on measure 1 through beat 3 of measure 5') ## broken!
+# ------------------------------------------------------------------------
+# Corpora by action category
+# ------------------------------------------------------------------------
 
-# perform_single_dependency_parse('Measure 1')
-# perform_single_dependency_parse('Beat 1 of Measure 2')
+CORPUS_INSERT = \
+    ("Insert a C4 quarter note on beat 1 of measure 3.",
+     "Insert a C4 quarter note on measure 1 beat 1",
+     "Insert a C4 quarter note on measure 1, beat 1",
+     "Insert a G4 half note on beat 3 of measure 2",
+     "Insert a C4 quarter note at beat 1 of measure 1",
+     "Insert a G4 half note on beat 1 of measure 1",
+     "Insert an F4 whole note on beat 1 of measure 3"
+    )
 
-# perform_single_dependency_parse('Move the car')
+CORPUS_DELETE = \
+    ("Delete the C in measure 1",
+     "Delete the Cs in measure 1",
+     "Delete all the notes in measure 2",
+     "Delete the second G",
+     "Delete all the notes",
+     "Delete all the Fs"
+    )
+
+CORPUS_REVERSE = \
+    ("Reverse all the notes",
+     "Reverse all the G",
+     "Reverse all the notes in measure 1"  # currently broken
+    )
 
 
-perform_single_dependency_parse('Delete all the notes')
-# Delete(MusicEntity(Specifier(All, None, None), Note(None, None, None)))
-# Specifier(det, card, set_choice)
+# ------------------------------------------------------------------------
+# Parse Corpus
+# ------------------------------------------------------------------------
+
+def batch_odin_parse(corpus, return_sentence=False):
+    for sentence in corpus:
+        pprint.pprint(odin_sentence_to_pyeci_spec(sentence=sentence, return_sentence=return_sentence))
 
 
-"""
+# ------------------------------------------------------------------------
+# Scripts
+# ------------------------------------------------------------------------
 
-perform_single_dependency_parse('Invert all the notes')
-# Invert(MusicEntity(Specifier(All, None, None), Note(None, None, None)), None)  # second arg: axis of inversion
-
-"""
-
-perform_single_dependency_parse('Delete everything below C4')  # Ask Donya: what's representation for 'below' -- in specifier?
-# Delete(MusicEntity(Specifier(All, None, None), Note(C4)))
-
-
-"""
-perform_single_dependency_parse('Invert everything in measure 1')  # new (not in original list)
-# Invert(MusicEntity(Specifier(All, None, None), Note(None, None, Onset(1, None)), None)
-
-perform_single_dependency_parse('Invert all the notes around G4')  # invert is vertical, so below & above
-# Invert(MusicEntity(Specifier(All, None, None), Note(None, None, Onset(1, None)), Pitch(...stuff specifying G4...))
-"""
-
-perform_single_dependency_parse('Insert a C4 quarter note on beat 1 of measure 3')  #
-# Insert(MusicEntity(Specifier(A, 1, None),
-#                    Note(C4, (0, 1) <dur: measure, beat>, (2, 0) <onset: measure, beat>)))
-
-Insert a C4 quarter note on beat 1 of measure 3.
-Insert a C4 quarter note on measure 3 beat 1.
-Insert a C4 quarter note on measure 3, beat 1.
-"""
-perform_single_dependency_parse('Transpose everything up 5 half steps')  # easier  # new (not in original list)
-# Transpose(MusicEntity(Specifier(All, None, None),
-#                       Note(None, None, None)),
-#           <direction>: Up,
-#           <extent (amount); units of HalfSteps>: 12)  # "up 3 steps" often means 3 steps in the scale - context!
-perform_single_dependency_parse('Transpose all the Cs up 5 half steps')  # intermediate
-
-perform_single_dependency_parse('Transpose all the Cs in measure 1 up 5 half steps')  # harder
-perform_single_dependency_parse('Transpose all the Cs up 5 half steps in measure 1')  # harder: distributed target (in TRIPS, in measure 1 gets associated with transpose, rather than the Cs)
-"""
+batch_odin_parse(CORPUS_REVERSE, return_sentence=True)

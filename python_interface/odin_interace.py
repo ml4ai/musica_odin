@@ -83,8 +83,35 @@ def process_action_mention(action_mention: dict):
     elif 'Reverse' in action_mention['labels']:
         op = 'Reverse'
         args = handle_reverse(action_mention)
+    elif 'Transpose' in action_mention['labels']:
+        op = 'Transpose'
+        args = handle_transpose(action_mention)
 
     return {'action': op, 'arguments': args}
+
+
+def handle_transpose(mention: dict):
+    onset = get_onset(mention)
+    note = get_note(mention)
+    direction = get_direction(mention)
+    step = get_step(mention)
+
+    if note['onset'] is None and onset is not None:
+        note['onset'] = onset
+    else:
+        print('UNHANDLED CASE: handle_insert() onset:', mention)
+        sys.exit()
+
+    specifier = None
+    if note['specifier'] is not None:
+        specifier = note['specifier']
+
+    return {'MusicEntity': {'Specifier': specifier,
+                            'Note': {'Pitch': note['pitch'],
+                                     'Onset': note['onset'],
+                                     'Duration': note['duration']}},
+            'Direction': direction,
+            'Step': step}
 
 
 def handle_insert(mention: dict):
@@ -336,6 +363,28 @@ def get_specifier(mention: dict) -> dict:
         cardinality = 1
 
     return {'quantifier': quantifier, 'cardinality': cardinality, 'set_choice': set_choice}
+
+
+def get_direction(mention: dict):
+    # NOTE: assumes direction is at top-level, as is currently the case with transpose
+    return get_property_value(mention['arguments'], 'direction')
+
+
+def get_step(mention: dict):
+    if 'step' in mention['arguments']:
+        sm = mention['arguments']['step'][0]['arguments']
+
+        cardinality = None
+        if 'cardinality' in sm:
+            cardinality = get_property_value(sm, 'cardinality')
+
+        proportion = None
+        if 'proportion' in sm:
+            proportion = get_property_value(sm, 'proportion')
+
+        return {'proportion': proportion, 'cardinality': cardinality}
+    else:
+        return None
 
 
 # ------------------------------------------------------------------------

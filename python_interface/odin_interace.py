@@ -11,9 +11,9 @@ import requests
 
 
 # ------------------------------------------------------------------------
-# TODO
+# TODO (does not include TODOs for action types...
+#       See sentence_parse_dev and Google doc: Sentence Corpus with PyECI)
 # (1) Create top-level main
-# (2) batch_odin_parse()  # currently in sentence_examples
 
 
 # ------------------------------------------------------------------------

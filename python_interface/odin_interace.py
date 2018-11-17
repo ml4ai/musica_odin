@@ -19,7 +19,8 @@ import requests
 # ------------------------------------------------------------------------
 # NOTE on terminology:
 # 'PyECI_spec' refers to a recursive dictionary specification for
-# components to be represented in *actual* PyECI syntax
+# the values needed for *actual* PyECI syntax
+# This is a placeholder until we finalize best way to map to PyECI
 
 
 # ------------------------------------------------------------------------
@@ -108,7 +109,7 @@ def process_action_mention(action_mention: dict):
 # These are the top-level entry to map between Odin mentions and PyECI_spec
 # TODO:
 #   There are repeated/redundant patterns within handlers that could
-#   likely be resolved/combined.
+#       likely be resolved/combined.
 # ------------------------------------------------------------------------
 
 

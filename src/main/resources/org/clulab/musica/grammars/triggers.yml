@@ -4,6 +4,8 @@ delete_triggers: "delete|del|remove"
 
 reverse_triggers: "reverse|retrograde"
 
+invert_triggers: "invert"
+
 transpose_triggers: "transpose"
 
 move_triggers: "move|mov|put|place|change"

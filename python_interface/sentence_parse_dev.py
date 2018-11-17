@@ -67,9 +67,9 @@ CORPUS_TRANSPOSE = \
     ("Transpose the C4 quarter note on beat 1 of measure 1 up 5 half steps",  # draft
      "Transpose the Eb in measure 5 down 3 half steps",                  # draft
      "Transpose the note on beat 3.5 of measure 5 down 1 half step",     # draft
-     "Transpose the C# on beat 1 up 1 half step",
-     "Transpose the C in measure 1 up 1 half step",
-     "Transpose the C up 1 half step",
+     "Transpose the C# on beat 1 up 1 half step",    # draft
+     "Transpose the C in measure 1 up 1 half step",  # draft
+     "Transpose the C up 1 half step",               # BROKEN: missing onset breaks pattern finding
      "Transpose the C quarter note up 1 half step",
      "Transpose all the notes up 1 half step",
      "Transpose all the notes in measure 2 down 5 half steps",
@@ -98,6 +98,7 @@ CORPUS_BETWEEN_THROUGH = \
      "Reverse all the notes in measures 1 through 4",
      "Transpose everything between the C in measure 1 and the E in measure 2 up 5 half steps",
      "Reverse the notes from beats 1 through 3 in measure 2"
+     "Invert all the notes between measures 2 and 5"
      )
 
 # TODO: Add: Generation, Make et al, Setting selections, Naming, Co-refs
@@ -139,4 +140,6 @@ def regression_test(snapshot_src):
 
 # batch_odin_parse(CORPUS_REVERSE, return_sentence=True)
 
-batch_odin_parse(["Transpose the note on beat 3.5 of measure 5 down 1 half step"], verbose=True)
+batch_odin_parse([CORPUS_TRANSPOSE[5]], return_sentence=True, verbose=True)
+
+# batch_odin_parse(["Invert all the notes"], verbose=True)

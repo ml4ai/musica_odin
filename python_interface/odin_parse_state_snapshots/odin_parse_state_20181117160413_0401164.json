@@ -1,0 +1,741 @@
+{
+    "0": {
+        "0_sentence": "Reverse all the notes",
+        "1_pyeci_spec": [
+            {
+                "action": "Reverse",
+                "arguments": {
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": null,
+                            "Pitch": null
+                        },
+                        "Specifier": {
+                            "cardinality": null,
+                            "quantifier": "all",
+                            "set_choice": null
+                        }
+                    }
+                }
+            }
+        ],
+        "2_mentions": {
+            "mentions": [
+                {
+                    "arguments": {
+                        "note": [
+                            {
+                                "arguments": {
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "all"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-1",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "note-1",
+                                    "labels": [
+                                        "Note",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "notes"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Reverse-active_voice-syntax-1",
+                    "labels": [
+                        "Reverse",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Reverse-active_voice-syntax-1",
+                        "labels": [
+                            "Reverse",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Reverse"
+                        ]
+                    }
+                },
+                {
+                    "arguments": {
+                        "specifier": [
+                            {
+                                "arguments": {
+                                    "quantifier": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "all"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "specifier-1",
+                                "labels": [
+                                    "Specifier",
+                                    "Entity"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "note-1",
+                    "labels": [
+                        "Note",
+                        "Entity"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "note-1",
+                        "labels": [
+                            "Note",
+                            "Entity"
+                        ],
+                        "words": [
+                            "notes"
+                        ]
+                    }
+                },
+                {
+                    "arguments": {
+                        "quantifier": [
+                            {
+                                "attachments": [],
+                                "foundBy": "specifier-1",
+                                "labels": [
+                                    "Specifier",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "all"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "specifier-1",
+                    "labels": [
+                        "Specifier",
+                        "Entity"
+                    ]
+                },
+                {
+                    "arguments": {
+                        "quantifier": [
+                            {
+                                "attachments": [],
+                                "foundBy": "specifier-1",
+                                "labels": [
+                                    "Specifier",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "the"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "specifier-1",
+                    "labels": [
+                        "Specifier",
+                        "Entity"
+                    ]
+                }
+            ]
+        }
+    },
+    "1": {
+        "0_sentence": "Reverse all the G",
+        "1_pyeci_spec": [
+            {
+                "action": "Reverse",
+                "arguments": {
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": null,
+                            "Pitch": {
+                                "octave": null,
+                                "pitch_class": "G"
+                            }
+                        },
+                        "Specifier": {
+                            "cardinality": null,
+                            "quantifier": "all",
+                            "set_choice": null
+                        }
+                    }
+                }
+            }
+        ],
+        "2_mentions": {
+            "mentions": [
+                {
+                    "arguments": {
+                        "note": [
+                            {
+                                "arguments": {
+                                    "pitch": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "pitch-1",
+                                            "labels": [
+                                                "Pitch",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "G"
+                                            ]
+                                        }
+                                    ],
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "all"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-2-underspecified",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Reverse-active_voice-syntax-1",
+                    "labels": [
+                        "Reverse",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Reverse-active_voice-syntax-1",
+                        "labels": [
+                            "Reverse",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Reverse"
+                        ]
+                    }
+                },
+                {
+                    "arguments": {
+                        "pitch": [
+                            {
+                                "attachments": [],
+                                "foundBy": "pitch-1",
+                                "labels": [
+                                    "Pitch",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "G"
+                                ]
+                            }
+                        ],
+                        "specifier": [
+                            {
+                                "arguments": {
+                                    "quantifier": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "all"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "specifier-1",
+                                "labels": [
+                                    "Specifier",
+                                    "Entity"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "note-2-underspecified",
+                    "labels": [
+                        "Note",
+                        "Entity"
+                    ]
+                },
+                {
+                    "arguments": {
+                        "quantifier": [
+                            {
+                                "attachments": [],
+                                "foundBy": "specifier-1",
+                                "labels": [
+                                    "Specifier",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "all"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "specifier-1",
+                    "labels": [
+                        "Specifier",
+                        "Entity"
+                    ]
+                },
+                {
+                    "arguments": {
+                        "quantifier": [
+                            {
+                                "attachments": [],
+                                "foundBy": "specifier-1",
+                                "labels": [
+                                    "Specifier",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "the"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "specifier-1",
+                    "labels": [
+                        "Specifier",
+                        "Entity"
+                    ]
+                },
+                {
+                    "attachments": [],
+                    "foundBy": "pitch-1",
+                    "labels": [
+                        "Pitch",
+                        "Entity"
+                    ],
+                    "words": [
+                        "G"
+                    ]
+                }
+            ]
+        }
+    },
+    "2": {
+        "0_sentence": "Reverse all the notes in measure 1",
+        "1_pyeci_spec": [
+            {
+                "action": "Reverse",
+                "arguments": {
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": {
+                                "beat": null,
+                                "measure": "1"
+                            },
+                            "Pitch": null
+                        },
+                        "Specifier": {
+                            "cardinality": null,
+                            "quantifier": "all",
+                            "set_choice": null
+                        }
+                    }
+                }
+            }
+        ],
+        "2_mentions": {
+            "mentions": [
+                {
+                    "arguments": {
+                        "note": [
+                            {
+                                "arguments": {
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "all"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-1",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "note-1",
+                                    "labels": [
+                                        "Note",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "notes"
+                                    ]
+                                }
+                            }
+                        ],
+                        "onset": [
+                            {
+                                "arguments": {
+                                    "measure": [
+                                        {
+                                            "arguments": {
+                                                "cardinality": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "cardinality",
+                                                        "labels": [
+                                                            "Cardinality",
+                                                            "Amount",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "1"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "measure-1",
+                                            "labels": [
+                                                "Measure",
+                                                "Metrical",
+                                                "Entity"
+                                            ],
+                                            "trigger": {
+                                                "attachments": [],
+                                                "foundBy": "measure-1",
+                                                "labels": [
+                                                    "Measure",
+                                                    "Metrical",
+                                                    "Entity"
+                                                ],
+                                                "words": [
+                                                    "measure"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "onset-1",
+                                "labels": [
+                                    "Onset",
+                                    "Metrical",
+                                    "Entity"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Reverse-active_voice-surface-1",
+                    "labels": [
+                        "Reverse",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Reverse-active_voice-surface-1",
+                        "labels": [
+                            "Reverse",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Reverse"
+                        ]
+                    }
+                },
+                {
+                    "arguments": {
+                        "specifier": [
+                            {
+                                "arguments": {
+                                    "quantifier": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "all"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "specifier-1",
+                                "labels": [
+                                    "Specifier",
+                                    "Entity"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "note-1",
+                    "labels": [
+                        "Note",
+                        "Entity"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "note-1",
+                        "labels": [
+                            "Note",
+                            "Entity"
+                        ],
+                        "words": [
+                            "notes"
+                        ]
+                    }
+                },
+                {
+                    "arguments": {
+                        "quantifier": [
+                            {
+                                "attachments": [],
+                                "foundBy": "specifier-1",
+                                "labels": [
+                                    "Specifier",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "all"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "specifier-1",
+                    "labels": [
+                        "Specifier",
+                        "Entity"
+                    ]
+                },
+                {
+                    "arguments": {
+                        "quantifier": [
+                            {
+                                "attachments": [],
+                                "foundBy": "specifier-1",
+                                "labels": [
+                                    "Specifier",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "the"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "specifier-1",
+                    "labels": [
+                        "Specifier",
+                        "Entity"
+                    ]
+                },
+                {
+                    "arguments": {
+                        "cardinality": [
+                            {
+                                "attachments": [],
+                                "foundBy": "cardinality",
+                                "labels": [
+                                    "Cardinality",
+                                    "Amount",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "1"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "measure-1",
+                    "labels": [
+                        "Measure",
+                        "Metrical",
+                        "Entity"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "measure-1",
+                        "labels": [
+                            "Measure",
+                            "Metrical",
+                            "Entity"
+                        ],
+                        "words": [
+                            "measure"
+                        ]
+                    }
+                },
+                {
+                    "arguments": {
+                        "measure": [
+                            {
+                                "arguments": {
+                                    "cardinality": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "cardinality",
+                                            "labels": [
+                                                "Cardinality",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "1"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "measure-1",
+                                "labels": [
+                                    "Measure",
+                                    "Metrical",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "measure-1",
+                                    "labels": [
+                                        "Measure",
+                                        "Metrical",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "measure"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "onset-1",
+                    "labels": [
+                        "Onset",
+                        "Metrical",
+                        "Entity"
+                    ]
+                },
+                {
+                    "attachments": [],
+                    "foundBy": "cardinality",
+                    "labels": [
+                        "Cardinality",
+                        "Amount",
+                        "Entity"
+                    ],
+                    "words": [
+                        "1"
+                    ]
+                }
+            ]
+        }
+    }
+}

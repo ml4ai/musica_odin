@@ -127,14 +127,29 @@ def create_corpus_odin_parse_state_snapshot(corpus, filename=None, root=SNAPSHOT
     return filename
 
 
-# TODO: create fn to:
-# (1) read in corpus snapshot file
-# (2) iterate through each sentence and (a) get *current* parse and (b) compare *current* against snapshot
-# (3) report diffs
+# TODO: save diff report
 def regression_test(snapshot_src_filename, root=SNAPSHOT_DST_ROOT, summary_p=False, save_p=False):
+    """
+    Cheap-n-cheerful regression testing.
+    (1) Takes as input a pointer to an odin_parse_state .JSON file and reads it
+    (2) Iterate through each sentence in file snapshot and
+        (a) gathers *current* Odin parse with PyECI_spec and mentions (if any)
+        (a) for each found action, reports whether PyECI_spec *snapshot* matches *current*
+        (b) reports whether Odin mentions *snapshot* matches *current*
+    All matching performed by dictionary == operator.
+    TODO Implement saving diff file
+    Diff file will report all matches and when there are diffs, what the two versions are.
+    :param snapshot_src_filename: snapshot file name
+    :param root: Root directory of snapshot file
+    :param summary_p: When True: does NOT display diff detail, only whether match
+    :param save_p: TODO
+    :return:
+    """
     src = os.path.join(root, snapshot_src_filename)
     with open(src, 'r') as json_file:
         data = json.load(json_file)
+
+    timestamp = get_timestamp()  # TODO use to indicate current Odin used at runtime
 
     for key, value in data.items():
         sentence, pyeci_spec_snapshot, mentions_snapshot \
@@ -171,8 +186,6 @@ def regression_test(snapshot_src_filename, root=SNAPSHOT_DST_ROOT, summary_p=Fal
                 pprint.pprint(mentions_current)
 
 
-
-
 # ------------------------------------------------------------------------
 # Scripts
 # ------------------------------------------------------------------------
@@ -193,10 +206,16 @@ def regression_test(snapshot_src_filename, root=SNAPSHOT_DST_ROOT, summary_p=Fal
 # ------------------------------------------------------------------------
 # Examples of running create_corpus_odin_parse_state_snapshot
 
+# Create corpus Odin parse state snapshot for just CORPUS_REVERSE
 # create_corpus_odin_parse_state_snapshot(CORPUS_REVERSE)
+
+# Create corpus Odin parse state snapshot for ALL_SENTENCES
+# create_corpus_odin_parse_state_snapshot(ALL_SENTENCES)
 
 
 # ------------------------------------------------------------------------
 # Examples of running ...
 
-regression_test('odin_parse_state_20181117160413_0401164.json')
+# regression_test('odin_parse_state_20181117160413_0401164.json')
+
+# regression_test('odin_parse_state_20181117164323_0569318.json')

@@ -6,14 +6,27 @@ import requests
 
 
 # ------------------------------------------------------------------------
+# File contains interface with Odin parser implementing musica_odin domain
+# Includes
+#   odin_request: communicate with Odin server
+#   odin_music mention handlers and parsers
+#   odin_sentence_to_pyeci_spec
+#
 # Current top-level entry point:
 # (1) perform_single_dependency_parse()
+
+
+# ------------------------------------------------------------------------
+# NOTE on terminology:
+# 'PyECI_spec' refers to a recursive dictionary specification for
+# components to be represented in *actual* PyECI syntax
 
 
 # ------------------------------------------------------------------------
 # TODO (does not include TODOs for action types...
 #       See sentence_parse_dev and Google doc: Sentence Corpus with PyECI)
 # (1) Create top-level main
+# (2) Create translator from PyECI_spec to *actual* PyECI (help from Donya)
 
 
 # ------------------------------------------------------------------------
@@ -90,28 +103,13 @@ def process_action_mention(action_mention: dict):
     return {'action': op, 'arguments': args}
 
 
-def handle_transpose(mention: dict):
-    onset = get_onset(mention)
-    note = get_note(mention)
-    direction = get_direction(mention)
-    step = get_step(mention)
-
-    if note['onset'] is None and onset is not None:
-        note['onset'] = onset
-    else:
-        print('UNHANDLED CASE: handle_insert() onset:', mention)
-        sys.exit()
-
-    specifier = None
-    if note['specifier'] is not None:
-        specifier = note['specifier']
-
-    return {'MusicEntity': {'Specifier': specifier,
-                            'Note': {'Pitch': note['pitch'],
-                                     'Onset': note['onset'],
-                                     'Duration': note['duration']}},
-            'Direction': direction,
-            'Step': step}
+# ------------------------------------------------------------------------
+# PyECI_spec Action handlers
+# These are the top-level entry to map between Odin mentions and PyECI_spec
+# TODO:
+#   There are repeated/redundant patterns within handlers that could
+#   likely be resolved/combined.
+# ------------------------------------------------------------------------
 
 
 def handle_insert(mention: dict):
@@ -179,6 +177,30 @@ def handle_reverse(mention: dict):
                             'Note': {'Pitch': note['pitch'],
                                      'Onset': note['onset'],
                                      'Duration': note['duration']}}}
+
+
+def handle_transpose(mention: dict):
+    onset = get_onset(mention)
+    note = get_note(mention)
+    direction = get_direction(mention)
+    step = get_step(mention)
+
+    if note['onset'] is None and onset is not None:
+        note['onset'] = onset
+    else:
+        print('UNHANDLED CASE: handle_insert() onset:', mention)
+        sys.exit()
+
+    specifier = None
+    if note['specifier'] is not None:
+        specifier = note['specifier']
+
+    return {'MusicEntity': {'Specifier': specifier,
+                            'Note': {'Pitch': note['pitch'],
+                                     'Onset': note['onset'],
+                                     'Duration': note['duration']}},
+            'Direction': direction,
+            'Step': step}
 
 
 # ------------------------------------------------------------------------
@@ -388,28 +410,36 @@ def get_step(mention: dict):
 
 
 # ------------------------------------------------------------------------
-# Perform single dependency parse
+# Perform single Odin parse to PyECI
 # ------------------------------------------------------------------------
 
-def odin_sentence_to_pyeci_spec(sentence: str, return_sentence=False, verbose=False):
+def odin_sentence_to_pyeci_spec(sentence: str,
+                                return_sentence=False,
+                                return_mentions=False,
+                                verbose=False):
     """
     Given a sentence, request Odin process the sentence, extract the musica_odin mentions.
     :param sentence: str representing sentence to be parsed
-    :param return_sentence: flag controlling whether function returns both the action_spec AND the original sentence
+    :param return_sentence: whether fn returns the original sentence
+                            This is a helper for auto-generating target unit test targets
+    :param return_mentions: whether fn includes *all* mentions in return
                             This is a helper for auto-generating target unit test targets
     :param verbose: flag controlling whether to print intermediate values (e.g., mentions)
-    :return:
+    :return: parsed PyECI_spec (dict) and optionally sentence and/or mentions (parsed json in dict form)
     """
 
     if verbose:
-        print(sentence)
+        print('Running odin_sentence_to_pyeci_spec()')
+        print('sentence: \"{0}\"'.format(sentence))
 
     r = odin_request(sentence)
     if verbose:
         print(r)
         pprint.pprint(r.json())
 
-    filtered_actions = filter_actions(json.loads(r.text))
+    mentions = json.loads(r.text)
+
+    filtered_actions = filter_actions(mentions)
 
     actions = list()
     for filtered_action in filtered_actions:
@@ -426,8 +456,13 @@ def odin_sentence_to_pyeci_spec(sentence: str, return_sentence=False, verbose=Fa
         print('\n==================')
         print('DONE')
 
+    ret = [actions]
+
     if return_sentence:
-        return actions, sentence
-    else:
-        return actions
+        ret.append(sentence)
+
+    if return_mentions:
+        ret.append(mentions)
+
+    return tuple(ret)
 

@@ -126,6 +126,7 @@ def handle_insert(mention: dict):
     if note['onset'] is None and onset is not None:
         note['onset'] = onset
     else:
+        # Appears to require an onset ?
         print('UNHANDLED CASE: handle_insert() onset:', mention)
         sys.exit()
 
@@ -147,6 +148,7 @@ def handle_delete(mention: dict):
         note['onset'] = onset
     else:
         if note['onset'] is None and onset is None:
+            # onset not required
             pass
         else:
             print('UNHANDLED CASE: handle_delete() onset:', mention)
@@ -170,7 +172,7 @@ def handle_reverse(mention: dict):
         note['onset'] = onset
     else:
         if note['onset'] is None and onset is None:
-            # Reverse appears to not require an onset
+            # onset not required
             pass
         else:
             print('UNHANDLED CASE: handle_reverse() onset:', mention)
@@ -195,8 +197,12 @@ def handle_transpose(mention: dict):
     if note['onset'] is None and onset is not None:
         note['onset'] = onset
     else:
-        print('UNHANDLED CASE: handle_insert() onset:', mention)
-        sys.exit()
+        if note['onset'] is None and onset is None:
+            # onset not required
+            pass
+        else:
+            print('UNHANDLED CASE: handle_transpose() onset:', mention)
+            sys.exit()
 
     specifier = None
     if note['specifier'] is not None:
@@ -382,6 +388,7 @@ def get_specifier(mention: dict) -> dict:
     cardinality = None
     if 'cardinality' in specifier_args:
         cardinality = get_property_value(specifier_args, 'cardinality')
+        cardinality = attempt_cardinality_to_int(cardinality)
 
     set_choice = None
     if 'set_choice' in specifier_args:
@@ -392,6 +399,18 @@ def get_specifier(mention: dict) -> dict:
         cardinality = 1
 
     return {'quantifier': quantifier, 'cardinality': cardinality, 'set_choice': set_choice}
+
+
+# TODO: bring in nth algorithm from last spring 2018
+NTHTEXT_TO_INT_MAP = {'first': 1, 'second': 2, 'third': 3, 'fourth': 4, 'fifth': 5,
+                      'sixth': 6, 'seventh': 7, 'eighth': 8, 'ninth': 9, 'tenth': 10}
+
+
+def attempt_cardinality_to_int(cardinality_value):
+    if cardinality_value in NTHTEXT_TO_INT_MAP:
+        return NTHTEXT_TO_INT_MAP[cardinality_value]
+    else:
+        return cardinality_value
 
 
 def get_direction(mention: dict):

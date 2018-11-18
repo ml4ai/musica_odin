@@ -128,7 +128,8 @@ def create_corpus_odin_parse_state_snapshot(corpus, filename=None, root=SNAPSHOT
 
 
 # TODO: save diff report
-def regression_test(snapshot_src_filename, root=SNAPSHOT_DST_ROOT, summary_p=False, save_p=False):
+def regression_test(snapshot_src_filename, root=SNAPSHOT_DST_ROOT,
+                    summary_p=False, mentions_p=True, save_p=False):
     """
     Cheap-n-cheerful regression testing.
     (1) Takes as input a pointer to an odin_parse_state .JSON file and reads it
@@ -142,6 +143,7 @@ def regression_test(snapshot_src_filename, root=SNAPSHOT_DST_ROOT, summary_p=Fal
     :param snapshot_src_filename: snapshot file name
     :param root: Root directory of snapshot file
     :param summary_p: When True: does NOT display diff detail, only whether match
+    :param mentions_p: When True: include Odin mention diff testing
     :param save_p: TODO
     :return:
     """
@@ -162,6 +164,11 @@ def regression_test(snapshot_src_filename, root=SNAPSHOT_DST_ROOT, summary_p=Fal
             = odin_sentence_to_pyeci_spec(sentence, return_sentence=True, return_mentions=True)
 
         print('-------------------------------------')
+        print('num orig vs curr:', len(pyeci_spec_snapshot), len(pyeci_spec_current))
+        if len(pyeci_spec_snapshot) < 1 and len(pyeci_spec_current) > 0:
+            print('NEW pyeci_spec in CURRENT')
+            for pyeci_spec_c in pyeci_spec_current:
+                pprint.pprint(pyeci_spec_c)
         for i, (pyeci_spec_s, pyeci_spec_c) \
                 in enumerate(zip(pyeci_spec_snapshot, pyeci_spec_current)):
             if pyeci_spec_s == pyeci_spec_c:
@@ -174,16 +181,17 @@ def regression_test(snapshot_src_filename, root=SNAPSHOT_DST_ROOT, summary_p=Fal
                     print('From CURRENT pyeci_spec:')
                     pprint.pprint(pyeci_spec_c)
 
-        print('-------------------------------------')
-        if mentions_snapshot == mentions_current:
-            print('mentions MATCH')
-        else:
-            print('mentions DO NOT MATCH')
-            if not summary_p:
-                print('From ORIGINAL pyeci_spec:', snapshot_src_filename)
-                pprint.pprint(mentions_snapshot)
-                print('From CURRENT pyeci_spec:')
-                pprint.pprint(mentions_current)
+        if mentions_p:
+            print('-------------------------------------')
+            if mentions_snapshot == mentions_current:
+                print('mentions MATCH')
+            else:
+                print('mentions DO NOT MATCH')
+                if not summary_p:
+                    print('From ORIGINAL mentions:', snapshot_src_filename)
+                    pprint.pprint(mentions_snapshot)
+                    print('From CURRENT mentions:')
+                    pprint.pprint(mentions_current)
 
 
 # ------------------------------------------------------------------------
@@ -197,12 +205,13 @@ def regression_test(snapshot_src_filename, root=SNAPSHOT_DST_ROOT, summary_p=Fal
 # batch_odin_parse(CORPUS_REVERSE, return_sentence=True)
 
 # just run first sentence of corpus with verbose output
-batch_odin_parse([CORPUS_INVERSION[4]], return_sentence=True, verbose_odin=True)
+# batch_odin_parse([CORPUS_INVERSION[4]], return_sentence=True, verbose_odin=True)
 
 # send in a specific single sentence
 # batch_odin_parse(["Reverse all the notes in measure 1"], return_sentence=True, verbose_odin=True)
 # batch_odin_parse(["Transpose the C4 quarter note on beat 1 of measure 1 up 5 half steps"],
 #                  return_sentence=True, verbose_odin=True)
+# batch_odin_parse(["Transpose the C up 1 half step"], return_sentence=True, verbose_odin=True)
 
 # ------------------------------------------------------------------------
 # Examples of running create_corpus_odin_parse_state_snapshot
@@ -219,4 +228,4 @@ batch_odin_parse([CORPUS_INVERSION[4]], return_sentence=True, verbose_odin=True)
 
 # regression_test('odin_parse_state_20181117160413_0401164.json')
 
-# regression_test('odin_parse_state_20181117164323_0569318.json')
+regression_test('odin_parse_state_20181117164323_0569318.json', mentions_p=False)

@@ -4744,7 +4744,7 @@
                             }
                         },
                         "Specifier": {
-                            "cardinality": "second",
+                            "cardinality": 2,
                             "quantifier": "the",
                             "set_choice": null
                         }
@@ -8879,9 +8879,174 @@
     },
     "21": {
         "0_sentence": "Transpose the C up 1 half step",
-        "1_pyeci_spec": [],
+        "1_pyeci_spec": [
+            {
+                "action": "Transpose",
+                "arguments": {
+                    "Direction": "up",
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": null,
+                            "Pitch": {
+                                "octave": null,
+                                "pitch_class": "C"
+                            }
+                        },
+                        "Specifier": {
+                            "cardinality": null,
+                            "quantifier": "the",
+                            "set_choice": null
+                        }
+                    },
+                    "Step": {
+                        "cardinality": "1",
+                        "proportion": "half"
+                    }
+                }
+            }
+        ],
         "2_mentions": {
             "mentions": [
+                {
+                    "arguments": {
+                        "direction": [
+                            {
+                                "attachments": [],
+                                "foundBy": "direction",
+                                "labels": [
+                                    "Direction",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "up"
+                                ]
+                            }
+                        ],
+                        "note": [
+                            {
+                                "arguments": {
+                                    "pitch": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "pitch-1",
+                                            "labels": [
+                                                "Pitch",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "C"
+                                            ]
+                                        }
+                                    ],
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "the"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-2-underspecified",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ]
+                            }
+                        ],
+                        "step": [
+                            {
+                                "arguments": {
+                                    "cardinality": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "cardinality",
+                                            "labels": [
+                                                "Cardinality",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "1"
+                                            ]
+                                        }
+                                    ],
+                                    "proportion": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "proportion",
+                                            "labels": [
+                                                "Proportion",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "half"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "step-trigger",
+                                "labels": [
+                                    "Step",
+                                    "Unit",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "step-trigger",
+                                    "labels": [
+                                        "Step",
+                                        "Unit",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "step"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Transpose-rule-1",
+                    "labels": [
+                        "Transpose",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Transpose-rule-1",
+                        "labels": [
+                            "Transpose",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Transpose"
+                        ]
+                    }
+                },
                 {
                     "arguments": {
                         "quantifier": [
@@ -9263,9 +9428,169 @@
     },
     "23": {
         "0_sentence": "Transpose all the notes up 1 half step",
-        "1_pyeci_spec": [],
+        "1_pyeci_spec": [
+            {
+                "action": "Transpose",
+                "arguments": {
+                    "Direction": "up",
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": null,
+                            "Pitch": null
+                        },
+                        "Specifier": {
+                            "cardinality": null,
+                            "quantifier": "all",
+                            "set_choice": null
+                        }
+                    },
+                    "Step": {
+                        "cardinality": "1",
+                        "proportion": "half"
+                    }
+                }
+            }
+        ],
         "2_mentions": {
             "mentions": [
+                {
+                    "arguments": {
+                        "direction": [
+                            {
+                                "attachments": [],
+                                "foundBy": "direction",
+                                "labels": [
+                                    "Direction",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "up"
+                                ]
+                            }
+                        ],
+                        "note": [
+                            {
+                                "arguments": {
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "all"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-1",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "note-1",
+                                    "labels": [
+                                        "Note",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "notes"
+                                    ]
+                                }
+                            }
+                        ],
+                        "step": [
+                            {
+                                "arguments": {
+                                    "cardinality": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "cardinality",
+                                            "labels": [
+                                                "Cardinality",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "1"
+                                            ]
+                                        }
+                                    ],
+                                    "proportion": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "proportion",
+                                            "labels": [
+                                                "Proportion",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "half"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "step-trigger",
+                                "labels": [
+                                    "Step",
+                                    "Unit",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "step-trigger",
+                                    "labels": [
+                                        "Step",
+                                        "Unit",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "step"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Transpose-rule-1",
+                    "labels": [
+                        "Transpose",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Transpose-rule-1",
+                        "labels": [
+                            "Transpose",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Transpose"
+                        ]
+                    }
+                },
                 {
                     "arguments": {
                         "specifier": [
@@ -10270,9 +10595,188 @@
     },
     "27": {
         "0_sentence": "Transpose the first C up 2 half steps",
-        "1_pyeci_spec": [],
+        "1_pyeci_spec": [
+            {
+                "action": "Transpose",
+                "arguments": {
+                    "Direction": "up",
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": null,
+                            "Pitch": {
+                                "octave": null,
+                                "pitch_class": "C"
+                            }
+                        },
+                        "Specifier": {
+                            "cardinality": 1,
+                            "quantifier": "the",
+                            "set_choice": null
+                        }
+                    },
+                    "Step": {
+                        "cardinality": "2",
+                        "proportion": "half"
+                    }
+                }
+            }
+        ],
         "2_mentions": {
             "mentions": [
+                {
+                    "arguments": {
+                        "direction": [
+                            {
+                                "attachments": [],
+                                "foundBy": "direction",
+                                "labels": [
+                                    "Direction",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "up"
+                                ]
+                            }
+                        ],
+                        "note": [
+                            {
+                                "arguments": {
+                                    "pitch": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "pitch-1",
+                                            "labels": [
+                                                "Pitch",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "C"
+                                            ]
+                                        }
+                                    ],
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "cardinality": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "cardinality",
+                                                        "labels": [
+                                                            "Cardinality",
+                                                            "Amount",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "first"
+                                                        ]
+                                                    }
+                                                ],
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "the"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-2-underspecified",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ]
+                            }
+                        ],
+                        "step": [
+                            {
+                                "arguments": {
+                                    "cardinality": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "cardinality",
+                                            "labels": [
+                                                "Cardinality",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "2"
+                                            ]
+                                        }
+                                    ],
+                                    "proportion": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "proportion",
+                                            "labels": [
+                                                "Proportion",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "half"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "step-trigger",
+                                "labels": [
+                                    "Step",
+                                    "Unit",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "step-trigger",
+                                    "labels": [
+                                        "Step",
+                                        "Unit",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "steps"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Transpose-rule-1",
+                    "labels": [
+                        "Transpose",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Transpose-rule-1",
+                        "labels": [
+                            "Transpose",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Transpose"
+                        ]
+                    }
+                },
                 {
                     "arguments": {
                         "cardinality": [
@@ -10486,9 +10990,188 @@
     },
     "28": {
         "0_sentence": "Transpose the second C up 2 half steps",
-        "1_pyeci_spec": [],
+        "1_pyeci_spec": [
+            {
+                "action": "Transpose",
+                "arguments": {
+                    "Direction": "up",
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": null,
+                            "Pitch": {
+                                "octave": null,
+                                "pitch_class": "C"
+                            }
+                        },
+                        "Specifier": {
+                            "cardinality": 2,
+                            "quantifier": "the",
+                            "set_choice": null
+                        }
+                    },
+                    "Step": {
+                        "cardinality": "2",
+                        "proportion": "half"
+                    }
+                }
+            }
+        ],
         "2_mentions": {
             "mentions": [
+                {
+                    "arguments": {
+                        "direction": [
+                            {
+                                "attachments": [],
+                                "foundBy": "direction",
+                                "labels": [
+                                    "Direction",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "up"
+                                ]
+                            }
+                        ],
+                        "note": [
+                            {
+                                "arguments": {
+                                    "pitch": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "pitch-1",
+                                            "labels": [
+                                                "Pitch",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "C"
+                                            ]
+                                        }
+                                    ],
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "cardinality": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "cardinality",
+                                                        "labels": [
+                                                            "Cardinality",
+                                                            "Amount",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "second"
+                                                        ]
+                                                    }
+                                                ],
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "the"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-2-underspecified",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ]
+                            }
+                        ],
+                        "step": [
+                            {
+                                "arguments": {
+                                    "cardinality": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "cardinality",
+                                            "labels": [
+                                                "Cardinality",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "2"
+                                            ]
+                                        }
+                                    ],
+                                    "proportion": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "proportion",
+                                            "labels": [
+                                                "Proportion",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "half"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "step-trigger",
+                                "labels": [
+                                    "Step",
+                                    "Unit",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "step-trigger",
+                                    "labels": [
+                                        "Step",
+                                        "Unit",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "steps"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Transpose-rule-1",
+                    "labels": [
+                        "Transpose",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Transpose-rule-1",
+                        "labels": [
+                            "Transpose",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Transpose"
+                        ]
+                    }
+                },
                 {
                     "arguments": {
                         "cardinality": [
@@ -10796,9 +11479,174 @@
     },
     "30": {
         "0_sentence": "Transpose all the C up 5 half steps",
-        "1_pyeci_spec": [],
+        "1_pyeci_spec": [
+            {
+                "action": "Transpose",
+                "arguments": {
+                    "Direction": "up",
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": null,
+                            "Pitch": {
+                                "octave": null,
+                                "pitch_class": "C"
+                            }
+                        },
+                        "Specifier": {
+                            "cardinality": null,
+                            "quantifier": "all",
+                            "set_choice": null
+                        }
+                    },
+                    "Step": {
+                        "cardinality": "5",
+                        "proportion": "half"
+                    }
+                }
+            }
+        ],
         "2_mentions": {
             "mentions": [
+                {
+                    "arguments": {
+                        "direction": [
+                            {
+                                "attachments": [],
+                                "foundBy": "direction",
+                                "labels": [
+                                    "Direction",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "up"
+                                ]
+                            }
+                        ],
+                        "note": [
+                            {
+                                "arguments": {
+                                    "pitch": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "pitch-1",
+                                            "labels": [
+                                                "Pitch",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "C"
+                                            ]
+                                        }
+                                    ],
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "all"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-2-underspecified",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ]
+                            }
+                        ],
+                        "step": [
+                            {
+                                "arguments": {
+                                    "cardinality": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "cardinality",
+                                            "labels": [
+                                                "Cardinality",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "5"
+                                            ]
+                                        }
+                                    ],
+                                    "proportion": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "proportion",
+                                            "labels": [
+                                                "Proportion",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "half"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "step-trigger",
+                                "labels": [
+                                    "Step",
+                                    "Unit",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "step-trigger",
+                                    "labels": [
+                                        "Step",
+                                        "Unit",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "steps"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Transpose-rule-1",
+                    "labels": [
+                        "Transpose",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Transpose-rule-1",
+                        "labels": [
+                            "Transpose",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Transpose"
+                        ]
+                    }
+                },
                 {
                     "arguments": {
                         "quantifier": [
@@ -11513,9 +12361,174 @@
     },
     "32": {
         "0_sentence": "Transpose all the Cs up 5 half steps in measure 1",
-        "1_pyeci_spec": [],
+        "1_pyeci_spec": [
+            {
+                "action": "Transpose",
+                "arguments": {
+                    "Direction": "up",
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": null,
+                            "Pitch": {
+                                "octave": null,
+                                "pitch_class": "C"
+                            }
+                        },
+                        "Specifier": {
+                            "cardinality": null,
+                            "quantifier": "all",
+                            "set_choice": null
+                        }
+                    },
+                    "Step": {
+                        "cardinality": "5",
+                        "proportion": "half"
+                    }
+                }
+            }
+        ],
         "2_mentions": {
             "mentions": [
+                {
+                    "arguments": {
+                        "direction": [
+                            {
+                                "attachments": [],
+                                "foundBy": "direction",
+                                "labels": [
+                                    "Direction",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "up"
+                                ]
+                            }
+                        ],
+                        "note": [
+                            {
+                                "arguments": {
+                                    "pitch": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "pitch-1",
+                                            "labels": [
+                                                "Pitch",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "Cs"
+                                            ]
+                                        }
+                                    ],
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "all"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-2-underspecified",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ]
+                            }
+                        ],
+                        "step": [
+                            {
+                                "arguments": {
+                                    "cardinality": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "cardinality",
+                                            "labels": [
+                                                "Cardinality",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "5"
+                                            ]
+                                        }
+                                    ],
+                                    "proportion": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "proportion",
+                                            "labels": [
+                                                "Proportion",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "half"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "step-trigger",
+                                "labels": [
+                                    "Step",
+                                    "Unit",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "step-trigger",
+                                    "labels": [
+                                        "Step",
+                                        "Unit",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "steps"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Transpose-rule-1",
+                    "labels": [
+                        "Transpose",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Transpose-rule-1",
+                        "labels": [
+                            "Transpose",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Transpose"
+                        ]
+                    }
+                },
                 {
                     "arguments": {
                         "quantifier": [
@@ -11811,9 +12824,169 @@
     },
     "33": {
         "0_sentence": "Transpose all the notes up 5 half steps in measure 1",
-        "1_pyeci_spec": [],
+        "1_pyeci_spec": [
+            {
+                "action": "Transpose",
+                "arguments": {
+                    "Direction": "up",
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": null,
+                            "Pitch": null
+                        },
+                        "Specifier": {
+                            "cardinality": null,
+                            "quantifier": "all",
+                            "set_choice": null
+                        }
+                    },
+                    "Step": {
+                        "cardinality": "5",
+                        "proportion": "half"
+                    }
+                }
+            }
+        ],
         "2_mentions": {
             "mentions": [
+                {
+                    "arguments": {
+                        "direction": [
+                            {
+                                "attachments": [],
+                                "foundBy": "direction",
+                                "labels": [
+                                    "Direction",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "up"
+                                ]
+                            }
+                        ],
+                        "note": [
+                            {
+                                "arguments": {
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "all"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-1",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "note-1",
+                                    "labels": [
+                                        "Note",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "notes"
+                                    ]
+                                }
+                            }
+                        ],
+                        "step": [
+                            {
+                                "arguments": {
+                                    "cardinality": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "cardinality",
+                                            "labels": [
+                                                "Cardinality",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "5"
+                                            ]
+                                        }
+                                    ],
+                                    "proportion": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "proportion",
+                                            "labels": [
+                                                "Proportion",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "half"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "step-trigger",
+                                "labels": [
+                                    "Step",
+                                    "Unit",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "step-trigger",
+                                    "labels": [
+                                        "Step",
+                                        "Unit",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "steps"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Transpose-rule-1",
+                    "labels": [
+                        "Transpose",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Transpose-rule-1",
+                        "labels": [
+                            "Transpose",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Transpose"
+                        ]
+                    }
+                },
                 {
                     "arguments": {
                         "specifier": [
@@ -12096,9 +13269,169 @@
     },
     "34": {
         "0_sentence": "Transpose all the notes up 5 half steps between measures 1 and 3",
-        "1_pyeci_spec": [],
+        "1_pyeci_spec": [
+            {
+                "action": "Transpose",
+                "arguments": {
+                    "Direction": "up",
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": null,
+                            "Pitch": null
+                        },
+                        "Specifier": {
+                            "cardinality": null,
+                            "quantifier": "all",
+                            "set_choice": null
+                        }
+                    },
+                    "Step": {
+                        "cardinality": "5",
+                        "proportion": "half"
+                    }
+                }
+            }
+        ],
         "2_mentions": {
             "mentions": [
+                {
+                    "arguments": {
+                        "direction": [
+                            {
+                                "attachments": [],
+                                "foundBy": "direction",
+                                "labels": [
+                                    "Direction",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "up"
+                                ]
+                            }
+                        ],
+                        "note": [
+                            {
+                                "arguments": {
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "all"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-1",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "note-1",
+                                    "labels": [
+                                        "Note",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "notes"
+                                    ]
+                                }
+                            }
+                        ],
+                        "step": [
+                            {
+                                "arguments": {
+                                    "cardinality": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "cardinality",
+                                            "labels": [
+                                                "Cardinality",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "5"
+                                            ]
+                                        }
+                                    ],
+                                    "proportion": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "proportion",
+                                            "labels": [
+                                                "Proportion",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "half"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "step-trigger",
+                                "labels": [
+                                    "Step",
+                                    "Unit",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "step-trigger",
+                                    "labels": [
+                                        "Step",
+                                        "Unit",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "steps"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Transpose-rule-1",
+                    "labels": [
+                        "Transpose",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Transpose-rule-1",
+                        "labels": [
+                            "Transpose",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Transpose"
+                        ]
+                    }
+                },
                 {
                     "arguments": {
                         "specifier": [
@@ -12393,9 +13726,98 @@
     },
     "35": {
         "0_sentence": "Invert all the notes",
-        "1_pyeci_spec": [],
+        "1_pyeci_spec": [
+            {
+                "action": "Invert",
+                "arguments": {
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": null,
+                            "Pitch": null
+                        },
+                        "Specifier": {
+                            "cardinality": null,
+                            "quantifier": "all",
+                            "set_choice": null
+                        }
+                    }
+                }
+            }
+        ],
         "2_mentions": {
             "mentions": [
+                {
+                    "arguments": {
+                        "note": [
+                            {
+                                "arguments": {
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "all"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-1",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "note-1",
+                                    "labels": [
+                                        "Note",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "notes"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Invert-active_voice-syntax-1",
+                    "labels": [
+                        "Invert",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Invert-active_voice-syntax-1",
+                        "labels": [
+                            "Invert",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Invert"
+                        ]
+                    }
+                },
                 {
                     "arguments": {
                         "specifier": [
@@ -12493,9 +13915,103 @@
     },
     "36": {
         "0_sentence": "Invert all the G",
-        "1_pyeci_spec": [],
+        "1_pyeci_spec": [
+            {
+                "action": "Invert",
+                "arguments": {
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": null,
+                            "Pitch": {
+                                "octave": null,
+                                "pitch_class": "G"
+                            }
+                        },
+                        "Specifier": {
+                            "cardinality": null,
+                            "quantifier": "all",
+                            "set_choice": null
+                        }
+                    }
+                }
+            }
+        ],
         "2_mentions": {
             "mentions": [
+                {
+                    "arguments": {
+                        "note": [
+                            {
+                                "arguments": {
+                                    "pitch": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "pitch-1",
+                                            "labels": [
+                                                "Pitch",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "G"
+                                            ]
+                                        }
+                                    ],
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "all"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-2-underspecified",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Invert-active_voice-syntax-1",
+                    "labels": [
+                        "Invert",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Invert-active_voice-syntax-1",
+                        "labels": [
+                            "Invert",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Invert"
+                        ]
+                    }
+                },
                 {
                     "arguments": {
                         "pitch": [
@@ -12606,9 +14122,153 @@
     },
     "37": {
         "0_sentence": "Invert all the notes in measure 1",
-        "1_pyeci_spec": [],
+        "1_pyeci_spec": [
+            {
+                "action": "Invert",
+                "arguments": {
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": {
+                                "beat": null,
+                                "measure": "1"
+                            },
+                            "Pitch": null
+                        },
+                        "Specifier": {
+                            "cardinality": null,
+                            "quantifier": "all",
+                            "set_choice": null
+                        }
+                    }
+                }
+            }
+        ],
         "2_mentions": {
             "mentions": [
+                {
+                    "arguments": {
+                        "note": [
+                            {
+                                "arguments": {
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "all"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-1",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "note-1",
+                                    "labels": [
+                                        "Note",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "notes"
+                                    ]
+                                }
+                            }
+                        ],
+                        "onset": [
+                            {
+                                "arguments": {
+                                    "measure": [
+                                        {
+                                            "arguments": {
+                                                "cardinality": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "cardinality",
+                                                        "labels": [
+                                                            "Cardinality",
+                                                            "Amount",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "1"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "measure-1",
+                                            "labels": [
+                                                "Measure",
+                                                "Metrical",
+                                                "Entity"
+                                            ],
+                                            "trigger": {
+                                                "attachments": [],
+                                                "foundBy": "measure-1",
+                                                "labels": [
+                                                    "Measure",
+                                                    "Metrical",
+                                                    "Entity"
+                                                ],
+                                                "words": [
+                                                    "measure"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "onset-1",
+                                "labels": [
+                                    "Onset",
+                                    "Metrical",
+                                    "Entity"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Invert-active_voice-syntax-1",
+                    "labels": [
+                        "Invert",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Invert-active_voice-syntax-1",
+                        "labels": [
+                            "Invert",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Invert"
+                        ]
+                    }
+                },
                 {
                     "arguments": {
                         "specifier": [
@@ -12805,9 +14465,45 @@
     },
     "38": {
         "0_sentence": "Invert everything in measure 1",
-        "1_pyeci_spec": [],
+        "1_pyeci_spec": [
+            {
+                "action": "Invert",
+                "arguments": {
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": null,
+                            "Pitch": null
+                        },
+                        "Specifier": null
+                    }
+                }
+            }
+        ],
         "2_mentions": {
             "mentions": [
+                {
+                    "arguments": {},
+                    "attachments": [],
+                    "foundBy": "Invert-active_voice-syntax-1",
+                    "labels": [
+                        "Invert",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Invert-active_voice-syntax-1",
+                        "labels": [
+                            "Invert",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Invert"
+                        ]
+                    }
+                },
                 {
                     "arguments": {
                         "cardinality": [
@@ -12912,9 +14608,103 @@
     },
     "39": {
         "0_sentence": "Invert all the notes around G4",
-        "1_pyeci_spec": [],
+        "1_pyeci_spec": [
+            {
+                "action": "Invert",
+                "arguments": {
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": null,
+                            "Pitch": {
+                                "octave": "4",
+                                "pitch_class": "G"
+                            }
+                        },
+                        "Specifier": {
+                            "cardinality": null,
+                            "quantifier": "the",
+                            "set_choice": null
+                        }
+                    }
+                }
+            }
+        ],
         "2_mentions": {
             "mentions": [
+                {
+                    "arguments": {
+                        "note": [
+                            {
+                                "arguments": {
+                                    "pitch": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "pitch-1",
+                                            "labels": [
+                                                "Pitch",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "G4"
+                                            ]
+                                        }
+                                    ],
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "the"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-2-underspecified",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Invert-active_voice-syntax-1",
+                    "labels": [
+                        "Invert",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Invert-active_voice-syntax-1",
+                        "labels": [
+                            "Invert",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Invert"
+                        ]
+                    }
+                },
                 {
                     "arguments": {
                         "quantifier": [
@@ -13947,7 +15737,7 @@
         }
     },
     "43": {
-        "0_sentence": "Reverse the notes from beats 1 through 3 in measure 2Invert all the notes between measures 2 and 5",
+        "0_sentence": "Reverse the notes from beats 1 through 3 in measure 2",
         "1_pyeci_spec": [
             {
                 "action": "Reverse",
@@ -13956,8 +15746,8 @@
                         "Note": {
                             "Duration": null,
                             "Onset": {
-                                "beat": "1",
-                                "measure": null
+                                "beat": null,
+                                "measure": "2"
                             },
                             "Pitch": null
                         },
@@ -14025,7 +15815,7 @@
                         "onset": [
                             {
                                 "arguments": {
-                                    "beat": [
+                                    "measure": [
                                         {
                                             "arguments": {
                                                 "cardinality": [
@@ -14038,28 +15828,28 @@
                                                             "Entity"
                                                         ],
                                                         "words": [
-                                                            "1"
+                                                            "2"
                                                         ]
                                                     }
                                                 ]
                                             },
                                             "attachments": [],
-                                            "foundBy": "beat-1",
+                                            "foundBy": "measure-1",
                                             "labels": [
-                                                "Beat",
+                                                "Measure",
                                                 "Metrical",
                                                 "Entity"
                                             ],
                                             "trigger": {
                                                 "attachments": [],
-                                                "foundBy": "beat-1",
+                                                "foundBy": "measure-1",
                                                 "labels": [
-                                                    "Beat",
+                                                    "Measure",
                                                     "Metrical",
                                                     "Entity"
                                                 ],
                                                 "words": [
-                                                    "beats"
+                                                    "measure"
                                                 ]
                                             }
                                         }
@@ -14076,7 +15866,7 @@
                         ]
                     },
                     "attachments": [],
-                    "foundBy": "Reverse-active_voice-surface-1",
+                    "foundBy": "Reverse-active_voice-syntax-1",
                     "labels": [
                         "Reverse",
                         "Action",
@@ -14084,7 +15874,7 @@
                     ],
                     "trigger": {
                         "attachments": [],
-                        "foundBy": "Reverse-active_voice-surface-1",
+                        "foundBy": "Reverse-active_voice-syntax-1",
                         "labels": [
                             "Reverse",
                             "Action",
@@ -14274,6 +16064,257 @@
                     "words": [
                         "3"
                     ]
+                },
+                {
+                    "arguments": {
+                        "cardinality": [
+                            {
+                                "attachments": [],
+                                "foundBy": "cardinality",
+                                "labels": [
+                                    "Cardinality",
+                                    "Amount",
+                                    "Entity"
+                                ],
+                                "words": [
+                                    "2"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "measure-1",
+                    "labels": [
+                        "Measure",
+                        "Metrical",
+                        "Entity"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "measure-1",
+                        "labels": [
+                            "Measure",
+                            "Metrical",
+                            "Entity"
+                        ],
+                        "words": [
+                            "measure"
+                        ]
+                    }
+                },
+                {
+                    "arguments": {
+                        "measure": [
+                            {
+                                "arguments": {
+                                    "cardinality": [
+                                        {
+                                            "attachments": [],
+                                            "foundBy": "cardinality",
+                                            "labels": [
+                                                "Cardinality",
+                                                "Amount",
+                                                "Entity"
+                                            ],
+                                            "words": [
+                                                "2"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "measure-1",
+                                "labels": [
+                                    "Measure",
+                                    "Metrical",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "measure-1",
+                                    "labels": [
+                                        "Measure",
+                                        "Metrical",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "measure"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "onset-1",
+                    "labels": [
+                        "Onset",
+                        "Metrical",
+                        "Entity"
+                    ]
+                },
+                {
+                    "attachments": [],
+                    "foundBy": "cardinality",
+                    "labels": [
+                        "Cardinality",
+                        "Amount",
+                        "Entity"
+                    ],
+                    "words": [
+                        "2"
+                    ]
+                }
+            ]
+        }
+    },
+    "44": {
+        "0_sentence": "Invert all the notes between measures 2 and 5",
+        "1_pyeci_spec": [
+            {
+                "action": "Invert",
+                "arguments": {
+                    "MusicEntity": {
+                        "Note": {
+                            "Duration": null,
+                            "Onset": {
+                                "beat": null,
+                                "measure": "2"
+                            },
+                            "Pitch": null
+                        },
+                        "Specifier": {
+                            "cardinality": null,
+                            "quantifier": "all",
+                            "set_choice": null
+                        }
+                    }
+                }
+            }
+        ],
+        "2_mentions": {
+            "mentions": [
+                {
+                    "arguments": {
+                        "note": [
+                            {
+                                "arguments": {
+                                    "specifier": [
+                                        {
+                                            "arguments": {
+                                                "quantifier": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "specifier-1",
+                                                        "labels": [
+                                                            "Specifier",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "all"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "specifier-1",
+                                            "labels": [
+                                                "Specifier",
+                                                "Entity"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "note-1",
+                                "labels": [
+                                    "Note",
+                                    "Entity"
+                                ],
+                                "trigger": {
+                                    "attachments": [],
+                                    "foundBy": "note-1",
+                                    "labels": [
+                                        "Note",
+                                        "Entity"
+                                    ],
+                                    "words": [
+                                        "notes"
+                                    ]
+                                }
+                            }
+                        ],
+                        "onset": [
+                            {
+                                "arguments": {
+                                    "measure": [
+                                        {
+                                            "arguments": {
+                                                "cardinality": [
+                                                    {
+                                                        "attachments": [],
+                                                        "foundBy": "cardinality",
+                                                        "labels": [
+                                                            "Cardinality",
+                                                            "Amount",
+                                                            "Entity"
+                                                        ],
+                                                        "words": [
+                                                            "2"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "attachments": [],
+                                            "foundBy": "measure-1",
+                                            "labels": [
+                                                "Measure",
+                                                "Metrical",
+                                                "Entity"
+                                            ],
+                                            "trigger": {
+                                                "attachments": [],
+                                                "foundBy": "measure-1",
+                                                "labels": [
+                                                    "Measure",
+                                                    "Metrical",
+                                                    "Entity"
+                                                ],
+                                                "words": [
+                                                    "measures"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "attachments": [],
+                                "foundBy": "onset-1",
+                                "labels": [
+                                    "Onset",
+                                    "Metrical",
+                                    "Entity"
+                                ]
+                            }
+                        ]
+                    },
+                    "attachments": [],
+                    "foundBy": "Invert-active_voice-surface-1",
+                    "labels": [
+                        "Invert",
+                        "Action",
+                        "Event"
+                    ],
+                    "trigger": {
+                        "attachments": [],
+                        "foundBy": "Invert-active_voice-surface-1",
+                        "labels": [
+                            "Invert",
+                            "Action",
+                            "Event"
+                        ],
+                        "words": [
+                            "Invert"
+                        ]
+                    }
                 },
                 {
                     "arguments": {
@@ -14481,14 +16522,14 @@
             ]
         }
     },
-    "44": {
+    "45": {
         "0_sentence": "Generate",
         "1_pyeci_spec": [],
         "2_mentions": {
             "mentions": []
         }
     },
-    "45": {
+    "46": {
         "0_sentence": "Generate 4 measures",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -14508,7 +16549,7 @@
             ]
         }
     },
-    "46": {
+    "47": {
         "0_sentence": "Generate a phrase in the style of a Bach chorale",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -14585,7 +16626,7 @@
             ]
         }
     },
-    "47": {
+    "48": {
         "0_sentence": "Generate in the style of Bach",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -14616,7 +16657,7 @@
             ]
         }
     },
-    "48": {
+    "49": {
         "0_sentence": "Generate a melody",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -14647,7 +16688,7 @@
             ]
         }
     },
-    "49": {
+    "50": {
         "0_sentence": "Make the C4 in measure 1 into a D",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -14918,7 +16959,7 @@
             ]
         }
     },
-    "50": {
+    "51": {
         "0_sentence": "Move the first note to measure 5",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -15134,7 +17175,7 @@
             ]
         }
     },
-    "51": {
+    "52": {
         "0_sentence": "Put the first C on top of the G",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -15346,7 +17387,7 @@
             ]
         }
     },
-    "52": {
+    "53": {
         "0_sentence": "Put the C in measure 1 on top",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -15535,7 +17576,7 @@
             ]
         }
     },
-    "53": {
+    "54": {
         "0_sentence": "Move all the notes from measure 1 into measure 5",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -15833,7 +17874,7 @@
             ]
         }
     },
-    "54": {
+    "55": {
         "0_sentence": "Copy all the notes from measure 1 into measure 4",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -16131,7 +18172,7 @@
             ]
         }
     },
-    "55": {
+    "56": {
         "0_sentence": "Swap the first and third notes in measure 2",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -16371,7 +18412,7 @@
             ]
         }
     },
-    "56": {
+    "57": {
         "0_sentence": "Move everything 2 measures to the right",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -16414,7 +18455,7 @@
             ]
         }
     },
-    "57": {
+    "58": {
         "0_sentence": "Move all the Cs 1 beat earlier",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -16539,7 +18580,7 @@
             ]
         }
     },
-    "58": {
+    "59": {
         "0_sentence": "Work on measure 1",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -16646,7 +18687,7 @@
             ]
         }
     },
-    "59": {
+    "60": {
         "0_sentence": "Work on measures 1 through 5",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -16765,7 +18806,7 @@
             ]
         }
     },
-    "60": {
+    "61": {
         "0_sentence": "Work on measures 1 and 2",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -16884,7 +18925,7 @@
             ]
         }
     },
-    "61": {
+    "62": {
         "0_sentence": "Select all the quarter notes",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -16985,7 +19026,7 @@
             ]
         }
     },
-    "62": {
+    "63": {
         "0_sentence": "Mark the C4 in measure 1 through the G in measure 5 as 'Part A'",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -17389,7 +19430,7 @@
             ]
         }
     },
-    "63": {
+    "64": {
         "0_sentence": "Call measures 1 through 4 'Part A'",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -17542,7 +19583,7 @@
             ]
         }
     },
-    "64": {
+    "65": {
         "0_sentence": "Repeat 'Part A'",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -17584,7 +19625,7 @@
             ]
         }
     },
-    "65": {
+    "66": {
         "0_sentence": "Transpose 'Part A' up 5 half steps",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -17712,7 +19753,7 @@
             ]
         }
     },
-    "66": {
+    "67": {
         "0_sentence": "Make the melody go back to the first refrain",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -17792,7 +19833,7 @@
             ]
         }
     },
-    "67": {
+    "68": {
         "0_sentence": "Go back to the first refrain (i.e. work on)",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -17849,7 +19890,7 @@
             ]
         }
     },
-    "68": {
+    "69": {
         "0_sentence": "Take the first C and put it a beat later",
         "1_pyeci_spec": [],
         "2_mentions": {
@@ -18002,7 +20043,7 @@
             ]
         }
     },
-    "69": {
+    "70": {
         "0_sentence": "Take the C and put it on top (i.e. we\u2019re working on a chord)",
         "1_pyeci_spec": [],
         "2_mentions": {

@@ -228,4 +228,4 @@ def regression_test(snapshot_src_filename, root=SNAPSHOT_DST_ROOT,
 
 # regression_test('odin_parse_state_20181117160413_0401164.json')
 
-regression_test('odin_parse_state_20181117164323_0569318.json', mentions_p=False)
+regression_test('odin_parse_state_20181118121432_0612711.json')  # , mentions_p=False)

@@ -97,6 +97,13 @@ rules:
       pattern: |
         (@specifier:Specifier []{,2})? @pitch:Pitch
 
+    - name: note-2-surface
+      label: Note
+      priority: 3
+      type: token
+      pattern: |
+        (@specifier:Specifier []{,2})? @pitch:Pitch @duration:Proportion? (?<trigger> [word=/(?i)^note/])
+
 
 
     - name: onset-1

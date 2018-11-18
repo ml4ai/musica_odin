@@ -76,7 +76,7 @@ CORPUS_BETWEEN_THROUGH = \
     ("Delete everything between C4 and E5",
      "Reverse all the notes in measures 1 through 4",
      "Transpose everything between the C in measure 1 and the E in measure 2 up 5 half steps",
-     "Reverse the notes from beats 1 through 3 in measure 2"
+     "Reverse the notes from beats 1 through 3 in measure 2",
      "Invert all the notes between measures 2 and 5"
      )
 

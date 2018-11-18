@@ -97,8 +97,10 @@ rules:
       pattern: |
         (@specifier:Specifier []{,2})? @pitch:Pitch
 
+    # Syntax isn't always right... :)
     - name: note-2-surface
       label: Note
+      example: "Transpose the C quarter note up 1 half step."
       priority: 3
       type: token
       pattern: |

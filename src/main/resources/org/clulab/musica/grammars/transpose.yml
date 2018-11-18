@@ -15,3 +15,11 @@ rules:
      type: token
      pattern: |
        (?<trigger>[word=/(?i)^transpose/]) @note:Note @direction:Direction @step:Step ([]? @onset:Onset)?
+
+   - name: Transpose-rule-everything
+     label: ${label}
+     priority: ${rulepriority}
+     example: "Transpose all the notes up 5 half steps in measure 1."
+     type: token
+     pattern: |
+       (?<trigger>[word=/(?i)^transpose/]) (everything|all) @direction:Direction @step:Step ([]? @onset:Onset)?

@@ -8,9 +8,12 @@ invert_triggers: "invert"
 
 transpose_triggers: "transpose"
 
-move_triggers: "move|mov|put|place|change"
 
-copy_triggers: "copy|cp|duplicate"
+### TODO
+
+# move_triggers: "move|mov|put|place|change"
+
+# copy_triggers: "copy|cp|duplicate"
 
 # describe_triggers: "describe|desc|what"
 

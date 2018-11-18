@@ -1,1 +1,3 @@
 *.swp
+.sbtopts
+PyECI.scala

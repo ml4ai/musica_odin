@@ -104,7 +104,7 @@ rules:
       priority: 3
       type: token
       pattern: |
-        (@specifier:Specifier []{,2})? @pitch:Pitch @duration:Proportion? (?<trigger> [word=/(?i)^note/])
+        (@specifier:Specifier []{,2})? @pitch:Pitch? @duration:Proportion? (?<trigger> [word=/(?i)^note/])
 
 
 

@@ -36,6 +36,13 @@ rules:
       label: Reverse
       trigger: ${reverse_triggers}
 
+  - import: org/clulab/musica/grammars/template.yml
+    vars:
+      rulepriority: "6"
+      addlabel: "Invert"
+      label: Invert
+      trigger: ${invert_triggers}
+
   - import: org/clulab/musica/grammars/transpose.yml
     vars:
       rulepriority: "6"

@@ -94,8 +94,14 @@ def process_action_mention(action_mention: dict):
     elif 'Delete' in action_mention['labels']:
         op = 'Delete'
         args = handle_delete(action_mention)
+    elif 'Invert' in action_mention['labels']:
+        op = 'Invert'
+        # NOTE: delete handler covers many cases, except...
+        # TODO: add handling of axis of Inversion.
+        args = handle_delete(action_mention)
     elif 'Reverse' in action_mention['labels']:
         op = 'Reverse'
+        # TODO: add handling of axis of Retrograde
         args = handle_reverse(action_mention)
     elif 'Transpose' in action_mention['labels']:
         op = 'Transpose'
@@ -455,6 +461,7 @@ def odin_sentence_to_pyeci_spec(sentence: str,
 
     if verbose:
         print('\n==================')
+        print('Finished: \"{0}\"'.format(sentence))
         print('DONE')
 
     ret = [actions]

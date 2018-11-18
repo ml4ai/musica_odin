@@ -197,14 +197,12 @@ def regression_test(snapshot_src_filename, root=SNAPSHOT_DST_ROOT, summary_p=Fal
 # batch_odin_parse(CORPUS_REVERSE, return_sentence=True)
 
 # just run first sentence of corpus with verbose output
-# batch_odin_parse([CORPUS_INVERSION[0]], return_sentence=True, verbose_odin=True)
+batch_odin_parse([CORPUS_INVERSION[4]], return_sentence=True, verbose_odin=True)
 
 # send in a specific single sentence
 # batch_odin_parse(["Reverse all the notes in measure 1"], return_sentence=True, verbose_odin=True)
-
-
-batch_odin_parse(["Transpose the C4 quarter note on beat 1 of measure 1 up 5 half steps"],
-                 return_sentence=True, verbose_odin=True)
+# batch_odin_parse(["Transpose the C4 quarter note on beat 1 of measure 1 up 5 half steps"],
+#                  return_sentence=True, verbose_odin=True)
 
 # ------------------------------------------------------------------------
 # Examples of running create_corpus_odin_parse_state_snapshot

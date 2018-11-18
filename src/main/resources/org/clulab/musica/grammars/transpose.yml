@@ -6,4 +6,12 @@ rules:
      priority: ${rulepriority}
      type: token
      pattern: |
-       (?<trigger>[word=/(?i)^transpose/]) @note:Note []? @onset:Onset? @direction:Direction @step:Step
+       (?<trigger>[word=/(?i)^transpose/]) @note:Note ([]? @onset:Onset)? @direction:Direction @step:Step
+
+   - name: Transpose-rule-2
+     label: ${label}
+     priority: ${rulepriority}
+     example: "Transpose all the notes up 5 half steps in measure 1."
+     type: token
+     pattern: |
+       (?<trigger>[word=/(?i)^transpose/]) @note:Note @direction:Direction @step:Step ([]? @onset:Onset)?

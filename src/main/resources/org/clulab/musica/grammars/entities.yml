@@ -95,7 +95,8 @@ rules:
       priority: 3
       type: token
       pattern: |
-        (@specifier:Specifier []{,2})? @pitch:Pitch
+        (@specifier:Specifier [word=/^(?!note).*/]{,2})? @pitch:Pitch
+
 
     # Syntax isn't always right... :)
     - name: note-2-surface

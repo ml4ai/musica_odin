@@ -99,7 +99,7 @@ rules:
 
 
     # Syntax isn't always right... :)
-    - name: note-2-surface
+    - name: note-3-surface
       label: Note
       example: "Transpose the C quarter note up 1 half step."
       priority: 3
@@ -107,6 +107,13 @@ rules:
       pattern: |
         (@specifier:Specifier []{,2})? @pitch:Pitch? @duration:Proportion? (?<trigger> [word=/(?i)^note/])
 
+    - name: note-4-surface
+      label: Note
+      example: "Transpose the C quarter note up 1 half step."
+      priority: 3
+      type: token
+      pattern: |
+        (@specifier:Specifier)? the? @pitch:Pitch? @duration:Proportion? (?<trigger> [word=/(?i)^note/])
 
 
     - name: onset-1

@@ -20,7 +20,7 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
       (k, v) <- mentions.groupBy(m => (m.sentence, m.label))
       m <- v
       // for overlapping mentions starting at the same token, keep only the longest
-      longest = v.filter(_.tokenInterval.overlaps(m.tokenInterval)).maxBy(m => m.end - m.start)
+      longest = v.filter(_.tokenInterval.overlaps(m.tokenInterval)).maxBy(m => ((m.end - m.start) + 0.1 * m.arguments.size))
     } yield longest
     mns.toVector.distinct
   }

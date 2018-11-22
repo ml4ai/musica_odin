@@ -1,0 +1,3 @@
+#!/bin/bash
+echo Found Java 1.8 here: $(/usr/libexec/java_home -v '1.8*')
+JAVA_HOME=$(/usr/libexec/java_home -v '1.8*') sbt webapp/run

@@ -48,3 +48,13 @@ rules:
       rulepriority: "6"
       label: Transpose
 
+  # ---------------------------------------------------
+
+  - import: org/clulab/musica/grammars/extra_arguments.yml
+    vars:
+      rulepriority: "8"
+      mention_type: Invert
+      action: addArgument
+      label: Invert
+      addlabel: "Invert"
+

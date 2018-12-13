@@ -55,3 +55,23 @@ rules:
       type: token
       pattern: |
         (?<trigger>[word=/(?i)^(${trigger})/]) @note:Note (that (are|is))? []{,2} @onset:Onset
+
+    #-------------------------------------------------------------
+    #   Everything rules
+
+    - name: ${addlabel}-active_voice-syntax-everything
+      label: ${label}
+      priority: ${rulepriority}
+      pattern: |
+        trigger = [word=/(?i)^(${trigger})/]
+        specifier: Specifier = >dobj
+        onset: Onset? = >dobj? >/(${location_preps})/
+
+    # Useful for when the verb is tagged as an NN, and so we can't use the parse
+    - name: ${addlabel}-active_voice-surface-everything
+      label: ${label}
+      example: "Reverse all the notes in measure 1."
+      priority: ${rulepriority}
+      type: token
+      pattern: |
+        (?<trigger>[word=/(?i)^(${trigger})/]) @specifier:Specifier (that (are|is))? []{,2} @onset:Onset

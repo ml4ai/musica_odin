@@ -1,5 +1,7 @@
 - Entity:
-  - Note
+  - MusicalEntity:
+    - Note
+    - Rest
   - Specifier
   - Amount:
     - Proportion   # 'half' in 'half step'

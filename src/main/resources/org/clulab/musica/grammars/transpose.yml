@@ -22,4 +22,4 @@ rules:
      example: "Transpose all the notes up 5 half steps in measure 1."
      type: token
      pattern: |
-       (?<trigger>[word=/(?i)^transpose/]) (everything|all) @direction:Direction @step:Step ([]? @onset:Onset)?
+       (?<trigger>[word=/(?i)^transpose/]) @specifier:Specifier @direction:Direction @step:Step ([]? @onset:Onset)?

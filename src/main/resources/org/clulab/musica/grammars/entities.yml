@@ -59,6 +59,8 @@ rules:
       type: token  # surface rule
       pattern: |
         (?<quantifier>[tag=/^(DT|PDT)/]) (@cardinality:Cardinality)?
+        |
+        (?<quantifier>[word=/(?i)^everything/])
 
     - name: beat-1
       label: Beat

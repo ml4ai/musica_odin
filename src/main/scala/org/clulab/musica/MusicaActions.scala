@@ -25,6 +25,25 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
     mns.toVector.distinct
   }
 
+  def addArgument(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+    for {
+      m <- mentions
+      argsToAdd = m.arguments - "original" // remove the original
+      origMention = m.arguments("original").head // assumes one only
+      combinedArgs = origMention.arguments ++ argsToAdd
+    } yield copyWithArgs(origMention, combinedArgs)
+  }
+
+  def copyWithArgs(orig: Mention, newArgs: Map[String, Seq[Mention]]): Mention = {
+    orig match {
+      case tb: TextBoundMention => ???
+      case rm: RelationMention => rm.copy(arguments = newArgs)
+      case em: EventMention => em.copy(arguments = newArgs)
+      case _ => ???
+    }
+  }
+
+
 //  // every action muct have a specific format:
 //  // mentions are the mentions extracted by THIS rule THIS time through the odin cascade
 //  def processPitch(mentions: Seq[Mention], state: State): Seq[Mention] = {

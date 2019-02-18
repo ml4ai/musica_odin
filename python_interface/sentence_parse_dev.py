@@ -65,7 +65,7 @@ def batch_odin_parse(corpus,
     :param return_sentence: when True: include sentence in return value
     :param return_mentions: when True: include Odin mentions in return value
     :param pprint_without_return: when True: just pprint results and don't have fn return at end
-                                  Use this when using only for sentence testing/dev
+                                  Use this for sentence testing/dev
     :param verbose: when True: print current sentence being processed
     :param verbose_odin: when True: run odin_sentence_to_pyeci_spec with verbose True
     :return:

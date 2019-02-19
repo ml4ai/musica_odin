@@ -13,7 +13,7 @@ import requests
 #   odin_sentence_to_pyeci_spec
 #
 # Current top-level entry point:
-# (1) perform_single_dependency_parse()
+# (1) odin_sentence_to_pyeci_spec()
 
 
 # ------------------------------------------------------------------------
@@ -444,7 +444,7 @@ def odin_sentence_to_pyeci_spec(sentence: str,
                                 return_mentions=False,
                                 verbose=False):
     """
-    Given a sentence, request Odin process the sentence, extract the musica_odin mentions.
+    Given a sentence, request Odin to process the sentence, extract the musica_odin mentions.
     :param sentence: str representing sentence to be parsed
     :param return_sentence: whether fn returns the original sentence
                             This is a helper for auto-generating target unit test targets

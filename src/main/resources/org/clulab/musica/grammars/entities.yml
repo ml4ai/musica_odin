@@ -1,6 +1,8 @@
 vars:
       notes: "A|A#|Ab|B|B#|Bb|C|C#|Cb|D|D#|Db|E|E#|Eb|F|F#|Fb|G|G#|Gb"
       proportions: "sixteenth|eight|quarter|half|whole"
+      chords: "major|minor|augmented|diminished|indeterminate|predominant|suspended|just|bitonal|atonal"
+      loc-preps: "after|before|between|above|below|followed by"
 
 rules:
 
@@ -8,12 +10,29 @@ rules:
               # Atomic things
 ## --------------------------------------------
 
+    # jc edited -- added lower & higher
     - name: direction
       label: Direction
       priority: 1
       type: token  # surface rule
       pattern: |
-        [word=/(up|down)/]
+        [word=/(up|down|lower|higher)/]
+
+    # jc added
+    - name: grounded-location
+      label: Location-abs
+      example: "Add a quarter rest at the start"
+      priority: 2
+      type: token
+      pattern: |
+        (the)? (?<trigger>[word=/^(start|end|begin)/]) (with)?
+
+    # jc added
+#    - name: negator
+#      label: Negator
+#      priority: 1
+#      pattern: |
+#        trigger = </neg/
 
     - name: cardinality
       label: Cardinality
@@ -29,6 +48,7 @@ rules:
       pattern: |
         [word=/(?i)^(${proportions})/]
 
+    # todo: determine if 'tone' is used as step in "raise x by a whole tone"
     - name: step-trigger  # handle cases like "3 half steps"
       label: Step
       priority: 2
@@ -43,6 +63,25 @@ rules:
       pattern: |
         (?<= /(?i)^(up|down)$/) (@cardinality:Cardinality)
 
+    # jc added
+    # todo: fix -- works for ABCD and A-B-C-D but not A,B,C,D, A B C D, or A, B, C, D
+    - name: pitch-for-seqs
+      label: Pitch-sequence
+      priority: 1
+      type: token
+      pattern:
+        (?<trigger> [word=/(${notes}(,|-|\s)?)+\.?/]) # should not need to be token-initial or final
+      # (?<trigger> [word=/(${notes},?-?\s?)+\.?/])
+
+    # jc added
+    # works for A B C D, but not A,B,C,D
+    - name: pitch-for-seqs-2
+      label: Pitch-sequence
+      priority: 2
+      type: token
+      pattern: |
+        ([word=/^${notes}$/])+
+
     # todo: fix
     - name: pitch-1
       label: Pitch
@@ -50,8 +89,8 @@ rules:
       type: token  # surface rule
       pattern: |   # replace with ${notes} var?
         [word=/^(${notes})[0-9]*s?\.?$/]
-        # Note: the \. is to handle cases that don't tokenize correctly,
-        # like "Delete the second G." Here, the period is included in the G token.
+      # Note: the \. is to handle cases that don't tokenize correctly,
+      # like "Delete the second G." Here, the period is included in the G token.
 
     - name: specifier-1
       label: Specifier
@@ -69,13 +108,54 @@ rules:
       pattern: |
         (?<trigger>[word=/^beat/]) @cardinality:Cardinality
 
+    # jc added
+    - name: beat-2
+      label: Beat
+      priority: 3
+      type: token # surface rule
+      pattern: |
+        @specifier:Specifier (?<trigger>[word=/^beat/])
+
+    # jc edited
     - name: measure-1
       label: Measure
       priority: 2
       type: token  # surface rule
       pattern: |
-        (?<trigger>[word=/^measure/]) @cardinality:Cardinality
+        (?<trigger>[word=/^(measure|bar)/]) @cardinality:Cardinality
+      #  (?<trigger>[word=/^measure/]) @cardinality:Cardinality
 
+    # jc added
+    - name: measure-2
+      label: Measure
+      priority: 3
+      type: token # surface rule
+      pattern: |
+        @specifier:Specifier (?<trigger>[word=/^(measure|bar)/])
+
+    # jc added
+    - name: octave
+      label: Octave
+      priority: 2
+      type: token # surface rule
+      pattern: |
+        (@cardinality:Cardinality)? (?<trigger>[word=/^octave/])
+
+    # jc added -- does not pick up words from chords var
+    - name: chord
+      label: Chord
+      priority: 3
+      type: token
+      pattern: |
+        (@specifier:Specifier)? ([word=/(?i)${chords}/])? (?<trigger>[word=/^chord/])
+
+    # jc added
+    # todo: fix
+#    - name: chord-underspecified
+#      label: Chord
+#      priority: 3
+#      pattern: |
+#        (@specifier:Specifier)? (?<trigger>[word=/(?i)${chords}/]) @cardinality:Cardinality
 
 ## --------------------------------------------
               # Simple Events
@@ -118,6 +198,15 @@ rules:
         (@specifier:Specifier)? the? @pitch:Pitch? @duration:Proportion? (?<trigger> [word=/(?i)^note/])
 
 
+    # jc added
+    - name: rest-1
+      label: Rest
+      example: "Add an eighth rest"
+      priority: 3
+      type: token
+      pattern: |
+        (@specifier:Specifier)? @duration:Proportion? (?<trigger> [word=/(?i)^rest/])
+
     - name: onset-1
       label: Onset
       priority: 3
@@ -136,7 +225,23 @@ rules:
         @measure:Measure []? @beat:Beat |
         @beat:Beat []? @measure:Measure
 
+    # jc added
+    - name: sequence
+      label: Sequence
+      priority: 3
+      type: token
+      pattern: |
+        (@specifier:Specifier)? (?<trigger> [word=/(?i)^(sequence|run)/])
 
+
+    # jc added -- do we need this?
+    - name: relative-location
+      label: Location-rel
+      priority: 4
+      type: token # surface rule
+      pattern: |
+        (?<trigger>[word=/${loc-preps}/]) (@note:Note|@rest:Rest) ((in|of) @measure:Measure)?
+      # [word=/(after|before|between|above|below|followed by)/]
 
 #    - name: insert-1
 #      label: Insert

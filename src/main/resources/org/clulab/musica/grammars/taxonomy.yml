@@ -2,20 +2,28 @@
   - MusicalEntity:
     - Note
     - Rest
+    - Chord
   - Specifier
   - Amount:
     - Proportion   # 'half' in 'half step'
     - Cardinality
   - Direction      # 'up' or 'down'
+  - Location-rel
+  - Location-abs
+  - Negator
   - Unit:
     - Step
+    - Octave
   - Pitch
+  - Seq-pitch
 #  - Rest
   - Metrical:
     - Measure
     - Duration
     - Onset
     - Beat
+    - Sequence
+    - Pitch-seq
 - Event:
   - Action:
     - Insert

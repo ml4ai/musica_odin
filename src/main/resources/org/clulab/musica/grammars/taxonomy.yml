@@ -8,14 +8,15 @@
     - Proportion   # 'half' in 'half step'
     - Cardinality
   - Direction      # 'up' or 'down'
-  - Location-rel
-  - Location-abs
+  - Location:
+    - Location-rel
+    - Location-abs
   - Negator
   - Unit:
     - Step
     - Octave
-  - Pitch
-  - Seq-pitch
+  - Pitch:
+    - Pitch-sequence
 #  - Rest
   - Metrical:
     - Measure
@@ -23,7 +24,6 @@
     - Onset
     - Beat
     - Sequence
-    - Pitch-seq
 - Event:
   - Action:
     - Insert

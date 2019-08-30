@@ -1,8 +1,5 @@
-vars:
-      notes: "A|A#|Ab|B|B#|Bb|C|C#|Cb|D|D#|Db|E|E#|Eb|F|F#|Fb|G|G#|Gb"
-      proportions: "sixteenth|eight|quarter|half|whole"
-      chords: "major|minor|augmented|diminished|indeterminate|predominant|suspended|just|bitonal|atonal"
-      loc-preps: "after|before|between|above|below|followed by"
+vars: org/clulab/musica/grammars/triggers.yml
+
 
 rules:
 
@@ -19,20 +16,13 @@ rules:
         [word=/(up|down|lower|higher)/]
 
     # jc added
-    - name: grounded-location
-      label: Location-abs
-      example: "Add a quarter rest at the start"
-      priority: 2
-      type: token
+    # todo: fix
+    - name: negator
+      label: Negator
+      priority: 1
+      type: token  # surface rule
       pattern: |
-        (the)? (?<trigger>[word=/^(start|end|begin)/]) (with)?
-
-    # jc added
-#    - name: negator
-#      label: Negator
-#      priority: 1
-#      pattern: |
-#        trigger = </neg/
+        [word=/(?i)${negators}/] longer?
 
     - name: cardinality
       label: Cardinality
@@ -40,6 +30,15 @@ rules:
       type: token  # surface rule
       pattern: |
         [tag=/CD/ | entity=/ORDINAL/]
+
+    # jc added
+    # for instances where 'second' etc are tagged as part of a date
+    - name: cardinality-2
+      label: Cardinality
+      priority: 1
+      type: token
+      pattern: |
+        [word=/(?i)${ordinals}/]
 
     - name: proportion
       label: Proportion
@@ -66,21 +65,21 @@ rules:
     # jc added
     # todo: fix -- works for ABCD and A-B-C-D but not A,B,C,D, A B C D, or A, B, C, D
     - name: pitch-for-seqs
-      label: Pitch-sequence
+      label: PitchSequence
       priority: 1
       type: token
       pattern:
-        (?<trigger> [word=/(${notes}(,|-|\s)?)+\.?/]) # should not need to be token-initial or final
+        (?<trigger> [word=/((${notes})(,|-|\s)?){2,8}\.?/]) # should not need to be token-initial or final
       # (?<trigger> [word=/(${notes},?-?\s?)+\.?/])
 
     # jc added
     # works for A B C D, but not A,B,C,D
     - name: pitch-for-seqs-2
-      label: Pitch-sequence
+      label: PitchSequence
       priority: 2
       type: token
       pattern: |
-        ([word=/^${notes}$/])+
+        ([word=/^${notes}$/]){2,8}
 
     # todo: fix
     - name: pitch-1
@@ -97,7 +96,7 @@ rules:
       priority: 2
       type: token  # surface rule
       pattern: |
-        (?<quantifier>[tag=/^(DT|PDT)/]) (@cardinality:Cardinality)?
+        (?<quantifier>[tag=/^(DT|PDT)/]+) (@cardinality:Cardinality)?
         |
         (?<quantifier>[word=/(?i)^everything/])
 
@@ -144,6 +143,7 @@ rules:
     # jc added -- does not pick up words from chords var
     - name: chord
       label: Chord
+      example: "A minor chord"
       priority: 3
       type: token
       pattern: |
@@ -153,9 +153,34 @@ rules:
     # todo: fix
 #    - name: chord-underspecified
 #      label: Chord
+#      example: "the minor fifth"
 #      priority: 3
 #      pattern: |
 #        (@specifier:Specifier)? (?<trigger>[word=/(?i)${chords}/]) @cardinality:Cardinality
+
+
+## --------------------------------------------
+              # Composed Items
+## --------------------------------------------
+
+  # jc added
+    - name: absolute-location-1
+      label: Locationabs
+      example: "Add a quarter rest at the start"
+      priority: 2
+      type: token
+      pattern: |
+        (the)? (?<trigger>[word=/^(start|end|begin)/]) (with)?
+
+  # jc added
+    - name: absolute-location-2
+      label: Locationabs
+      example: "Add a quarter rest to the start of the second measure"
+      priority: 3
+      type: token
+      pattern: |
+        @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) of @measure:Measure
+
 
 ## --------------------------------------------
               # Simple Events
@@ -195,7 +220,7 @@ rules:
       priority: 3
       type: token
       pattern: |
-        (@specifier:Specifier)? the? @pitch:Pitch? @duration:Proportion? (?<trigger> [word=/(?i)^note/])
+        (@specifier:Specifier)? @pitch:Pitch? @duration:Proportion? (?<trigger> [word=/(?i)^note/])
 
 
     # jc added
@@ -209,7 +234,7 @@ rules:
 
     - name: onset-1
       label: Onset
-      priority: 3
+      priority: 4
       type: token
       pattern: |  # what does []? indicate?
           ((@measure:Measure []?)? @beat:Beat |
@@ -219,15 +244,16 @@ rules:
 
     - name: onset-2
       label: Onset
-      priority: 3
+      priority: 4
       type: token
       pattern: |
         @measure:Measure []? @beat:Beat |
         @beat:Beat []? @measure:Measure
 
+
     # jc added
     - name: sequence
-      label: Sequence
+      label: PitchSequence
       priority: 3
       type: token
       pattern: |
@@ -236,11 +262,12 @@ rules:
 
     # jc added -- do we need this?
     - name: relative-location
-      label: Location-rel
-      priority: 4
+      label: Locationrel
+      priority: 5
       type: token # surface rule
       pattern: |
-        (?<trigger>[word=/${loc-preps}/]) (@note:Note|@rest:Rest) ((in|of) @measure:Measure)?
+        (?<trigger>[word=/${loc-preps}/]) (@onset:Onset|it)
+      #  (?<trigger>[word=/${loc-preps}/]) (((@note:Note|@rest:Rest) ((in|of) @measure:Measure)?)|it)
       # [word=/(after|before|between|above|below|followed by)/]
 
 #    - name: insert-1

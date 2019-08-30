@@ -68,39 +68,11 @@ class MusicaEngine (val config: Config = ConfigFactory.load("musica")) extends C
     val events =  engine.extractFrom(doc, new State()).toVector
     //println(s"In extractFrom() -- res : ${res.map(m => m.text).mkString(",\t")}")
 
-    println("***************************************")
-    println("***************************************\n")
-
-    events.foreach(DisplayUtils.displayMention)
-
-    // todo: some appropriate version of "keepMostComplete"
-    val out = loadableAttributes.actions.keepLongest(events).toVector
-
-    println("***************************************")
-    println("***************************************\n")
-
-    out.foreach(DisplayUtils.displayMention)
-
-    println("\n***************************************")
-    println("***************************************")
-
-    println("\nnotes in transpose:")
-    val ts = out.filter(m => m.matches("Transpose"))
-    assert(ts.length == 1)
-    val t = ts.head
-    val tns = t.arguments("note")
-    tns.foreach(println)
-    println("\nNotes in out:")
-    val ns = out.filter(m => m.matches("Note"))
-    assert(ns.length == 1)
-    val n = ns.head
-    println(n)
-    println(n == tns.head)
-
-    out
+    loadableAttributes.actions.keepLongest(events).toVector
   }
 
   // ---------- Helper Methods -----------
+
 
   // Annotate the text using a Processor and then populate lexicon labels
   def annotate(text: String, keepText: Boolean = false): Document = {

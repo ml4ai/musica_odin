@@ -5,7 +5,7 @@ import com.typesafe.config.ConfigFactory
 import org.clulab.odin.{ExtractorEngine, Mention, State}
 import org.clulab.processors.{Document, Processor}
 import org.clulab.processors.fastnlp.FastNLPProcessor
-import org.clulab.utils.{Configured, FileUtils}
+import org.clulab.utils.{Configured, DisplayUtils, FileUtils}
 import org.slf4j.LoggerFactory
 
 class MusicaEngine (val config: Config = ConfigFactory.load("musica")) extends Configured {
@@ -40,7 +40,7 @@ class MusicaEngine (val config: Config = ConfigFactory.load("musica")) extends C
 
       new LoadableAttributes(
         actions,
-        ExtractorEngine(masterRules, actions), // ODIN component
+        ExtractorEngine(masterRules, actions, actions.keepLongest) // ODIN component
       )
     }
   }
@@ -68,8 +68,36 @@ class MusicaEngine (val config: Config = ConfigFactory.load("musica")) extends C
     val events =  engine.extractFrom(doc, new State()).toVector
     //println(s"In extractFrom() -- res : ${res.map(m => m.text).mkString(",\t")}")
 
+    println("***************************************")
+    println("***************************************\n")
+
+    events.foreach(DisplayUtils.displayMention)
+
     // todo: some appropriate version of "keepMostComplete"
-    loadableAttributes.actions.keepLongest(events).toVector
+    val out = loadableAttributes.actions.keepLongest(events).toVector
+
+    println("***************************************")
+    println("***************************************\n")
+
+    out.foreach(DisplayUtils.displayMention)
+
+    println("\n***************************************")
+    println("***************************************")
+
+    println("\nnotes in transpose:")
+    val ts = out.filter(m => m.matches("Transpose"))
+    assert(ts.length == 1)
+    val t = ts.head
+    val tns = t.arguments("note")
+    tns.foreach(println)
+    println("\nNotes in out:")
+    val ns = out.filter(m => m.matches("Note"))
+    assert(ns.length == 1)
+    val n = ns.head
+    println(n)
+    println(n == tns.head)
+
+    out
   }
 
   // ---------- Helper Methods -----------

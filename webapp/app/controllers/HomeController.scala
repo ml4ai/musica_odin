@@ -43,9 +43,9 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
 
 
   def getMentions(text: String) = Action {
-    val (doc, eidosMentions) = processPlaySentence(ieSystem, text)
+    val (doc, mentions) = processPlaySentence(ieSystem, text)
     println(s"Sentence returned from processPlaySentence : ${doc.sentences.head.getSentenceText()}")
-    val json = JsonUtils.mkJsonFromMentions(eidosMentions)
+    val json = JsonUtils.mkJsonFromMentions(mentions)
     Ok(json)
   }
 
@@ -63,13 +63,6 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     println(s"Done extracting the mentions ... ")
     println(s"They are : ${mentions.map(m => m.text).mkString(",\t")}")
 
-//    println(s"Grounding the gradable adjectives ... ")
-//    val groundedEntities = groundEntities(ieSystem, mentions)
-
-    println(s"Getting entity linking events ... ")
-
-    println("DONE .... ")
-//    println(s"Grounded Adjectives : ${groundedAdjectives.size}")
     // return the sentence and all the mentions extracted ... TODO: fix it to process all the sentences in the doc
     (doc, mentions.sortBy(_.start))
   }
@@ -131,21 +124,19 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
         "relations" -> mkJsonFromDependencies(doc)
       )
     val eidosJsonObj = mkJsonForEidos(text, sent, mentions, showEverything)
-    val groundedAdjObj = mkGroundedObj(mentions)
+    val mentionsDisplayString = mkMentionsDisplayString(mentions)
     val parseObj = mkParseObj(doc)
 
     // These print the html and it's a mess to look at...
-    // println(s"Grounded Gradable Adj: ")
-    // println(s"$groundedAdjObj")
     Json.obj(
       "syntax" -> syntaxJsonObj,
       "eidosMentions" -> eidosJsonObj,
-      "groundedAdj" -> groundedAdjObj,
+      "mentionsDisplayString" -> mentionsDisplayString,
       "parse" -> parseObj
     )
   }
 
-  def mkGroundedObj(mentions: Vector[Mention]): String = {
+  def mkMentionsDisplayString(mentions: Vector[Mention]): String = {
     var objectToReturn = ""
 
     // Entities
@@ -199,10 +190,22 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
       e.trigger +: argTriggers.toSeq
     }
     // collect event arguments as text bound mentions
-    val entities = for {
+//    val entities = for {
+//      e <- events ++ relations
+//      a <- e.arguments.values.flatten
+//    } yield a match {
+//      case m: TextBoundMention => m
+//      case m: RelationMention => new TextBoundMention(m.labels, m.tokenInterval, m.sentence, m.document, m.keep, m.foundBy)
+//      case m: EventMention => m.trigger
+//    }
+    val candidateEntities = for {
       e <- events ++ relations
       a <- e.arguments.values.flatten
-    } yield a match {
+    } yield a
+    val entitiesFiltered = candidateEntities.filter(e => !events.contains(e))
+    val entities = for {
+      e <- entitiesFiltered
+    } yield e match {
       case m: TextBoundMention => m
       case m: RelationMention => new TextBoundMention(m.labels, m.tokenInterval, m.sentence, m.document, m.keep, m.foundBy)
       case m: EventMention => m.trigger

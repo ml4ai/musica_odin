@@ -48,6 +48,16 @@ rules:
       rulepriority: "6"
       label: Transpose
 
+  - import: org/clulab/musica/grammars/delete.yml
+    vars:
+      rulepriority: "6"
+      label: Delete
+
+#  - import: org/clulab/musica/grammars/convert.yml
+#    vars:
+#      rulepriority: "6"
+#      label: Convert
+
   # ---------------------------------------------------
 
   - import: org/clulab/musica/grammars/extra_arguments.yml

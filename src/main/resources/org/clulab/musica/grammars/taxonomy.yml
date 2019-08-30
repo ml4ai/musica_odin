@@ -9,14 +9,14 @@
     - Cardinality
   - Direction      # 'up' or 'down'
   - Location:
-    - Location-rel
-    - Location-abs
+    - Locationrel
+    - Locationabs
   - Negator
   - Unit:
     - Step
     - Octave
   - Pitch:
-    - Pitch-sequence
+    - Pitchsequence
 #  - Rest
   - Metrical:
     - Measure

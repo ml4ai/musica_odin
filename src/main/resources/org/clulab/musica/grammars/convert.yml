@@ -1,0 +1,14 @@
+
+vars: org/clulab/musica/grammars/triggers.yml
+
+
+rules:
+
+  # todo: figure out how to differentiate this from the similar TRANSPOSE rule
+  - name: convert-rule-1
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Change the whole note into a half note"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^${convert_triggers}/]) @proportion:Proportion @note:Note (into|to) @proportion:Proportion (@note:Note|@rest:Rest)

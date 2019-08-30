@@ -1,29 +1,20 @@
 - Entity:
-  - MusicalEntity:
+  - EntityMusic:
     - Note
     - Rest
     - Chord
-  - Specifier
-  - Amount:
-    - Proportion   # 'half' in 'half step'
-    - Cardinality
-  - Direction      # 'up' or 'down'
-  - Location:
-    - Locationrel
-    - Locationabs
-  - Negator
-  - Unit:
+    - Pitch:
+      - PitchSequence
+- Unit:
+  - UnitMusic:
     - Step
     - Octave
-  - Pitch:
-    - Pitchsequence
-#  - Rest
-  - Metrical:
+- Coordinate:
+  - CoordinateMusic:
     - Measure
     - Duration
     - Onset
-    - Beat
-    - Sequence
+- Beat
 - Event:
   - Action:
     - Insert
@@ -39,7 +30,16 @@
   #  - What
   #  - Describe
   #  - Put
-- Quantifier:
-  - An
-  - The
-  - All
+- Specifier: # TODO: revisit these subtypes, informed by ECI-gathering
+  - SpecifierDef
+  - SpecifierIndef
+  - SpecifierQuant:
+    - All
+- Amount:
+  - Proportion   # 'half' in 'half step'
+  - Cardinality
+- Direction      # 'up' or 'down'
+- Location:
+  - Locationrel
+  - Locationabs
+- Negator

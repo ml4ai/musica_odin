@@ -64,17 +64,17 @@ rules:
     # jc added
     # todo: fix -- works for ABCD and A-B-C-D but not A,B,C,D, A B C D, or A, B, C, D
     - name: pitch-for-seqs
-      label: Pitchsequence
+      label: PitchSequence
       priority: 1
       type: token
       pattern:
-        (?<trigger> [word=/(${notes}(,|-|\s)?){2,8}\.?/]) # should not need to be token-initial or final
+        (?<trigger> [word=/((${notes})(,|-|\s)?){2,8}\.?/]) # should not need to be token-initial or final
       # (?<trigger> [word=/(${notes},?-?\s?)+\.?/])
 
     # jc added
     # works for A B C D, but not A,B,C,D
     - name: pitch-for-seqs-2
-      label: Pitchsequence
+      label: PitchSequence
       priority: 2
       type: token
       pattern: |
@@ -252,7 +252,7 @@ rules:
 
     # jc added
     - name: sequence
-      label: Sequence
+      label: PitchSequence
       priority: 3
       type: token
       pattern: |

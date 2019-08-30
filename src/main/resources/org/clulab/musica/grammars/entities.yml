@@ -17,11 +17,12 @@ rules:
 
     # jc added
     # todo: fix
-#    - name: negator
-#      label: Negator
-#      priority: 1
-#      pattern: |
-#        [word=/(?i)${negators}/]
+    - name: negator
+      label: Negator
+      priority: 1
+      type: token  # surface rule
+      pattern: |
+        [word=/(?i)${negators}/] longer?
 
     - name: cardinality
       label: Cardinality

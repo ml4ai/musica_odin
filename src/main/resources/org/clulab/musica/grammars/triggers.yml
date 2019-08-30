@@ -22,7 +22,7 @@ notes: "A|A#|Ab|B|B#|Bb|C|C#|Cb|D|D#|Db|E|E#|Eb|F|F#|Fb|G|G#|Gb"
 proportions: "sixteenth|eight|quarter|half|whole"
 chords: "major|minor|augmented|diminished|indeterminate|predominant|suspended|just|bitonal|atonal"
 loc-preps: "after|before|between|above|below|followed by"
-negators: "not|no longer|no"
+negators: "not|no"
 ordinals: "first|second|third|fourth"
 
 ### TODO

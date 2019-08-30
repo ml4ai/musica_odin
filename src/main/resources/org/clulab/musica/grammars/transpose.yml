@@ -1,4 +1,7 @@
 
+vars: org/clulab/musica/grammars/triggers.yml
+
+
 rules:
 
    - name: Transpose-rule-1
@@ -6,7 +9,7 @@ rules:
      priority: ${rulepriority}
      type: token
      pattern: |
-       (?<trigger>[word=/(?i)^transpose/]) @note:Note ([]? @onset:Onset)? @direction:Direction @step:Step
+       (?<trigger>[word=/(?i)^${transpose_triggers}/]) @note:Note ([]? @onset:Onset)? @direction:Direction @step:Step
 
    - name: Transpose-rule-2
      label: ${label}
@@ -14,7 +17,16 @@ rules:
      example: "Transpose all the notes up 5 half steps in measure 1."
      type: token
      pattern: |
-       (?<trigger>[word=/(?i)^transpose/]) @note:Note @direction:Direction @step:Step ([]? @onset:Onset)?
+       (?<trigger>[word=/(?i)^${transpose_triggers}/]) @note:Note @direction:Direction @step:Step ([]? @onset:Onset)?
+
+   # todo: add specificity to avoid things like 'change the whole note to a half note'
+   - name: Transpose-rule-3
+     label: ${label}
+     priority: ${rulepriority}
+     example: "Move the G quarter note to the F above it"
+     type: token
+     pattern: |
+       (?<trigger>[word=/(?i)^${transpose_triggers}/]) @note:Note to (@note:Note|@pitch:Pitch) @locationrel:Locationrel?
 
    - name: Transpose-rule-everything
      label: ${label}
@@ -22,4 +34,4 @@ rules:
      example: "Transpose all the notes up 5 half steps in measure 1."
      type: token
      pattern: |
-       (?<trigger>[word=/(?i)^transpose/]) @specifier:Specifier @direction:Direction @step:Step ([]? @onset:Onset)?
+       (?<trigger>[word=/(?i)^${transpose_triggers}/]) @specifier:Specifier @direction:Direction @step:Step ([]? @onset:Onset)?

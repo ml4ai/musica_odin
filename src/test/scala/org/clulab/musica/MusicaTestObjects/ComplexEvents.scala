@@ -5,7 +5,7 @@ import org.clulab.musica.MusicaTestObjects.SimpleEvents._
 
 object ComplexEvents {
 
-  case class Transpose(note: Option[Note], direction: Option[Direction], onset: Option[Onset], step: Option[Step]) extends MusicaObj
+  case class Transpose(note: Option[Note] = None, direction: Option[Direction] = None, onset: Option[Onset] = None, step: Option[Step] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }

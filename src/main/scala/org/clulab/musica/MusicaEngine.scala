@@ -40,7 +40,7 @@ class MusicaEngine (val config: Config = ConfigFactory.load("musica")) extends C
 
       new LoadableAttributes(
         actions,
-        ExtractorEngine(masterRules, actions), // ODIN component
+        ExtractorEngine(masterRules, actions, actions.keepLongest), // ODIN component
       )
     }
   }
@@ -73,6 +73,7 @@ class MusicaEngine (val config: Config = ConfigFactory.load("musica")) extends C
   }
 
   // ---------- Helper Methods -----------
+
 
   // Annotate the text using a Processor and then populate lexicon labels
   def annotate(text: String, keepText: Boolean = false): Document = {

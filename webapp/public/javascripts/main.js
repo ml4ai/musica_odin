@@ -221,7 +221,7 @@ head.ready(function() {
         $.extend({}, docData),
         webFontURLs
     );
-    var eidosMentionsLiveDispatcher = Util.embed('eidosMentions',
+    var mentionsLiveDispatcher = Util.embed('mentions',
         $.extend({'collection': null}, collData),
         $.extend({}, docData),
         webFontURLs
@@ -262,7 +262,7 @@ head.ready(function() {
         .done(function (data) {
             console.log(data);
             syntaxLiveDispatcher.post('requestRenderData', [$.extend({}, data.syntax)]);
-            eidosMentionsLiveDispatcher.post('requestRenderData', [$.extend({}, data.eidosMentions)]);
+            mentionsLiveDispatcher.post('requestRenderData', [$.extend({}, data.mentions)]);
             document.getElementById("mentionsDisplayString").innerHTML = data.mentionsDisplayString;
             document.getElementById("parse").innerHTML = data.parse;
             // hide spinner

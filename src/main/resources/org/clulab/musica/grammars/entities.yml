@@ -28,7 +28,7 @@ rules:
       priority: 1
       type: token  # surface rule
       pattern: |
-        [tag=/CD/ | entity=/ORDINAL/]
+        [(tag=/CD/ | entity=/ORDINAL/) & word=/^(?!eighth)/]
 
     # jc added
     # for instances where 'second' etc are tagged as part of a date
@@ -166,16 +166,16 @@ rules:
     - name: absolute-location-1
       label: Locationabs
       example: "Add a quarter rest at the start"
-      priority: 2
+      priority: 3
       type: token
       pattern: |
-        (the)? (?<trigger>[word=/^(start|end|begin)/]) (with)?
+        @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) (with)?
 
   # jc added
     - name: absolute-location-2
       label: Locationabs
       example: "Add a quarter rest to the start of the second measure"
-      priority: 3
+      priority: 4
       type: token
       pattern: |
         @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) of @measure:Measure
@@ -265,7 +265,7 @@ rules:
       priority: 5
       type: token # surface rule
       pattern: |
-        (?<trigger>[word=/${loc-preps}/]) (@onset:Onset|it)
+        (?<trigger>[word=/${loc-preps}/]) by? (@onset:Onset|@note:Note|it)
       #  (?<trigger>[word=/${loc-preps}/]) (((@note:Note|@rest:Rest) ((in|of) @measure:Measure)?)|it)
       # [word=/(after|before|between|above|below|followed by)/]
 

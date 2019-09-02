@@ -59,6 +59,15 @@ rules:
         measure: Measure? = >/nmod_*/
         locationabs: Locationabs? = >/nmod_*/
 
+#    - name: ${addlabel}-active_voice-syntax-3
+#      label: ${label}
+#      example: "drop a quarter note from the start of the second measure"
+#      priority: ${rulepriority}
+#      pattern: |
+#        trigger = [word=/(?i)^${trigger}/]
+#        note: Note = >dobj
+
+
     # jc added
     # todo: would using 'MusicalEntity' instead of note, pitch,rest be problematic in the framework?
     - name: ${addlabel}-passive_voice-syntax-1

@@ -86,15 +86,79 @@ class TestChangeDuration extends ExtractionTest {
 //  Cannot yet handle 2 notes OR 'cardinals' in note
   val t5 = "The first quarter note should be shortened to an eighth note"
 
-  failingTest should s"extract correctly from $t5" in {
+  passingTest should s"extract correctly from $t5" in {
     val mentions = extractMentions(t5)
     val changeDurationEvents = mentions.filter(_ matches "ChangeDuration")
 
     changeDurationEvents should have length(1)
     val found = changeDurationEvents.head
 
-    val note = Note(Some(Duration("quarter")), None, Some(Specifier("The")))
-    val onset = Onset(Some(Measure("2")), Some(Beat("1")))
+    val note = Note(Some(Duration("quarter")), None, Some(Specifier("The first")))
+    val onset = Onset(None, None)
+    val note2 = Note(Some(Duration("eighth")), None, Some(Specifier("an")))
+    val desired = ChangeDuration(
+      note = Some(note),
+      onset = Some(onset),
+      note2 = Some(note2)
+    )
+
+    testChangeDurationEvent(found, desired)
+  }
+
+  //  Cannot yet handle 2 notes OR 'cardinals' in note
+  val t6 = "Shorten the quarter note in measure 1 to an eighth note"
+
+  passingTest should s"extract correctly from $t6" in {
+    val mentions = extractMentions(t6)
+    val changeDurationEvents = mentions.filter(_ matches "ChangeDuration")
+
+    changeDurationEvents should have length(1)
+    val found = changeDurationEvents.head
+
+    val note = Note(Some(Duration("quarter")), None, Some(Specifier("the")))
+    val onset = Onset(Some(Measure("1")), None)
+    val note2 = Note(Some(Duration("eighth")), None, Some(Specifier("an")))
+    val desired = ChangeDuration(
+      note = Some(note),
+      onset = Some(onset),
+      note2 = Some(note2)
+    )
+
+    testChangeDurationEvent(found, desired)
+  }
+
+  val t7 = "Shorten all the half notes"
+
+  passingTest should s"extract correctly from $t7" in {
+    val mentions = extractMentions(t7)
+    val changeDurationEvents = mentions.filter(_ matches "ChangeDuration")
+
+    changeDurationEvents should have length(1)
+    val found = changeDurationEvents.head
+
+    val note = Note(Some(Duration("half")), None, Some(Specifier("all the")))
+    val onset = Onset(None, None)
+    val desired = ChangeDuration(
+      note = Some(note),
+      onset = Some(onset)
+    )
+
+    testChangeDurationEvent(found, desired)
+  }
+
+  // needs to include specifier everything
+  val t8 = "Everything should be shortened from half notes to quarter notes"
+
+  failingTest should s"extract correctly from $t8" in {
+    val mentions = extractMentions(t8)
+    val changeDurationEvents = mentions.filter(_ matches "ChangeDuration")
+
+    changeDurationEvents should have length(1)
+    val found = changeDurationEvents.head
+
+    // val spec = Specifier("everything")
+    val note = Note(Some(Duration("half")), None, Some(Specifier("all the")))
+    val onset = Onset(None, None)
     val desired = ChangeDuration(
       note = Some(note),
       onset = Some(onset)

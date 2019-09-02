@@ -17,13 +17,15 @@
 - Beat
 - Event:
   - Action:
-    - Insert
-    - Delete
-    - Transpose
-    - Reverse
-    - Invert
     - ChangeDuration
     - Convert
+    - Delete
+    - Insert
+    - Invert
+    - Repeat
+    - Replace
+    - Reverse
+    - Transpose
   #  - Move
   #  - Change
   #  - Generate

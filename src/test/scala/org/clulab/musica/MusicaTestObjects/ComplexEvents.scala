@@ -5,7 +5,7 @@ import org.clulab.musica.MusicaTestObjects.SimpleEvents._
 
 object ComplexEvents {
 
-  case class ChangeDuration(note: Option[Note] = None, onset: Option[Onset] = None) extends MusicaObj
+  case class ChangeDuration(note: Option[Note] = None, onset: Option[Onset] = None, note2: Option[Note] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }
@@ -15,7 +15,6 @@ object ComplexEvents {
   {
     def toMentionString: String = toString
   }
-
 
   case class Delete(note: Option[Note] = None, onset: Option[Onset] = None) extends MusicaObj
   {

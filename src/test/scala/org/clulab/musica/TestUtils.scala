@@ -65,13 +65,13 @@ object TestUtils {
       ms.foreach(m => m.label should be (label))
 
       // allow for 2 notes to be found
-//      if (label == "Note") {
-//        ms should have length 2
-//      }
-//      else {
+      if (label == "Note") {
+        ms should (have length 2 or have length 1)
+      }
+      else {
         // There shouldn't be any extra notes that we didn't want...
       ms should have length 1
-//      }
+      }
 
       // Make sure each of the desired Notes is in the list of notes
       val mentionsAsStrings = ms.map(mentionToString)
@@ -131,6 +131,12 @@ object TestUtils {
       if (desired.onset.nonEmpty) {
         val onsetArgs = m.arguments.getOrElse("onset", Seq())
         shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      }
+
+      // Test the optional second Note
+      if (desired.note2.nonEmpty) {
+        val noteArgs = m.arguments.getOrElse("note2", Seq())
+        shouldHaveDesired("Note", noteArgs, desired.note.get)
       }
     }
 
@@ -214,7 +220,7 @@ object TestUtils {
       }
     }
 
-    def testRepeatEvent(m: Mention, desired: Insert) = {
+    def testRepeatEvent(m: Mention, desired: Repeat) = {
       // Example: Repeat everything in the first measure
 
       // Test the Note

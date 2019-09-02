@@ -12,9 +12,7 @@ replace_triggers: "replac"
 
 repeat_triggers: "repeat|duplicat"
 
-shorten_triggers: "shorten"
-
-lengthen_triggers: "lengthen"
+change_duration_triggers: "shorten|lengthen|change|chang|convert"
 
 convert_triggers: "chang|change|convert"
 
@@ -23,7 +21,8 @@ proportions: "sixteenth|eight|quarter|half|whole"
 chords: "major|minor|augmented|diminished|indeterminate|predominant|suspended|just|bitonal|atonal"
 loc-preps: "after|before|between|above|below|followed by"
 negators: "not|no"
-ordinals: "first|second|third|fourth"
+ordinals: "first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|1st|2nd|3rd|4th|5th|6th|7th|8th|9th|10th"
+aux_be: "is|are|was|were|be"
 
 ### TODO
 

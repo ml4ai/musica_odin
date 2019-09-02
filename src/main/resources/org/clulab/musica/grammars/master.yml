@@ -18,23 +18,21 @@ rules:
   - import: org/clulab/musica/grammars/template.yml
     vars:
       rulepriority: "6"
-      addlabel: "Insert"
-      label: Insert
-      trigger: ${insert_triggers}
-
-  - import: org/clulab/musica/grammars/template.yml
-    vars:
-      rulepriority: "6"
       addlabel: "Delete"
       label: Delete
       trigger: ${delete_triggers}
 
+  - import: org/clulab/musica/grammars/delete.yml
+    vars:
+      rulepriority: "6"
+      label: Delete
+
   - import: org/clulab/musica/grammars/template.yml
     vars:
       rulepriority: "6"
-      addlabel: "Reverse"
-      label: Reverse
-      trigger: ${reverse_triggers}
+      addlabel: "Insert"
+      label: Insert
+      trigger: ${insert_triggers}
 
   - import: org/clulab/musica/grammars/template.yml
     vars:
@@ -43,20 +41,30 @@ rules:
       label: Invert
       trigger: ${invert_triggers}
 
+  - import: org/clulab/musica/grammars/template.yml
+    vars:
+      rulepriority: "6"
+      addlabel: "Reverse"
+      label: Reverse
+      trigger: ${reverse_triggers}
+
+
   - import: org/clulab/musica/grammars/transpose.yml
     vars:
       rulepriority: "6"
       label: Transpose
 
-  - import: org/clulab/musica/grammars/delete.yml
+
+
+  - import: org/clulab/musica/grammars/change_duration.yml
     vars:
       rulepriority: "6"
-      label: Delete
+      label: ChangeDuration
 
-#  - import: org/clulab/musica/grammars/convert.yml
-#    vars:
-#      rulepriority: "6"
-#      label: Convert
+  - import: org/clulab/musica/grammars/convert.yml
+    vars:
+      rulepriority: "6"
+      label: Convert
 
   # ---------------------------------------------------
 

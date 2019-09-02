@@ -8,7 +8,7 @@ rules:
   - name: convert-rule-1
     label: ${label}
     priority: ${rulepriority}
-    example: "Change the whole note into a half note"
+    example: "Convert the quarter note in measure 1 into a quarter rest"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^${convert_triggers}/]) @proportion:Proportion @note:Note (into|to) @proportion:Proportion (@note:Note|@rest:Rest)
+      (?<trigger>[word=/(?i)^${convert_triggers}/]) @note:Note ([]? @onset:Onset)? (into|to) (@note:Note|@rest:Rest)

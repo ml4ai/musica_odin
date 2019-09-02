@@ -27,6 +27,15 @@ object SimpleEvents {
     }
   }
 
+  case class Rest(specifier: Option[Specifier] = None, duration: Option[Duration] = None) extends MusicaObj {
+    def toMentionString: String = {
+      val args = new ArrayBuffer[String]
+      specifier.foreach(s => args.append(s.toMentionString))
+      duration.foreach(d => args.append(d.toMentionString))
+      s"Step(${args.sorted.mkString(", ")})"
+    }
+  }
+
   case class Step(cardinality: Option[String], proportion: Option[String]) extends MusicaObj {
     def toMentionString: String = {
       val args = new ArrayBuffer[String]

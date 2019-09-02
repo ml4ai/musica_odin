@@ -115,7 +115,7 @@ rules:
       priority: ${rulepriority}
       type: token
       pattern: |
-        (@note:Note|@rest:Rest|@pitch:Pitch) @onset:Onset (is|are) (?<trigger>[word=/(?i)^(${trigger})/])
+        (@note:Note|@rest:Rest|@pitch:Pitch) []? (@onset:Onset)? []? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${trigger})/])
 
 
     #-------------------------------------------------------------

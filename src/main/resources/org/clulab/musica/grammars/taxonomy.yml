@@ -22,6 +22,8 @@
     - Transpose
     - Reverse
     - Invert
+    - ChangeDuration
+    - Convert
   #  - Move
   #  - Change
   #  - Generate

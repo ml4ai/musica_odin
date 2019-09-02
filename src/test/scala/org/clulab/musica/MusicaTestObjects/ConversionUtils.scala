@@ -12,8 +12,10 @@ object ConversionUtils {
       case "Direction" => Direction(m.text).toMentionString // TBM
       case "Note" => noteMentionToNote(m).toMentionString
       case "Onset" => onsetMentionToOnset(m).toMentionString
-      case "Transpose" => transposeMentionToTranspose(m).toMentionString
+      case "Pitch" => pitchMentionToPitch(m).toMentionString
+      case "Rest" => restMentionToRest(m).toMentionString
       case "Step" => stepMentionToStep(m).toMentionString
+      case "Transpose" => transposeMentionToTranspose(m).toMentionString
       case _ => ???
     }
   }
@@ -41,6 +43,17 @@ object ConversionUtils {
     Onset(measure, beat)
   }
 
+  def pitchMentionToPitch(m: Mention): Pitch = {
+    val pitch = headText("pitch", m)
+    Pitch(pitch.get)
+  }
+
+  def restMentionToRest(rest: Mention): Rest = {
+    val specifier = headText("specifier", rest).map(Specifier)
+    val duration = headText("duration", rest).map(Duration)
+    Rest(specifier, duration)
+  }
+
   def stepMentionToStep(step: Mention): Step = {
     val cardinality = step.arguments.get("cardinality").map(_.head.text)
     val prop = step.arguments.get("proportion").map(_.head.text)
@@ -49,10 +62,12 @@ object ConversionUtils {
 
   def transposeMentionToTranspose(t: Mention): Transpose = {
     val note = t.arguments.get("note").map(notes => noteMentionToNote(notes.head))
+//    val note2 = t.arguments.get("note2").map(notes => noteMentionToNote(notes.head))
     val direction = t.arguments.get("direction").map(ds => Direction(ds.head.text))
     val onset = t.arguments.get("onset").map(os => onsetMentionToOnset(os.head))
     val step = t.arguments.get("step").map(steps => stepMentionToStep(steps.head))
     Transpose(note, direction, onset, step)
+//    Transpose(note, note2, direction, onset, step)
   }
 
   // Helper Methods

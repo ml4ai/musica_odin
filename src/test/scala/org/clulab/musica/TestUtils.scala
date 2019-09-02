@@ -64,8 +64,14 @@ object TestUtils {
       // These should all be notes...
       ms.foreach(m => m.label should be (label))
 
-      // There shouldn't be any extra notes that we didn't want...
+      // allow for 2 notes to be found
+//      if (label == "Note") {
+//        ms should have length 2
+//      }
+//      else {
+        // There shouldn't be any extra notes that we didn't want...
       ms should have length 1
+//      }
 
       // Make sure each of the desired Notes is in the list of notes
       val mentionsAsStrings = ms.map(mentionToString)
@@ -87,6 +93,11 @@ object TestUtils {
         shouldHaveDesired("Note", noteArgs, desired.note.get)
       }
 
+//      if (desired.note2.nonEmpty) {
+//        val noteArgs = m.arguments.getOrElse("note2", Seq())
+//        shouldHaveDesired("Note2", noteArgs, desired.note2.get)
+//      }
+
       // Test the Onset
       if (desired.onset.nonEmpty) {
         val onsetArgs = m.arguments.getOrElse("onset", Seq())
@@ -103,6 +114,151 @@ object TestUtils {
       if (desired.step.nonEmpty) {
         val stepArgs = m.arguments.getOrElse("step", Seq())
         shouldHaveDesired("Step", stepArgs, desired.step.get)
+      }
+    }
+
+
+    def testChangeDurationEvent(m: Mention, desired: ChangeDuration) = {
+      // Example: Transpose the C4 quarter note on beat 1 of measure 1 up 5 half steps
+
+      // Test the Note
+      if (desired.note.nonEmpty) {
+        val noteArgs = m.arguments.getOrElse("note", Seq())
+        shouldHaveDesired("Note", noteArgs, desired.note.get)
+      }
+
+      // Test the Onset
+      if (desired.onset.nonEmpty) {
+        val onsetArgs = m.arguments.getOrElse("onset", Seq())
+        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      }
+    }
+
+
+    def testConvertEvent(m: Mention, desired: Convert) = {
+      // Example: Convert the quarter note to a quarter rest
+
+      // Test the Note
+      if (desired.note.nonEmpty) {
+        val noteArgs = m.arguments.getOrElse("note", Seq())
+        shouldHaveDesired("Note", noteArgs, desired.note.get)
+      }
+
+      // Test the Onset
+      if (desired.onset.nonEmpty) {
+        val onsetArgs = m.arguments.getOrElse("onset", Seq())
+        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      }
+
+      // Test the Rest
+      if (desired.rest.nonEmpty) {
+        val restArgs = m.arguments.getOrElse("rest", Seq())
+        shouldHaveDesired("Rest", restArgs, desired.rest.get)
+      }
+    }
+
+
+    def testDeleteEvent(m: Mention, desired: Delete) = {
+      // Example: Delete the G in measure 1
+
+      // Test the Note
+      if (desired.note.nonEmpty) {
+        val noteArgs = m.arguments.getOrElse("note", Seq())
+        shouldHaveDesired("Note", noteArgs, desired.note.get)
+      }
+
+      // Test the Onset
+      if (desired.onset.nonEmpty) {
+        val onsetArgs = m.arguments.getOrElse("onset", Seq())
+        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      }
+
+    }
+
+    def testInsertEvent(m: Mention, desired: Insert) = {
+      // Example: Insert a D quarter note after the quarter rest in measure 2
+
+      // Test the Note
+      if (desired.note.nonEmpty) {
+        val noteArgs = m.arguments.getOrElse("note", Seq())
+        shouldHaveDesired("Note", noteArgs, desired.note.get)
+      }
+
+      // Test the Onset
+      if (desired.onset.nonEmpty) {
+        val onsetArgs = m.arguments.getOrElse("onset", Seq())
+        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      }
+
+    }
+
+    def testInvertEvent(m: Mention, desired: Invert) = {
+      // Example: Invert the second measure around middle C
+
+      // Test the Note
+      if (desired.note.nonEmpty) {
+        val noteArgs = m.arguments.getOrElse("note", Seq())
+        shouldHaveDesired("Note", noteArgs, desired.note.get)
+      }
+
+      // Test the Onset
+      if (desired.onset.nonEmpty) {
+        val onsetArgs = m.arguments.getOrElse("onset", Seq())
+        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      }
+
+      // Test the inversion axis (pitch)?
+      if (desired.pitch.nonEmpty) {
+        val pitchArgs = m.arguments.getOrElse("pitch", Seq())
+        shouldHaveDesired("Pitch", pitchArgs, desired.pitch.get)
+      }
+    }
+
+    def testRepeatEvent(m: Mention, desired: Insert) = {
+      // Example: Repeat everything in the first measure
+
+      // Test the Note
+      if (desired.note.nonEmpty) {
+        val noteArgs = m.arguments.getOrElse("note", Seq())
+        shouldHaveDesired("Note", noteArgs, desired.note.get)
+      }
+
+      // Test the Onset
+      if (desired.onset.nonEmpty) {
+        val onsetArgs = m.arguments.getOrElse("onset", Seq())
+        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      }
+    }
+
+    def testReplaceEvent(m: Mention, desired: Replace) = {
+      // Example: Replace all the Gs with Fs
+
+      // Test the Note
+      if (desired.note.nonEmpty) {
+        val noteArgs = m.arguments.getOrElse("note", Seq())
+        shouldHaveDesired("Note", noteArgs, desired.note.get)
+      }
+
+      // Test the Onset
+      if (desired.onset.nonEmpty) {
+        val onsetArgs = m.arguments.getOrElse("onset", Seq())
+        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      }
+    }
+
+    def testReverseEvent(m: Mention, desired: Reverse) = {
+      // Example: Reverse the notes in measure 2
+
+      // Test the Note
+      if (desired.note.nonEmpty) {
+        val noteArgs = m.arguments.getOrElse("note", Seq())
+        shouldHaveDesired("Note", noteArgs, desired.note.get)
+      }
+
+      // Test the Onset
+      if (desired.onset.nonEmpty) {
+        val onsetArgs = m.arguments.getOrElse("onset", Seq())
+        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
       }
     }
 

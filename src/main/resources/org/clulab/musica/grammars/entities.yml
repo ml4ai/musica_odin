@@ -16,13 +16,12 @@ rules:
         [word=/(up|down|lower|higher)/]
 
     # jc added
-    # todo: fix
     - name: negator
       label: Negator
       priority: 1
       type: token  # surface rule
       pattern: |
-        [word=/(?i)${negators}/] longer?
+        [word=/(?i)^(${negators})$/] longer?
 
     - name: cardinality
       label: Cardinality

@@ -5,7 +5,7 @@ import com.typesafe.config.ConfigFactory
 import org.clulab.odin.{ExtractorEngine, Mention, State}
 import org.clulab.processors.{Document, Processor}
 import org.clulab.processors.fastnlp.FastNLPProcessor
-import org.clulab.utils.{Configured, FileUtils}
+import org.clulab.utils.{Configured, DisplayUtils, FileUtils}
 import org.slf4j.LoggerFactory
 
 class MusicaEngine (val config: Config = ConfigFactory.load("musica")) extends Configured {
@@ -40,7 +40,7 @@ class MusicaEngine (val config: Config = ConfigFactory.load("musica")) extends C
 
       new LoadableAttributes(
         actions,
-        ExtractorEngine(masterRules, actions, actions.keepLongest), // ODIN component
+        ExtractorEngine(masterRules, actions, actions.keepLongest) // ODIN component
       )
     }
   }
@@ -68,7 +68,6 @@ class MusicaEngine (val config: Config = ConfigFactory.load("musica")) extends C
     val events =  engine.extractFrom(doc, new State()).toVector
     //println(s"In extractFrom() -- res : ${res.map(m => m.text).mkString(",\t")}")
 
-    // todo: some appropriate version of "keepMostComplete"
     loadableAttributes.actions.keepLongest(events).toVector
   }
 

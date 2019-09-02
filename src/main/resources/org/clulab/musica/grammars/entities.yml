@@ -7,6 +7,14 @@ rules:
               # Atomic things
 ## --------------------------------------------
 
+    # todo: Add 'everything' to test framework
+    - name: everything
+      label: Everything
+      priority: 1
+      type: token
+      pattern: |
+        [word=/(?i)^everything$/]
+
     # jc edited -- added lower & higher
     - name: direction
       label: Direction
@@ -96,8 +104,8 @@ rules:
       type: token  # surface rule
       pattern: |
         (?<quantifier>[tag=/^(DT|PDT)/]+) (@cardinality:Cardinality)?
-        |
-        (?<quantifier>[word=/(?i)^everything/])
+#        |
+#        (?<quantifier>[word=/(?i)^everything/])
 
     - name: beat-1
       label: Beat
@@ -265,9 +273,17 @@ rules:
       priority: 5
       type: token # surface rule
       pattern: |
-        (?<trigger>[word=/${loc-preps}/]) by? (@onset:Onset|@note:Note|it)
+        (?<trigger>[word=/${loc_preps}/]) by? (@onset:Onset|@note:Note|it)
       #  (?<trigger>[word=/${loc-preps}/]) (((@note:Note|@rest:Rest) ((in|of) @measure:Measure)?)|it)
       # [word=/(after|before|between|above|below|followed by)/]
+
+    - name: relative-location-2
+      label: Locationrel
+      priority: 5
+      pattern: |
+        trigger = [word=/${loc_preps}/] by?
+        onset: Onset? = /nmod_${loc_preps}/
+        note: Note? = /nmod_${loc_preps}/
 
 #    - name: insert-1
 #      label: Insert

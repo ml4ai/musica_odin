@@ -25,6 +25,11 @@ object ConversionUtils {
     Beat(cardinality.get)
   }
 
+  def directionMentionToDirection(m:Mention): Direction = {
+    val direction = headText("direction", m)
+    Direction(direction.get)
+  }
+
   def measureMentionToMeasure(m: Mention): Measure = {
     val cardinality = headText("cardinality", m)
     Measure(cardinality.get)

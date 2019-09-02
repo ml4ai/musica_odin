@@ -153,4 +153,73 @@ class TestTranspose extends ExtractionTest {
 
     testTransposeEvent(found, desired)
   }
+
+  // requires 3 notes
+  val t7 = "Change the second note in the first measure from a G to an A"
+
+  failingTest should s"extract correctly from $t7" in {
+    val mentions = extractMentions(t7)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(None, None, Some(Specifier("the second")))
+    val onset = Onset(Some(Measure("first")), None)
+    val step = Step(cardinality = Some("1"), None)
+    val desired = Transpose(
+      note = Some(note),
+      direction = None,
+      onset = Some(onset),
+      step = Some(step)
+    )
+
+    testTransposeEvent(found, desired)
+  }
+
+  // do we want to extract transpose events with no pitch OR direction of change?
+  val t8 = "Move the second quarter note in measure 2 two steps"
+
+  failingTest should s"extract correctly from $t8" in {
+    val mentions = extractMentions(t8)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("quarter")), None, Some(Specifier("the second")))
+    val onset = Onset(Some(Measure("2")), None)
+    val step = Step(cardinality = Some("two"), None)
+    val desired = Transpose(
+      note = Some(note),
+      direction = None,
+      onset = Some(onset),
+      step = Some(step)
+    )
+
+    testTransposeEvent(found, desired)
+  }
+
+  // requires 3 notes
+  val t9 = "In the 3rd bar you want to change the 3rd note from a d to an a"
+
+  failingTest should s"extract correctly from $t9" in {
+    val mentions = extractMentions(t9)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(None, None, Some(Specifier("the 3rd")))
+    val onset = Onset(Some(Measure("3rd")), None)
+    val step = Step(cardinality = Some("two"), None)
+    val desired = Transpose(
+      note = Some(note),
+      direction = None,
+      onset = Some(onset),
+      step = Some(step)
+    )
+
+    testTransposeEvent(found, desired)
+  }
 }

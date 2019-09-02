@@ -90,4 +90,25 @@ class TestDelete extends ExtractionTest {
 
     testDeleteEvent(found, desired)
   }
+
+  // needs 'everything' AND relative location handling
+  val t5 = "Delete everything before the first half note"
+
+  failingTest should s"extract correctly from $t5" in {
+    val mentions = extractMentions(t5)
+    val deleteEvents = mentions.filter(_ matches "Delete")
+    //    println(ConversionUtils.mentionToString(convertEvents.head))
+
+    deleteEvents should have length(1)
+    val found = deleteEvents.head
+
+    val note = Note(Some(Duration("quarter")), Some(Pitch("B")), Some(Specifier("the")))
+    val onset = Onset(Some(Measure("1")), Some(Beat("1")))
+    val desired = Delete(
+      note = Some(note),
+      onset = Some(onset)
+    )
+
+    testDeleteEvent(found, desired)
+  }
 }

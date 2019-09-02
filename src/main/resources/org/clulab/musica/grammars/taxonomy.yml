@@ -1,4 +1,6 @@
 - Entity:
+  - EntityGeneric:
+    - Everything
   - EntityMusic:
     - Note
     - Rest

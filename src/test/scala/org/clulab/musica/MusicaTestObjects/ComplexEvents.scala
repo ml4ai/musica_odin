@@ -10,7 +10,7 @@ object ComplexEvents {
     def toMentionString: String = toString
   }
 
-  case class ChangeDuration(note: Option[Note] = None, onset: Option[Onset] = None,
+  case class ChangeDuration(note: Option[Note] = None, rest: Option[Rest] = None, onset: Option[Onset] = None,
                             final_note: Option[Note] = None) extends MusicaObj
   {
     def toMentionString: String = toString
@@ -23,43 +23,46 @@ object ComplexEvents {
     def toMentionString: String = toString
   }
 
-  case class Delete(note: Option[Note] = None, onset: Option[Onset] = None) extends MusicaObj
+  case class Delete(note: Option[Note] = None, rest: Option[Rest] = None, chord: Option[Chord] = None,
+                    onset: Option[Onset] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }
 
   // todo: need to add a relative location
   case class Insert(note: Option[Note] = None, onset: Option[Onset] = None,
-                    rest: Option[Rest] = None) extends MusicaObj
+                    rest: Option[Rest] = None, chord: Option[Chord] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }
 
-  case class Invert(note: Option[Note] = None, onset: Option[Onset] = None, pitch: Option[Pitch] = None,
-                    final_note: Option[Note] = None) extends MusicaObj
+  case class Invert(note: Option[Note] = None, chord: Option[Chord] = None, onset: Option[Onset] = None,
+                    pitch: Option[Pitch] = None, final_note: Option[Note] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }
 
-  case class Repeat(note: Option[Note] = None, onset: Option[Onset] = None) extends MusicaObj
+  case class Repeat(note: Option[Note] = None, chord: Option[Chord] = None,
+                    onset: Option[Onset] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }
 
-  case class Replace(note: Option[Note] = None, onset: Option[Onset] = None,
+  case class Replace(note: Option[Note] = None, chord: Option[Chord] = None, onset: Option[Onset] = None,
                      final_note: Option[Note] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }
 
-  case class Reverse(note: Option[Note] = None, onset: Option[Onset] = None) extends MusicaObj
+  case class Reverse(note: Option[Note] = None, chord: Option[Chord] = None,
+                     onset: Option[Onset] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }
 
   // todo: add another note: e.g. the first note is changed from note to note
   case class Transpose(note: Option[Note] = None, direction: Option[Direction] = None,
-                       onset: Option[Onset] = None, step: Option[Step] = None,
+                       onset: Option[Onset] = None, step: Option[Step] = None, chord: Option[Chord] = None,
                        final_note: Option[Note] = None) extends MusicaObj
   {
     def toMentionString: String = toString

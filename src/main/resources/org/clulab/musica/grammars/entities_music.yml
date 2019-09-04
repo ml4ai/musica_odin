@@ -13,7 +13,7 @@ rules:
       priority: 1
       type: token
       pattern: |
-        ([word=/(?i)^(${chords})/])
+        ([word=/(?i)^(${chordtype})/])
 
     # todo: fix
     # Note: the \. is to handle cases that don't tokenize correctly,
@@ -66,16 +66,17 @@ rules:
       priority: 3
       type: token
       pattern: |
-        (@specifier:Specifier)? @chordType:ChordType (?<trigger>[word=/^chord/])
+        (@specifier:Specifier)? @chordType:ChordType (?<trigger>[word=/^${chord}/])
+#        (@specifier:Specifier)? @chordType:ChordType (?<trigger>[word=/^chord/])
 
-    # todo: should trigger be cardinality?
-    - name: chord-underspecified
-      label: Chord
-      example: "the minor fifth"
-      priority: 3
-      type: token
-      pattern: |
-        (@specifier:Specifier)? (?<trigger>[word=/(?i)^${chords}/]) @cardinality:Cardinality
+#    # todo: should trigger be cardinality?
+#    - name: chord-underspecified
+#      label: Chord
+#      example: "the minor fifth"
+#      priority: 3
+#      type: token
+#      pattern: |
+#        (@specifier:Specifier)? (?<trigger>[word=/(?i)^${chordtype}/]) @cardinality:Cardinality
 
     - name: measure-1
       label: Measure

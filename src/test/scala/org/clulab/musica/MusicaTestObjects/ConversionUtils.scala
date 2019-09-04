@@ -11,6 +11,7 @@ object ConversionUtils {
   def mentionToString(m: Mention): String = {
     m.label match {
       case "Direction" => Direction(m.text).toMentionString // TBM
+      case "LocationAbs" => locationabsMentionToLocationAbs(m).toMentionString
       case "LocationRel" => locationrelMentionToLocationRel(m).toMentionString
       case "Note" => noteMentionToNote(m).toMentionString
       case "Onset" => onsetMentionToOnset(m).toMentionString
@@ -90,7 +91,8 @@ object ConversionUtils {
     val direction = t.arguments.get("direction").map(ds => Direction(ds.head.text))
     val onset = t.arguments.get("onset").map(os => onsetMentionToOnset(os.head))
     val step = t.arguments.get("step").map(steps => stepMentionToStep(steps.head))
-    Transpose(note, direction, onset, step)
+    val chord = t.arguments.get("chord").map(chords => chordMentionToChord(chords.head))
+    Transpose(note, direction, onset, step, chord)
 //    Transpose(note, note2, direction, onset, step)
   }
 

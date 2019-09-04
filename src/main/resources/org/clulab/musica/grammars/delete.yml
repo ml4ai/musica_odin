@@ -4,18 +4,12 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
-  - name: Delete-rule-1
-    label: ${label}
-    priority: ${rulepriority}
-    example: "Delete the quarter note from the second bar"
-    type: token
-    pattern: |
-        (?<trigger>[word=/(?i)^${delete_triggers}/]) @note:Note ((from|in) (@locationabs:Locationabs|((@locationrel:Locationrel)? @measure:Measure)))?
-
   - name: Delete-rule-2
     label: ${label}
     priority: ${rulepriority}
     example: "Delete everything in the second bar"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^${delete_triggers}/]) ((@specifier:Specifier|@note:Note) (from|in))? @measure:Measure
+      (?<trigger>[word=/(?i)^${delete_triggers}/])
+      (@everything:Everything|@entityMusic:EntityMusic)
+      ((in|from) @onset:Onset)?

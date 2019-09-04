@@ -15,7 +15,7 @@ replace_triggers: "replac"
 
 reverse_triggers: "reverse|retrograde|switch"
 
-transpose_triggers: "transpose|move|mov|drop|naturalize|change|chang"
+transpose_triggers: "transpose|move|mov|drop|naturalize|change|chang|rais"
 
 
 

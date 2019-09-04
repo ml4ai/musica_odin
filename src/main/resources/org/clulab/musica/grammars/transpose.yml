@@ -10,7 +10,7 @@ rules:
      type: token
      pattern: |
        (?<trigger>[word=/(?i)^${transpose_triggers}/]) (@note:Note|@chord:Chord)
-       ([]? @onset:Onset)? @direction:Direction @step:Step
+       ([]? @onset:Onset)? @direction:Direction? @step:Step
 
    - name: Transpose-rule-2
      label: ${label}
@@ -19,7 +19,7 @@ rules:
      type: token
      pattern: |
        (?<trigger>[word=/(?i)^${transpose_triggers}/]) (@note:Note|@chord:Chord)
-       @direction:Direction @step:Step ([]? @onset:Onset)?
+       @direction:Direction? @step:Step ([]? @onset:Onset)?
 
    # todo: add specificity to avoid things like 'change the whole note to a half note'
    - name: Transpose-rule-3
@@ -47,4 +47,4 @@ rules:
      type: token
      pattern: |
        (?<trigger>[word=/(?i)^${transpose_triggers}/])
-       @everything:Everything @direction:Direction @step:Step ([]? @onset:Onset)?
+       @everything:Everything @direction:Direction? @step:Step ([]? @onset:Onset)?

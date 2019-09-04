@@ -51,7 +51,8 @@ object ComplexEvents {
 
   // todo: add another note
   //  case class Transpose(note: Option[Note] = None, note2: Option[Note] = None, direction: Option[Direction] = None, onset: Option[Onset] = None, step: Option[Step] = None) extends MusicaObj
-  case class Transpose(note: Option[Note] = None, direction: Option[Direction] = None, onset: Option[Onset] = None, step: Option[Step] = None) extends MusicaObj
+  case class Transpose(note: Option[Note] = None, direction: Option[Direction] = None,
+                       onset: Option[Onset] = None, step: Option[Step] = None, final_note: Option[Note] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }

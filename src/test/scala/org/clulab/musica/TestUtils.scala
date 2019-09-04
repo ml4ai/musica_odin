@@ -93,9 +93,19 @@ object TestUtils {
         shouldHaveDesired("Note", noteArgs, desired.note.get)
       }
 
-//      if (desired.note2.nonEmpty) {
+//      if (desired.original_note.nonEmpty) {
+//        val noteArgs = m.arguments.getOrElse("note", Seq())
+//        shouldHaveDesired("Note", noteArgs, desired.original_note.get)
+//      }
+//
+//      if (desired.final_note.nonEmpty) {
 //        val noteArgs = m.arguments.getOrElse("note2", Seq())
-//        shouldHaveDesired("Note2", noteArgs, desired.note2.get)
+//        shouldHaveDesired("Note2", noteArgs, desired.final_note.get)
+//      }
+
+//      if (desired.generic_note.nonEmpty) {
+//        val noteArgs = m.arguments.getOrElse("note2", Seq())
+//        shouldHaveDesired("Note2", noteArgs, desired.generic_note.get)
 //      }
 
       // Test the Onset

@@ -5,6 +5,11 @@ import org.clulab.musica.MusicaTestObjects.SimpleEvents._
 
 object ComplexEvents {
 
+  case class Change(note: Option[Note] = None, onset: Option[Onset] = None) extends MusicaObj
+  {
+    def toMentionString: String = toString
+  }
+
   case class ChangeDuration(note: Option[Note] = None, onset: Option[Onset] = None,
                             final_note: Option[Note] = None) extends MusicaObj
   {
@@ -12,7 +17,8 @@ object ComplexEvents {
   }
 
   case class Convert(note: Option[Note] = None, onset: Option[Onset] = None,
-                     rest: Option[Rest] = None, final_note: Option[Note] = None) extends MusicaObj
+                     rest: Option[Rest] = None, final_note: Option[Note] = None,
+                     chord: Option[Chord] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }

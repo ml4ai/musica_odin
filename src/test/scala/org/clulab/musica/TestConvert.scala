@@ -52,4 +52,22 @@ class TestConvert extends ExtractionTest {
 
     testConvertEvent(found, desired)
   }
+
+  val t3 = "Change the D quarter note into a minor fifth"
+
+  passingTest should s"extract correctly from $t3" in {
+    val mentions = extractMentions(t3)
+    val convertEvents = mentions.filter(_ matches "Convert")
+
+    convertEvents should have length(1)
+    val found = convertEvents.head
+
+    val note = Note(Some(Duration("quarter")), Some(Pitch("D")), Some(Specifier("the")))
+    val chord = Chord(cardinality = Some("fifth"), Some(ChordType("minor")), Some(Specifier("a")))
+    val desired = Convert(
+      note = Some(note),
+      chord = Some(chord)
+    )
+
+  }
 }

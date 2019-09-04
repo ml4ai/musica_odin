@@ -1,5 +1,6 @@
 package org.clulab.musica.MusicaTestObjects
 
+import com.google.protobuf.Field.Cardinality
 import org.clulab.musica.MusicaTestObjects.AtomicObjects._
 import org.clulab.musica.MusicaTestObjects.ComplexEvents._
 import org.clulab.musica.MusicaTestObjects.SimpleEvents._
@@ -10,6 +11,7 @@ object ConversionUtils {
   def mentionToString(m: Mention): String = {
     m.label match {
       case "Direction" => Direction(m.text).toMentionString // TBM
+      case "LocationRel" => locationrelMentionToLocationRel(m).toMentionString
       case "Note" => noteMentionToNote(m).toMentionString
       case "Onset" => onsetMentionToOnset(m).toMentionString
       case "Pitch" => pitchMentionToPitch(m).toMentionString
@@ -25,9 +27,26 @@ object ConversionUtils {
     Beat(cardinality.get)
   }
 
+  def chordMentionToChord(chord: Mention): Chord = {
+    val cardinality = chord.arguments.get("cardinality").map(_.head.text)
+    val chordtype = headText("chordType", chord).map(ChordType)
+    val specifier = headText("specifier", chord).map(Specifier)
+    Chord(cardinality, chordtype, specifier)
+  }
+
   def directionMentionToDirection(m:Mention): Direction = {
     val direction = headText("direction", m)
     Direction(direction.get)
+  }
+
+  def locationabsMentionToLocationAbs(m: Mention): LocationAbs = {
+    val location = headText("locationabs", m)
+    LocationAbs(location.get)
+  }
+
+  def locationrelMentionToLocationRel(m: Mention): LocationRel = {
+    val location = headText("locationrel", m)
+    LocationRel(location.get)
   }
 
   def measureMentionToMeasure(m: Mention): Measure = {

@@ -245,7 +245,7 @@ class TestTranspose extends ExtractionTest {
   // only examining the transposition -- should we deal with 'notes' for steps?
   val t11 = "The first note switched from a half note to a quarter note and moved up two notes"
 
-  passingTest should s"extract correctly from $t11" in {
+  failingTest should s"extract correctly from $t11" in {
     val mentions = extractMentions(t11)
     val transposeEvents = mentions.filter(_ matches "Transpose")
 
@@ -306,7 +306,7 @@ class TestTranspose extends ExtractionTest {
 
   val t14 = "Naturalize the whole note in the first measure."
 
-  passingTest should s"extract correctly from $t14" in {
+  failingTest should s"extract correctly from $t14" in {
     val mentions = extractMentions(t14)
     val transposeEvents = mentions.filter(_ matches "Transpose")
 
@@ -364,7 +364,7 @@ class TestTranspose extends ExtractionTest {
   // needs to use pitch after note
   val t17 = "In the first measure, move to third note G to the B above it."
 
-  passingTest should s"extract correctly from $t17" in {
+  failingTest should s"extract correctly from $t17" in {
     val mentions = extractMentions(t17)
     val transposeEvents = mentions.filter(_ matches "Transpose")
 

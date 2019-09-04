@@ -34,7 +34,7 @@ class TestConvert extends ExtractionTest {
   // todo: relative location needed
   val t2 = "In the first measure, after the C quarter note, take the D eighth note out and change it to an eighth note rest."
 
-  passingTest should s"extract correctly from $t2" in {
+  failingTest should s"extract correctly from $t2" in {
     val mentions = extractMentions(t2)
     val convertEvents = mentions.filter(_ matches "Convert")
 

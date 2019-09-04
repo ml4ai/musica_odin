@@ -109,4 +109,26 @@ class TestDelete extends ExtractionTest {
 
     testDeleteEvent(found, desired)
   }
+
+  // only looking at 'take the D eighth note out'
+  // todo: add relative location (after the C quarter note)
+  val t6 = "In the first measure, after the C quarter note, take the D eighth note out and change it to an eighth note rest."
+
+  failingTest should s"extract correctly from $t6" in {
+    val mentions = extractMentions(t6)
+    val deleteEvents = mentions.filter(_ matches "Delete")
+    //    println(ConversionUtils.mentionToString(convertEvents.head))
+
+    deleteEvents should have length(1)
+    val found = deleteEvents.head
+
+    val note = Note(Some(Duration("eighth")), Some(Pitch("D")), Some(Specifier("the")))
+    val onset = Onset(Some(Measure("first")), None)
+    val desired = Delete(
+      note = Some(note),
+      onset = Some(onset)
+    )
+
+    testDeleteEvent(found, desired)
+  }
 }

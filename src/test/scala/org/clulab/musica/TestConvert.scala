@@ -28,4 +28,28 @@ class TestConvert extends ExtractionTest {
 
     testConvertEvent(found, desired)
   }
+
+  // only dealing with the conversion event
+  // this one will be very hard to do
+  // todo: relative location needed
+  val t2 = "In the first measure, after the C quarter note, take the D eighth note out and change it to an eighth note rest."
+
+  passingTest should s"extract correctly from $t2" in {
+    val mentions = extractMentions(t2)
+    val convertEvents = mentions.filter(_ matches "Convert")
+
+    convertEvents should have length(1)
+    val found = convertEvents.head
+
+    val note = Note(Some(Duration("eighth")), Some(Pitch("D")), Some(Specifier("the")))
+    val onset = Onset(Some(Measure("the first")), None)
+    val rest = Rest(Some(Specifier("an")), Some(Duration("eighth")))
+    val desired = Convert(
+      note = Some(note),
+      onset = Some(onset),
+      rest = Some(rest)
+    )
+
+    testConvertEvent(found, desired)
+  }
 }

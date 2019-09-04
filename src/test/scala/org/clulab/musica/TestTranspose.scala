@@ -284,5 +284,102 @@ class TestTranspose extends ExtractionTest {
 //    testTransposeEvent(found, desired)
 //  }
 
+//  todo: how do we deal with this?
+//  val t13 = "In the first score, the second bar starts with those four eigth notes: G,F,G,F. In the second score, the change to G,A,G,A."
+//
+//  passingTest should s"extract correctly from $t13" in {
+//    val mentions = extractMentions(t13)
+//    val transposeEvents = mentions.filter(_ matches "Transpose")
+//
+//    transposeEvents should have length(1)
+//    val found = transposeEvents.head
+//
+//    val note = Note(Some(Duration("eighth")), None, Some(Specifier("Those four")))
+//    val onset = Onset(Some(Measure("third")), None)
+//    val desired = Transpose(
+//      note = Some(note),
+//      onset = Some(onset)
+//    )
+//
+//    testTransposeEvent(found, desired)
+//  }
+
+  val t14 = "Naturalize the whole note in the first measure."
+
+  passingTest should s"extract correctly from $t14" in {
+    val mentions = extractMentions(t14)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("whole")), None, Some(Specifier("the")))
+    val onset = Onset(Some(Measure("the first")), None)
+    val desired = Transpose(
+      note = Some(note),
+      onset = Some(onset)
+    )
+
+  }
+
+  // todo: determine how to deal with 'sharp'
+  val t15 = "In the second line of sheet music of the first measure, the G whole note no longer is sharp."
+
+  failingTest should s"extract correctly from $t15" in {
+    val mentions = extractMentions(t15)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("whole")), Some(Pitch("G")), Some(Specifier("the")))
+    val onset = Onset(Some(Measure("the first")), None)
+    val desired = Transpose(
+      note = Some(note),
+      onset = Some(onset)
+    )
+
+  }
+
+  // todo: needs location handling
+  // also needs ability to include a pitch
+  val t16 = "The first measure 8th note run should end with a quarter note changed to G, not F. "
+
+  failingTest should s"extract correctly from $t16" in {
+    val mentions = extractMentions(t16)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("quarter")), None, Some(Specifier("a")))
+    val onset = Onset(Some(Measure("the first")), None)
+    val desired = Transpose(
+      note = Some(note),
+      onset = Some(onset)
+    )
+
+  }
+
+  // needs to use pitch after note
+  val t17 = "In the first measure, move to third note G to the B above it."
+
+  passingTest should s"extract correctly from $t17" in {
+    val mentions = extractMentions(t17)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(None, None, Some(Specifier("thrird")))
+    val onset = Onset(Some(Measure("the first")), None)
+    val final_note = Note(None, Some(Pitch("B")), Some(Specifier("the")))
+    val desired = Transpose(
+      note = Some(note),
+      onset = Some(onset),
+      final_note = Some(final_note)
+    )
+
+  }
 
 }

@@ -211,7 +211,6 @@ rules:
       pattern: |
         (@specifier:Specifier [word=/^(?!note).*/]{,2})? @pitch:Pitch
 
-
     # Syntax isn't always right... :)
     - name: note-3-surface
       label: Note
@@ -227,8 +226,8 @@ rules:
       priority: 3
       type: token
       pattern: |
-        (@specifier:Specifier)? @pitch:Pitch? @duration:Proportion? (?<trigger> [word=/(?i)^note/])
-
+        (@specifier:Specifier)? @pitch:Pitch? (@cardinality:Cardinality+)? @duration:Proportion?
+        (?<trigger> [word=/(?i)^note/])
 
     # jc added
     - name: rest-1

@@ -95,11 +95,11 @@ class TestChangeDuration extends ExtractionTest {
 
     val note = Note(Some(Duration("quarter")), None, Some(Specifier("The first")))
     val onset = Onset(None, None)
-    val note2 = Note(Some(Duration("eighth")), None, Some(Specifier("an")))
+    val final_note = Note(Some(Duration("eighth")), None, Some(Specifier("an")))
     val desired = ChangeDuration(
       note = Some(note),
       onset = Some(onset),
-      note2 = Some(note2)
+      final_note = Some(final_note)
     )
 
     testChangeDurationEvent(found, desired)
@@ -117,11 +117,11 @@ class TestChangeDuration extends ExtractionTest {
 
     val note = Note(Some(Duration("quarter")), None, Some(Specifier("the")))
     val onset = Onset(Some(Measure("1")), None)
-    val note2 = Note(Some(Duration("eighth")), None, Some(Specifier("an")))
+    val final_note = Note(Some(Duration("eighth")), None, Some(Specifier("an")))
     val desired = ChangeDuration(
       note = Some(note),
       onset = Some(onset),
-      note2 = Some(note2)
+      final_note = Some(final_note)
     )
 
     testChangeDurationEvent(found, desired)
@@ -166,7 +166,7 @@ class TestChangeDuration extends ExtractionTest {
     testChangeDurationEvent(found, desired)
   }
 
-  // needs to include specifier everything
+  // todo: needs to include specifier everything
   val t9 = "Everything should be shortened from half notes to quarter notes"
 
   failingTest should s"extract correctly from $t9" in {
@@ -182,6 +182,27 @@ class TestChangeDuration extends ExtractionTest {
     val desired = ChangeDuration(
       note = Some(note),
       onset = Some(onset)
+    )
+
+    testChangeDurationEvent(found, desired)
+  }
+
+  // only testing duration change here; todo: needs 3 notes
+  val t10 = "The first note switched from a half note to a quarter note and moved up two notes."
+
+  failingTest should s"extract correctly from $t10" in {
+    val mentions = extractMentions(t10)
+    val changeDurationEvents = mentions.filter(_ matches "ChangeDuration")
+
+    changeDurationEvents should have length(1)
+    val found = changeDurationEvents.head
+
+    // val spec = Specifier("everything")
+    val note = Note(None, None, Some(Specifier("The first")))
+    val final_note = Note(Some(Duration("quarter")), None, Some(Specifier("a")))
+    val desired = ChangeDuration(
+      note = Some(note),
+      final_note = Some(final_note)
     )
 
     testChangeDurationEvent(found, desired)

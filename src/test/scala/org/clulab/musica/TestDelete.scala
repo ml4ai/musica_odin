@@ -44,8 +44,7 @@ class TestDelete extends ExtractionTest {
     val note = Note(Some(Duration("eighth")), None, Some(Specifier("The")))
     val onset = Onset(None, None)
     val desired = Delete(
-      note = Some(note),
-      onset = Some(onset)
+      note = Some(note)
     )
 
     testDeleteEvent(found, desired)
@@ -63,8 +62,7 @@ class TestDelete extends ExtractionTest {
     val note = Note(Some(Duration("whole")), None, Some(Specifier("all the")))
     val onset = Onset(None, None)
     val desired = Delete(
-      note = Some(note),
-      onset = Some(onset)
+      note = Some(note)
     )
 
     testDeleteEvent(found, desired)

@@ -28,7 +28,7 @@ class TestChangeDuration extends ExtractionTest {
 
   val t2 = "Shorten the half note on the first beat of the second measure"
 
-  failingTest should s"extract correctly from $t2" in {
+  passingTest should s"extract correctly from $t2" in {
     val mentions = extractMentions(t2)
     val changeDurationEvents = mentions.filter(_ matches "ChangeDuration")
 
@@ -160,8 +160,7 @@ class TestChangeDuration extends ExtractionTest {
     val note = Note(Some(Duration("half")), None, Some(Specifier("all the")))
     val onset = Onset(None, None)
     val desired = ChangeDuration(
-      note = Some(note),
-      onset = Some(onset)
+      note = Some(note)
     )
 
     testChangeDurationEvent(found, desired)

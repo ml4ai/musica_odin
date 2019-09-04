@@ -11,4 +11,5 @@ rules:
     example: "Convert the quarter note in measure 1 into a quarter rest"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^${convert_triggers}/]) @entityMusic:EntityMusic ([]? @onset:Onset)? (into|to) @entityMusic:EntityMusic
+      (?<trigger>[word=/(?i)^${convert_triggers}/])
+      (@note:Note|@rest:Rest|@chord:Chord) ([]? @onset:Onset)? (into|to) (@note:Note|@rest:Rest|@chord:Chord)

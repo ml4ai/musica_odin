@@ -49,6 +49,7 @@ rules:
 
     # jc added
     # more common insert, delete, reverse predicate syntax
+    # todo: fix this (generalize or figuer out how to make one of note, rest, chord required)
     - name: ${addlabel}-active_voice-syntax-2
       label: ${label}
       example: "Add an eighth note to the first measure"
@@ -56,6 +57,8 @@ rules:
       pattern: |
         trigger = [word=/(?i)^${trigger}/]
         note: Note? = >dobj
+        rest: Rest? = >dobj
+        chord: Chord? = >dobj
         measure: Measure? = >/nmod_*/
         locationabs: Locationabs? = >/nmod_*/
 

@@ -11,7 +11,7 @@ class TestConvert extends ExtractionTest {
 
   passingTest should s"extract correctly from $t1" in {
     val mentions = extractMentions(t1)
-    val convertEvents = mentions.filter(_ matches "ChangeDuration")
+    val convertEvents = mentions.filter(_ matches "Convert")
 //    println(ConversionUtils.mentionToString(convertEvents.head))
 
     convertEvents should have length(1)

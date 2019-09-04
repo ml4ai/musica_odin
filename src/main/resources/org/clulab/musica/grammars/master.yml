@@ -8,10 +8,16 @@ vars: org/clulab/musica/grammars/triggers.yml
 rules:
 
 
-  # Extract the entities
-  - import: org/clulab/musica/grammars/entities.yml
+  # Extract the generic entities
+  - import: org/clulab/musica/grammars/entities_generic.yml
     vars:
       rulepriority: "1"
+
+  # Extract the music entities
+  - import: org/clulab/musica/grammars/entities_music.yml
+    vars:
+      rulepriority: "1"
+
 
   # Extract the events
 

@@ -4,7 +4,8 @@
   - EntityMusic:
     - Note
     - Rest
-    - Chord
+    - Chord:
+        - ChordType
     - Pitch:
       - PitchSequence
 - Unit:
@@ -25,12 +26,11 @@
     - Delete
     - Insert
     - Invert
+    - Move
     - Repeat
     - Replace
     - Reverse
     - Transpose
-  #  - Move
-  #  - Change
   #  - Generate
   #  - Add
   #  - Copy
@@ -47,6 +47,7 @@
   - Cardinality
 - Direction      # 'up' or 'down'
 - Location:
-  - Locationrel
+  - Locationrel:
+      - LocRelMusic
   - Locationabs
 - Negator

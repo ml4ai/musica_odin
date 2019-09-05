@@ -1,0 +1,53 @@
+
+vars: org/clulab/musica/grammars/triggers.yml
+
+
+rules:
+
+  - name: ChangeDuration-rule-1
+    label: ${label}
+    example: "Lengthen the half note in measure 2 to a whole note"
+    priority: ${rulepriority}
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^${change_duration_triggers}/]) (@note:Note|@rest:Rest) ([]? @onset:Onset)? (to (@note:Note|@rest:Rest))?
+
+  - name: ChangeDuration-rule-2
+    label: ${label}
+    example: "Lengthen the note in measure 2 from a half note to a whole note"
+    priority: ${rulepriority}
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${change_duration_triggers})/]) (@note:Note|@rest:Rest) []? (@onset:Onset)? from (@note:Note|@rest:Rest) (to|into) (@note:Note|@rest:Rest)
+#      (?<trigger>[word=/(?i)^(${change_duration_triggers})/]) @note:Note []? (@onset:Onset)? from @note:Note (to|into) @note:Note
+
+#  - name: ChangeDuration-rule-2
+#    label: ${label}
+#    example: "Lengthen the note in measure 2 from a half note to a whole note"
+#    priority: ${rulepriority}
+#    pattern: |
+#      trigger = (?<trigger>[word=/(?i)^${change_duration_triggers}/])
+#      onset: Onset? = >nmod_in
+#      note_generic: Note = >dobj
+#      note_original: Note? = >nmod_in? >nmod_from
+#      note_changed: Note? = >nmod_in? >nmod_from >nmod_to
+
+  - name: ChangeDuration-rule-passive-1
+    label: ${label}
+    example: "The half note is shortened in beat 1 of measure 1 to a quarter note"
+    priority: ${rulepriority}
+    type: token
+    pattern: |
+      (@note:Note|@rest:Rest) []? [word=/^${aux_be}/] (?<trigger>[word=/(?i)^${change_duration_triggers}/]) ([]? @onset:Onset)? (to (@note:Note|@rest:Rest))?
+
+  - name: ChangeDuration-rule-passive-2
+    label: ${label}
+    example: "The quarter note in beat 1 of measure 1 is shortened to an eighth note"
+    priority: ${rulepriority}
+    type: token
+    pattern: |
+      (@note:Note|@rest:Rest) ([]? @onset:Onset)? []? [word=/^${aux_be}/] (?<trigger>[word=/(?i)^${change_duration_triggers}/]) (to (@note:Note|@rest:Rest))?
+
+#  - name: ChangeDuration-rule-3
+#    label: ${label}
+#    example:

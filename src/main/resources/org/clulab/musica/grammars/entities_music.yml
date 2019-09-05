@@ -1,0 +1,189 @@
+vars: org/clulab/musica/grammars/triggers.yml
+
+
+rules:
+
+## --------------------------------------------
+          # Atomic concepts -- Music
+## --------------------------------------------
+
+    - name: chord-type
+      label: ChordType
+      example: "minor"
+      priority: 1
+      type: token
+      pattern: |
+        ([word=/(?i)^(${chordtype})/])
+
+    # todo: fix
+    # Note: the \. is to handle cases that don't tokenize correctly,
+    # like "Delete the second G." Here, the period is included in the G token.
+    - name: pitch-1
+      label: Pitch
+      priority: 1
+      type: token  # surface rule
+      pattern: |   # replace with ${notes} var?
+        [word=/^(${notes})[0-9]*s?\.?$/]
+
+    # todo: fix -- works for ABCD and A-B-C-D but not A,B,C,D, A B C D, or A, B, C, D
+    - name: pitch-for-seqs
+      label: PitchSequence
+      priority: 1
+      type: token
+      pattern:
+        (?<trigger> [word=/((${notes})(,|-|\s)?){2,8}\.?/]) # should not need to be token-initial or final
+      # (?<trigger> [word=/(${notes},?-?\s?)+\.?/])
+
+    # works for A B C D, but not A,B,C,D
+    - name: pitch-for-seqs-2
+      label: PitchSequence
+      priority: 2
+      type: token
+      pattern: |
+        ([word=/^${notes}$/]){2,8}
+
+## --------------------------------------------
+          # Composed concepts -- Music
+## --------------------------------------------
+
+    - name: beat-1
+      label: Beat
+      priority: 2
+      type: token  # surface rule
+      pattern: |
+        (?<trigger>[word=/^beat/]) @cardinality:Cardinality
+
+    - name: beat-2
+      label: Beat
+      priority: 3
+      type: token # surface rule
+      pattern: |
+        @specifier:Specifier (?<trigger>[word=/^beat/])
+
+    - name: chord
+      label: Chord
+      example: "A minor chord"
+      priority: 3
+      type: token
+      pattern: |
+        (@specifier:Specifier)? @chordType:ChordType (?<trigger>[word=/^${chord}/])
+#        (@specifier:Specifier)? @chordType:ChordType (?<trigger>[word=/^chord/])
+
+#    # todo: should trigger be cardinality?
+#    - name: chord-underspecified
+#      label: Chord
+#      example: "the minor fifth"
+#      priority: 3
+#      type: token
+#      pattern: |
+#        (@specifier:Specifier)? (?<trigger>[word=/(?i)^${chordtype}/]) @cardinality:Cardinality
+
+    - name: measure-1
+      label: Measure
+      priority: 2
+      type: token  # surface rule
+      pattern: |
+        (?<trigger>[word=/^(measure|bar)/]) @cardinality:Cardinality
+
+    - name: measure-2
+      label: Measure
+      priority: 3
+      type: token # surface rule
+      pattern: |
+        @specifier:Specifier (?<trigger>[word=/^(measure|bar)/])
+
+    - name: octave
+      label: Octave
+      priority: 2
+      type: token # surface rule
+      pattern: |
+        (@cardinality:Cardinality)? (?<trigger>[word=/^octave/])
+
+    - name: sequence
+      label: PitchSequence
+      priority: 3
+      type: token
+      pattern: |
+        (@specifier:Specifier)? (?<trigger> [word=/(?i)^(sequence|run)/])
+
+    # todo: determine if 'tone' is used as step in "raise x by a whole tone"
+    - name: step-trigger  # handle cases like "3 half steps"
+      label: Step
+      priority: 2
+      type: token  # surface rule
+      pattern: |
+        (@cardinality:Cardinality)? (@proportion: Proportion)? (?<trigger>[word=/^step/])
+
+    - name: step-underspecified  # handle cases when 'step' is elided, like "up 3"
+      label: Step
+      priority: 2
+      type: token  # surface rule
+      pattern: |
+        (?<= /(?i)^(up|down)$/) (@cardinality:Cardinality)
+
+## --------------------------------------------
+            # Simple Events -- Music
+## --------------------------------------------
+
+
+    # no "type" so it's a syntax rule
+    - name: note-1
+      label: Note
+      priority: 3
+      pattern: |  # what is amod or compound?
+        trigger = [word=/(?i)^note/]
+        duration: Proportion? = >/(amod|compound)/
+        pitch: Pitch? = >/(amod|compound)/
+        specifier: Specifier? = >/^det/
+
+    - name: note-2-underspecified
+      label: Note
+      priority: 3
+      type: token
+      pattern: |
+        (@specifier:Specifier [word=/^(?!note).*/]{,2})? @pitch:Pitch
+
+    # Syntax isn't always right... :)
+    - name: note-3-surface
+      label: Note
+      example: "Transpose the C quarter note up 1 half step."
+      priority: 3
+      type: token
+      pattern: |
+        (@specifier:Specifier []{,2})? @pitch:Pitch? @duration:Proportion? (?<trigger> [word=/(?i)^note/])
+
+    - name: note-4-surface
+      label: Note
+      example: "Transpose the C quarter note up 1 half step."
+      priority: 3
+      type: token
+      pattern: |
+        (@specifier:Specifier)? @pitch:Pitch? (@cardinality:Cardinality+)? @duration:Proportion?
+        (?<trigger> [word=/(?i)^note/])
+
+    - name: onset-1
+      label: Onset
+      priority: 4
+      type: token
+      pattern: |  # what does []? indicate?
+        ((@measure:Measure []?)? @beat:Beat |
+        @measure:Measure ([]? @beat:Beat)? |
+        (@beat:Beat []?)? @measure:Measure |
+        @beat:Beat ([]? @measure:Measure)?)
+
+    - name: onset-2
+      label: Onset
+      priority: 4
+      type: token
+      pattern: |
+        @measure:Measure []? @beat:Beat |
+        @beat:Beat []? @measure:Measure
+
+    # jc added
+    - name: rest-1
+      label: Rest
+      example: "Add an eighth rest"
+      priority: 3
+      type: token
+      pattern: |
+        (@specifier:Specifier)? @duration:Proportion? (?<trigger> [word=/(?i)^rest/])

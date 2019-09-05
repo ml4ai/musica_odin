@@ -49,6 +49,7 @@ rules:
 
     # jc added
     # more common insert, delete, reverse predicate syntax
+    # todo: fix this (generalize or figuer out how to make one of note, rest, chord required)
     - name: ${addlabel}-active_voice-syntax-2
       label: ${label}
       example: "Add an eighth note to the first measure"
@@ -56,8 +57,33 @@ rules:
       pattern: |
         trigger = [word=/(?i)^${trigger}/]
         note: Note? = >dobj
+        rest: Rest? = >dobj
+        chord: Chord? = >dobj
         measure: Measure? = >/nmod_*/
         locationabs: Locationabs? = >/nmod_*/
+
+    #jc added
+    # with three tagged notes
+    # only works as syntactic rule if all three notes are given different arc labels
+    - name: ${addlabel}-active_voice-syntax-3
+      label: ${label}
+      example: "The first note switched from a half note to a quarter note"
+      priority: ${rulepriority}
+      pattern: |
+        trigger = [word=/(?i)^${trigger}/]
+        note1: Note = >nsubj
+        note: Note = >nmod_from
+        note3: Note = >nmod_to
+        onset: Onset? = >nsubj? >nmod_in
+
+#    - name: ${addlabel}-active_voice-syntax-3
+#      label: ${label}
+#      example: "drop a quarter note from the start of the second measure"
+#      priority: ${rulepriority}
+#      pattern: |
+#        trigger = [word=/(?i)^${trigger}/]
+#        note: Note = >dobj
+
 
     # jc added
     # todo: would using 'MusicalEntity' instead of note, pitch,rest be problematic in the framework?
@@ -115,7 +141,8 @@ rules:
       priority: ${rulepriority}
       type: token
       pattern: |
-        (@note:Note|@rest:Rest|@pitch:Pitch) @onset:Onset (is|are) (?<trigger>[word=/(?i)^(${trigger})/])
+        (@entityMusic:EntityMusic) []? (@onset:Onset)? []? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${trigger})/])
+  #        (@note:Note|@rest:Rest|@pitch:Pitch) []? (@onset:Onset)? []? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${trigger})/])
 
 
     #-------------------------------------------------------------

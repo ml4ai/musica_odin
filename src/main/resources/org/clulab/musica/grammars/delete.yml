@@ -7,15 +7,32 @@ rules:
   - name: Delete-rule-1
     label: ${label}
     priority: ${rulepriority}
-    example: "Delete the quarter note from the second bar"
-    type: token
-    pattern: |
-        (?<trigger>[word=/(?i)^${delete_triggers}/]) @note:Note (from (@locationabs:Locationabs|((@locationrel:Locationrel)? @measure:Measure)))?
-
-  - name: Delete-rule-2
-    label: ${label}
-    priority: ${rulepriority}
     example: "Delete everything in the second bar"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^${delete_triggers}/]) (@specifier:Specifier|@note:Note) (from|in) @measure:Measure
+      (?<trigger>[word=/(?i)^${delete_triggers}/])
+      (@everything:Everything|@note:Note|@rest:Rest|@chord:Chord|@pitch:Pitch|@measure:Measure)
+      ([]? @onset:Onset)?
+
+#  - name: Delete-rule-passive-syntax
+#    label: ${label}
+#    priority: ${rulepriority}
+#    example: "The first quarter note in measure 1 is deleted"
+#    pattern: |
+#      trigger = [word=/(?i)^${delete_triggers}/]
+#      everything: Everything? = >nsubjpass
+#      note: Note? = >nsubjpass
+#      chord: Chord? = >nsubjpass
+#      measure: Measure? = >nsubjpass
+#      rest: Rest? = >nsubjpass
+#      onset: Onset = >nsubjpass >/nmod_*/
+
+  - name: Delete-rule-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The first quarter note should be deleted"
+    type: token
+    pattern: |
+      (@everything:Everything|@note:Note|@rest:Rest|@chord:Chord|@pitch:Pitch|@measure:Measure)
+      ([]? @onset:Onset)? should? (${aux_be})
+      (?<trigger>[word=/(?i)^${delete_triggers}/])

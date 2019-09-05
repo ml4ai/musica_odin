@@ -8,12 +8,40 @@ vars: org/clulab/musica/grammars/triggers.yml
 rules:
 
 
-  # Extract the entities
-  - import: org/clulab/musica/grammars/entities.yml
+  # Extract the generic entities
+  - import: org/clulab/musica/grammars/entities_generic.yml
     vars:
       rulepriority: "1"
 
+  # Extract the music entities
+  - import: org/clulab/musica/grammars/entities_music.yml
+    vars:
+      rulepriority: "1"
+
+
   # Extract the events
+
+  - import: org/clulab/musica/grammars/change_duration.yml
+    vars:
+      rulepriority: "6"
+      label: ChangeDuration
+
+  - import: org/clulab/musica/grammars/convert.yml
+    vars:
+      rulepriority: "6"
+      label: Convert
+
+#  - import: org/clulab/musica/grammars/template.yml
+#    vars:
+#      rulepriority: "6"
+#      addlabel: "Delete"
+#      label: Delete
+#      trigger: ${delete_triggers}
+
+  - import: org/clulab/musica/grammars/delete.yml
+    vars:
+      rulepriority: "6"
+      label: Delete
 
   - import: org/clulab/musica/grammars/template.yml
     vars:
@@ -25,9 +53,16 @@ rules:
   - import: org/clulab/musica/grammars/template.yml
     vars:
       rulepriority: "6"
-      addlabel: "Delete"
-      label: Delete
-      trigger: ${delete_triggers}
+      addlabel: "Invert"
+      label: Invert
+      trigger: ${invert_triggers}
+
+  - import: org/clulab/musica/grammars/template.yml
+    vars:
+      rulepriority: "6"
+      addlabel: "Repeat"
+      label: Repeat
+      trigger: ${repeat_triggers}
 
   - import: org/clulab/musica/grammars/template.yml
     vars:
@@ -36,27 +71,15 @@ rules:
       label: Reverse
       trigger: ${reverse_triggers}
 
-  - import: org/clulab/musica/grammars/template.yml
-    vars:
-      rulepriority: "6"
-      addlabel: "Invert"
-      label: Invert
-      trigger: ${invert_triggers}
 
   - import: org/clulab/musica/grammars/transpose.yml
     vars:
       rulepriority: "6"
       label: Transpose
 
-  - import: org/clulab/musica/grammars/delete.yml
-    vars:
-      rulepriority: "6"
-      label: Delete
 
-#  - import: org/clulab/musica/grammars/convert.yml
-#    vars:
-#      rulepriority: "6"
-#      label: Convert
+
+
 
   # ---------------------------------------------------
 

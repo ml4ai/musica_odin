@@ -1,8 +1,11 @@
 - Entity:
+  - EntityGeneric:
+    - Everything
   - EntityMusic:
     - Note
     - Rest
-    - Chord
+    - Chord:
+        - ChordType
     - Pitch:
       - PitchSequence
 - Unit:
@@ -17,13 +20,17 @@
 - Beat
 - Event:
   - Action:
-    - Insert
+    - Change
+    - ChangeDuration
+    - Convert
     - Delete
-    - Transpose
-    - Reverse
+    - Insert
     - Invert
-  #  - Move
-  #  - Change
+    - Move
+    - Repeat
+    - Replace
+    - Reverse
+    - Transpose
   #  - Generate
   #  - Add
   #  - Copy
@@ -40,6 +47,7 @@
   - Cardinality
 - Direction      # 'up' or 'down'
 - Location:
-  - Locationrel
+  - Locationrel:
+      - LocRelMusic
   - Locationabs
 - Negator

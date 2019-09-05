@@ -1,0 +1,108 @@
+vars: org/clulab/musica/grammars/triggers.yml
+
+rules:
+
+  ## --------------------------------------------
+  # Atomic concepts -- not music specific
+  ## --------------------------------------------
+
+  - name: cardinality
+    label: Cardinality
+    priority: 1
+    type: token  # surface rule
+    pattern: |
+      [(tag=/CD/ | entity=/ORDINAL/) & word=/^(?!eighth)/]
+
+  # for instances where 'second' etc are tagged as part of a date
+  - name: cardinality-2
+    label: Cardinality
+    priority: 1
+    type: token
+    pattern: |
+      [word=/(?i)${ordinals}/]
+
+  - name: direction
+    label: Direction
+    priority: 1
+    type: token  # surface rule
+    pattern: |
+      [word=/(up|down|lower|higher)/]
+
+    # todo: Add 'everything' to test framework
+  - name: everything
+    label: Everything
+    priority: 1
+    type: token
+    pattern: |
+      [word=/(?i)^everything$/]
+
+  - name: negator
+    label: Negator
+    priority: 1
+    type: token  # surface rule
+    pattern: |
+      [word=/(?i)^(${negators})$/] longer?
+
+  - name: proportion
+    label: Proportion
+    priority: 1
+    type: token  # surface rule
+    pattern: |
+      [word=/(?i)^(${proportions})/]
+
+  - name: specifier-1
+    label: Specifier
+    priority: 2
+    type: token  # surface rule
+    pattern: |
+      (?<quantifier>[tag=/^(DT|PDT)/]+) (@cardinality:Cardinality)?
+  #        |
+  #        (?<quantifier>[word=/(?i)^everything/])
+
+  ## --------------------------------------------
+  # Composed Items -- not? music specific
+  ## --------------------------------------------
+
+  - name: absolute-location-1
+    label: Locationabs
+    example: "Add a quarter rest at the start"
+    priority: 3
+    type: token
+    pattern: |
+      @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) (with)?
+
+  - name: absolute-location-2
+    label: Locationabs
+    example: "Add a quarter rest to the start of the second measure"
+    priority: 4
+    type: token
+    pattern: |
+      @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) of @measure:Measure
+
+  # do we need this?
+  - name: relative-location-1
+    label: Locationrel
+    priority: 5
+    type: token # surface rule
+    pattern: |
+      (?<trigger>[word=/${loc_preps}/]) by? (@onset:Onset|@note:Note|it)
+    #  (?<trigger>[word=/${loc-preps}/]) (((@note:Note|@rest:Rest) ((in|of) @measure:Measure)?)|it)
+    # [word=/(after|before|between|above|below|followed by)/]
+
+  - name: relative-location-2
+    label: Locationrel
+    priority: 5
+    pattern: |
+      trigger = [word=/${loc_preps}/] by?
+      onset: Onset? = /nmod_${loc_preps}/
+      note: Note? = /nmod_${loc_preps}/
+
+  ## potential alternative
+  ## use only location words for rel-location and add music with a rule like:
+  # todo: fix
+#    - name: relative-location-music
+#      label: LocRelMusic
+#      priority: 6
+#      type: token
+#      pattern: |
+#        @locationrel:Locationrel by? (@entityMusic:EntityMusic)

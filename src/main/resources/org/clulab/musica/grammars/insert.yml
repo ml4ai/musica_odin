@@ -3,3 +3,12 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 
 rules:
+
+#    - name: insert-1
+#      label: Insert
+#      priority: 3
+#      pattern: |  # what is amod or compound?
+#        trigger = [word=/(?i)^note/]
+#        duration: Duration? = >/(amod|compound)/
+#        pitch: Pitch? = >/(amod|compound)/
+#        specifier: Specifier? = >det

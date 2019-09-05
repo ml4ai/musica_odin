@@ -1,29 +1,37 @@
-insert_triggers: "insert|add"
-
-delete_triggers: "delete|del|remove"
-
-reverse_triggers: "reverse|retrograde|switch"
-
-invert_triggers: "invert"
-
-transpose_triggers: "transpose|move|mov|drop|naturalize|change|chang"
-
-replace_triggers: "replac"
-
-repeat_triggers: "repeat|duplicat"
-
-shorten_triggers: "shorten"
-
-lengthen_triggers: "lengthen"
+#music-specific event triggers
+change_duration_triggers: "shorten|lengthen|change|chang|convert"
 
 convert_triggers: "chang|change|convert"
 
-notes: "A|A#|Ab|B|B#|Bb|C|C#|Cb|D|D#|Db|E|E#|Eb|F|F#|Fb|G|G#|Gb"
-proportions: "sixteenth|eight|quarter|half|whole"
-chords: "major|minor|augmented|diminished|indeterminate|predominant|suspended|just|bitonal|atonal"
-loc-preps: "after|before|between|above|below|followed by"
+delete_triggers: "delete|del|remove|drop"
+
+insert_triggers: "insert|add"
+
+invert_triggers: "invert|flip"
+
+repeat_triggers: "repeat|duplicat"
+
+replace_triggers: "replac"
+
+reverse_triggers: "reverse|retrograde|switch"
+
+transpose_triggers: "transpose|move|mov|drop|naturalize|change|chang|rais"
+
+
+#generic vars
+aux_be: "is|are|was|were|be"
+loc_preps: "after|before|between|above|below|followed"
 negators: "not|no"
-ordinals: "first|second|third|fourth"
+ordinals: "first|second|third|fourth|fifth|sixth|seventh|ninth|tenth|1st|2nd|3rd|4th|5th|6th|7th|8th|9th|10th"
+proportions: "sixteenth|eight|quarter|half|whole"
+
+#music-specific vars
+chord: "chord|dyad|triad|third|fifth|seventh|ninth|eleventh|thirteenth|3rd|5th|7th|9th|11th|13th"
+chordtype: "major|minor|augmented|diminished|indeterminate|predominant|suspended|just|bitonal|atonal"
+key: "major|minor"
+notes: "A|A#|Ab|B|B#|Bb|C|C#|Cb|D|D#|Db|E|E#|Eb|F|F#|Fb|G|G#|Gb"
+pitch_changes: "sharp|flat|natural|diesis|bemolle"
+
 
 ### TODO
 

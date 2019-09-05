@@ -9,7 +9,8 @@ rules:
      priority: ${rulepriority}
      type: token
      pattern: |
-       (?<trigger>[word=/(?i)^${transpose_triggers}/]) @note:Note ([]? @onset:Onset)? @direction:Direction @step:Step
+       (?<trigger>[word=/(?i)^${transpose_triggers}/]) (@note:Note|@chord:Chord)
+       ([]? @onset:Onset)? @direction:Direction? @step:Step
 
    - name: Transpose-rule-2
      label: ${label}
@@ -17,7 +18,8 @@ rules:
      example: "Transpose all the notes up 5 half steps in measure 1."
      type: token
      pattern: |
-       (?<trigger>[word=/(?i)^${transpose_triggers}/]) @note:Note @direction:Direction @step:Step ([]? @onset:Onset)?
+       (?<trigger>[word=/(?i)^${transpose_triggers}/]) (@note:Note|@chord:Chord)
+       @direction:Direction? @step:Step ([]? @onset:Onset)?
 
    # todo: add specificity to avoid things like 'change the whole note to a half note'
    - name: Transpose-rule-3
@@ -26,7 +28,17 @@ rules:
      example: "Move the G quarter note to the F above it"
      type: token
      pattern: |
-       (?<trigger>[word=/(?i)^${transpose_triggers}/]) @note:Note to (@note:Note|@pitch:Pitch) @locationrel:Locationrel?
+       (?<trigger>[word=/(?i)^${transpose_triggers}/]) (@note:Note|@chord:Chord)
+       (@direction:Direction)? to (@note:Note|@pitch:Pitch|@chord:Chord) @locationrel:Locationrel?
+
+   - name: Transpose-rule-passive
+     label: ${label}
+     priority: ${rulepriority}
+     example: "The first quarter note in measure 1 is transposed down 2 steps"
+     type: token
+     pattern: |
+       @note:Note ([]? @onset:Onset)? []? [word=/^${aux_be}/]
+       (?<trigger>[word=/(?i)^${transpose_triggers}/]) (@direction:Direction)?  @step:Step
 
    - name: Transpose-rule-everything
      label: ${label}
@@ -34,4 +46,5 @@ rules:
      example: "Transpose all the notes up 5 half steps in measure 1."
      type: token
      pattern: |
-       (?<trigger>[word=/(?i)^${transpose_triggers}/]) @specifier:Specifier @direction:Direction @step:Step ([]? @onset:Onset)?
+       (?<trigger>[word=/(?i)^${transpose_triggers}/])
+       @everything:Everything @direction:Direction? @step:Step ([]? @onset:Onset)?

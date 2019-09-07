@@ -99,8 +99,8 @@ object TestUtils {
 //      }
 //
 //      if (desired.final_note.nonEmpty) {
-//        val noteArgs = m.arguments.getOrElse("note2", Seq())
-//        shouldHaveDesired("Note2", noteArgs, desired.final_note.get)
+//        val noteArgs = m.arguments.getOrElse("final_note", Seq())
+//        shouldHaveDesired("Note", noteArgs, desired.final_note.get)
 //      }
 
 //      if (desired.generic_note.nonEmpty) {

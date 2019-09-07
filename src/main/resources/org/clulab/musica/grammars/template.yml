@@ -164,3 +164,12 @@ rules:
       type: token
       pattern: |
         (?<trigger>[word=/(?i)^(${trigger})/]) @specifier:Specifier (that (are|is))? []{,2} @onset:Onset
+
+    - name: ${addlabel}-active_voice-surface-everything-2
+      label: ${label}
+      example: "Repeat everything in measure 2"
+      priority: ${rulepriority}
+      type: token
+      pattern: |
+        (?<trigger>[word=/(?i)^(${trigger})/]) (@everything:Everything|@note:Note|@chord:Chord|@sequence:Sequence)
+        ([]? @onset:Onset)?

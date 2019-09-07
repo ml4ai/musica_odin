@@ -37,8 +37,9 @@ object ComplexEvents {
     def toMentionString: String = toString
   }
 
-  case class Repeat(note: Option[Note] = None, chord: Option[Chord] = None,
-                    onset: Option[Onset] = None) extends MusicaObj
+  case class Repeat(note: Option[Note] = None, chord: Option[Chord] = None, onset: Option[Onset] = None,
+                    loc_rel: Option[LocationRel] = None, loc_abs: Option[LocationAbs] = None,
+                    everything: Option[Everything] = None, note_two: Option[Note] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }

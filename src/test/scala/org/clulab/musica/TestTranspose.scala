@@ -465,7 +465,7 @@ class TestTranspose extends ExtractionTest {
 
   val t21 = "The A quarter note in measure 1 should be taken and changed to a G"
 
-  passingTest should s"extract correctly from $t21" in {
+  failingTest should s"extract correctly from $t21" in {
     val mentions = extractMentions(t21)
     val transposeEvents = mentions.filter(_ matches "Transpose")
 

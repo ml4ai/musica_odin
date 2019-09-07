@@ -17,7 +17,6 @@ rules:
        direction: Direction? = >/nmod_(up|down)/ >case
        step: Step? = >/nmod_(up|down)/
 
-
    - name: Transpose-rule-1
      label: ${label}
      priority: ${rulepriority}
@@ -64,6 +63,15 @@ rules:
        @note:Note (should)? ([] and)? (?<trigger>[word=/(?i)^${transpose_triggers}/])
        @direction:Direction? @step:Step? ([]? @onset:Onset)? (from @note:Note)?
        (to @note:Note @locationrel:Locationrel?)?
+
+   - name: Transpose-rule-6
+     label: ${label}
+     priority: ${rulepriority}
+     example: "take the first whole note and move it down one step"
+     type: token
+     pattern: |
+       @note:Note ([]? @onset:Onset)? (and)? (?<trigger>[word=/(?i)^${transpose_triggers}/])
+       it @direction:Direction? @step:Step? (from @note:Note)? (to @note:Note @locationrel:Locationrel?)?
 
    - name: Transpose-rule-passive
      label: ${label}

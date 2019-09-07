@@ -1,5 +1,5 @@
 #music-specific event triggers
-change_duration_triggers: "shorten|lengthen|change|chang|convert"
+change_duration_triggers: "shorten|lengthen|change|chang|convert|augment|diminish"
 
 convert_triggers: "chang|change|convert"
 

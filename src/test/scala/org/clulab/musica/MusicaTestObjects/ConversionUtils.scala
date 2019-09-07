@@ -10,7 +10,9 @@ object ConversionUtils {
 
   def mentionToString(m: Mention): String = {
     m.label match {
+//      case "Cardinality" => Cardinality(m.text).toMentionString
       case "Direction" => Direction(m.text).toMentionString // TBM
+      case "Everything" => Everything(m.text).toMentionString
       case "LocationAbs" => locationabsMentionToLocationAbs(m).toMentionString
       case "LocationRel" => locationrelMentionToLocationRel(m).toMentionString
       case "Note" => noteMentionToNote(m).toMentionString

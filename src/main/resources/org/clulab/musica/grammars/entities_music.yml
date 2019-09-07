@@ -69,6 +69,14 @@ rules:
         (@specifier:Specifier)? @chordType:ChordType (?<trigger>[word=/^${chord}/])
 #        (@specifier:Specifier)? @chordType:ChordType (?<trigger>[word=/^chord/])
 
+    # in cases like "the chord"
+    - name: chord-2
+      label: Chord
+      example: "The chord"
+      type: token
+      pattern: |
+        @specifier:Specifier (?<trigger>[word=/^chord/])
+
 #    # todo: should trigger be cardinality?
 #    - name: chord-underspecified
 #      label: Chord
@@ -107,12 +115,13 @@ rules:
         (@specifier:Specifier)? (?<trigger> [word=/(?i)^(sequence|run)/])
 
     # todo: determine if 'tone' is used as step in "raise x by a whole tone"
+    # todo: semitone = 1/2 step; how to encode this?
     - name: step-trigger  # handle cases like "3 half steps"
       label: Step
       priority: 2
       type: token  # surface rule
       pattern: |
-        (@cardinality:Cardinality)? (@proportion: Proportion)? (?<trigger>[word=/^step/])
+        (@cardinality:Cardinality)? (@proportion: Proportion)? (?<trigger>[word=/^(step|tone)/])
 
     - name: step-underspecified  # handle cases when 'step' is elided, like "up 3"
       label: Step
@@ -125,6 +134,23 @@ rules:
             # Simple Events -- Music
 ## --------------------------------------------
 
+    # do we need this?
+    - name: relative-location-music-1
+      label: LocRelMusic
+      priority: 5
+      type: token # surface rule
+      pattern: |
+        @locationrel:Locationrel (@onset:Onset|@note:Note|it)
+      #  (?<trigger>[word=/${loc-preps}/]) (((@note:Note|@rest:Rest) ((in|of) @measure:Measure)?)|it)
+      # [word=/(after|before|between|above|below|followed by)/]
+
+    - name: relative-location-music-2
+      label: LocRelMusic
+      priority: 5
+      pattern: |
+        trigger = @locationrel:Locationrel
+        onset: Onset? = /nmod_${loc_preps}/
+        note: Note? = /nmod_${loc_preps}/
 
     # no "type" so it's a syntax rule
     - name: note-1
@@ -160,6 +186,24 @@ rules:
       pattern: |
         (@specifier:Specifier)? @pitch:Pitch? (@cardinality:Cardinality+)? @duration:Proportion?
         (?<trigger> [word=/(?i)^note/])
+
+    # handle cases where the pitch comes after word 'note'
+    - name: note-5-surface
+      label: Note
+      example: "the eighth note B"
+      priority: 3
+      type: token
+      pattern: |
+        (@specifier:Specifier)? (@cardinality:Cardinality+)? @duration:Proportion?
+        (?<trigger> [word=/(?i)^note/]) @pitch:Pitch
+
+#    - name: note-6-underspecified
+#      label: Note
+#      example: "the quarter B"
+#      priority: 3
+#      type: token
+#      pattern: |
+
 
     - name: onset-1
       label: Onset

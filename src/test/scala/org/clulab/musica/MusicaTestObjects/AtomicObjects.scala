@@ -10,6 +10,7 @@ object AtomicObjects {
 
   case class Beat(b: String) extends MusicaObj {
     def toMentionString: String = toString
+//    def toMentionString: String = convertOrd2Int(toString)
   }
 
 //  // needed?
@@ -47,6 +48,7 @@ object AtomicObjects {
 
   case class Measure(m: String) extends MusicaObj {
     def toMentionString: String = toString
+//    def toMentionString: String = convertOrd2Int(toString)
   }
 
   case class Pitch(p: String) extends MusicaObj {
@@ -59,5 +61,20 @@ object AtomicObjects {
 
   case class Specifier(s: String) extends MusicaObj {
     def toMentionString: String = toString
+  }
+
+  // helper method
+  // change ordinals to string-typed ints for beats and measures
+  def convertOrd2Int(found: String): String = {
+    val ord2IntMap = Map("first" -> "1", "second" -> "2", "third" -> "3", "fourth" -> "4", "1st" -> "1",
+                        "2nd" -> "2", "3rd" -> "3", "4th" -> "4")
+//    println("This was found: " + found)
+    if (ord2IntMap.contains(found)) {
+//      println("This worked and converted " + found + " to:")
+//      println(ord2IntMap(found))
+      return ord2IntMap(found)
+    } else {
+      return found
+    }
   }
 }

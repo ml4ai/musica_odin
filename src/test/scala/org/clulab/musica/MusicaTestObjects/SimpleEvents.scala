@@ -10,6 +10,7 @@ object SimpleEvents {
                    specifier: Option[Specifier] = None) extends MusicaObj {
     def toMentionString: String = {
       val args = new ArrayBuffer[String]
+//      cardinality.foreach(c => args.append(c.toMentionString))
       if (cardinality.nonEmpty) args.append(s"Cardinality(${cardinality.get})")
       chordType.foreach(d => args.append(d.toMentionString))
       specifier.foreach(s => args.append(s.toMentionString))

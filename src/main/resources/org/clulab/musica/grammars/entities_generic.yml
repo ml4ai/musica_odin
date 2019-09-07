@@ -36,6 +36,13 @@ rules:
     pattern: |
       [word=/(?i)^everything$/]
 
+  - name: locationrel
+    label: Locationrel
+    priority: 1
+    type: token
+    pattern: |
+      (?<trigger>[word=/${loc_preps}/]) by?
+
   - name: negator
     label: Negator
     priority: 1
@@ -56,6 +63,7 @@ rules:
     type: token  # surface rule
     pattern: |
       (?<quantifier>[tag=/^(DT|PDT)/]+) (@cardinality:Cardinality)?
+#      (?<quantifier>[tag=/^(DT|PDT)/]) (?<quantifier>[tag=/^(DT|PDT)/] & [word=/(?!)^[A-G]$/])? (@cardinality:Cardinality)?
   #        |
   #        (?<quantifier>[word=/(?i)^everything/])
 
@@ -79,23 +87,6 @@ rules:
     pattern: |
       @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) of @measure:Measure
 
-  # do we need this?
-  - name: relative-location-1
-    label: Locationrel
-    priority: 5
-    type: token # surface rule
-    pattern: |
-      (?<trigger>[word=/${loc_preps}/]) by? (@onset:Onset|@note:Note|it)
-    #  (?<trigger>[word=/${loc-preps}/]) (((@note:Note|@rest:Rest) ((in|of) @measure:Measure)?)|it)
-    # [word=/(after|before|between|above|below|followed by)/]
-
-  - name: relative-location-2
-    label: Locationrel
-    priority: 5
-    pattern: |
-      trigger = [word=/${loc_preps}/] by?
-      onset: Onset? = /nmod_${loc_preps}/
-      note: Note? = /nmod_${loc_preps}/
 
   ## potential alternative
   ## use only location words for rel-location and add music with a rule like:

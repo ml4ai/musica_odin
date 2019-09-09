@@ -10,9 +10,65 @@ rules:
       example: "Insert an A quarter note after the D in measure 3"
       type: token
       pattern: |
-        (?<trigger>[word=/(?i)^${insert_triggers}/]) @note:Note (@locationrel:Locationrel|@locationabs:Locationabs)?
-        (@note:Note|@chord:Chord|@pitchsequence:PitchSequence)?
+        (?<trigger>[word=/(?i)^${insert_triggers}/]) (@note:Note|@chord:Chord|@pitchsequence:PitchSequence)
+        (@locationrel:Locationrel|@locationabs:Locationabs)? (@note:Note|@chord:Chord|@pitchsequence:PitchSequence)?
         ([]? @onset:Onset)?
+
+    - name: insert-1-test
+      label: ${label}
+      priority: ${rulepriority}
+      type: token
+      pattern: |
+        (?<trigger>[word=/(?i)^${insert_triggers}/]) @note:Note at @locationabs:Locationabs
+
+    - name: insert-2-passive
+      label: ${label}
+      priority: ${rulepriority}
+      example: "An A quarter note is inserted after the D in measure 3"
+      type: token
+      pattern: |
+        (@note:Note|@chord:Chord|@pitchsequence:PitchSequence) should? [word=/(?i)^${aux_be}/]
+        (?<trigger>[word=/(?i)^${insert_triggers}/]) (@locationrel:Locationrel|([]? @locationabs:Locationabs))?
+        (@note:Note|@chord:Chord|@pitchsequence:PitchSequence)? ([]? @onset:Onset)?
+
+#   untested -- webapp not working at this shop
+    - name: insert-3
+      label: ${label}
+      priority: ${rulepriority}
+      example: "Insert a quarter note and a quarter rest after the last eighth note"
+      type: token
+      pattern: |
+        (?<trigger>[word=/(?i)^${insert_triggers}/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))?
+        (@locationrel:Locationrel (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure) []? @onset:Onset?)?
+
+# untested: webapp not working at this shop
+#    - name: insert-4
+#      label: ${label}
+#      priority: ${rulepriority}
+#      example: "Insert a quarter note at the end of the last measure"
+#      pattern: |
+#        (?<trigger>[word=/(?i)^${insert_triggers}/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+#        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))?
+#        @locationabs:Locationabs (([]? @onset:Onset)|@pitchsequence:PitchSequence)?
+
+# untested: webapp not working at this shop
+# todo: should be able to be combined with insert 3; testing separately
+#    - name: insert-5-between
+#      label: ${label}
+#      priority: ${rulepriority}
+#      example: "Add a D eighth note between the C half note and the D quarter note"
+#      pattern: |
+#        (?<trigger>[word=/(?i)^${insert_triggers}/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+#        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))?
+#        (@locationrel:Locationrel (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+#        and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure) []? @onset:Onset?)?
+
+#    - name: insert-6
+#      label: ${label}
+#      priority: ${rulepriority}
+#      example:
+
 
 
 #    - name: insert-1

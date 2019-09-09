@@ -5,7 +5,7 @@ vars: org/clulab/musica/grammars/triggers.yml
 rules:
 
   # todo: figure out how to differentiate this from the similar TRANSPOSE rule
-  - name: convert-rule-1
+  - name: convert-1
     label: ${label}
     priority: ${rulepriority}
     example: "Convert the quarter note in measure 1 into a quarter rest"
@@ -13,3 +13,35 @@ rules:
     pattern: |
       (?<trigger>[word=/(?i)^${convert_triggers}/])
       (@note:Note|@rest:Rest|@chord:Chord) ([]? @onset:Onset)? (into|to) (@note:Note|@rest:Rest|@chord:Chord)
+
+
+  - name: convert-2
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Convert the quarter note in measure 1 into a quarter rest"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^${convert_triggers}/])
+      (@note:Note|@rest:Rest|@chord:Chord) ([]? @onset:Onset)? to @chordtype:ChordType? @chord:Chord?
+
+
+  - name: convert-3-syntax
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Convert the quarter note in measure 1 into a quarter rest"
+    pattern: |
+      trigger = [word=/(?i)^${convert_triggers}/]
+      note: Note? = >dobj
+      chord: Chord? = >/nmod_*/
+
+
+# should there be one of these for each type?
+  - name: convert-4-conjunction
+    label: ${label}
+    priority: ${rulepriority}
+    example: "convert the G in measure 1 to an augmented second and the F into a rest"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^${convert_triggers}/]) []{2,10} and
+      (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) (to|into)
+      (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) []? @onset:Onset?

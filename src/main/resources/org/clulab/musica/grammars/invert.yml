@@ -3,3 +3,12 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 
 rules:
+
+    - name: invert-1
+      label: ${label}
+      priority: ${rulepriority}
+      example: "Invert the first measure around middle C"
+      type: token
+      pattern: |
+        (?<trigger>[word=/^${invert_triggers}/]) ((@note:Note|@everything:Everything) []? @onset:Onset)|@measure:Measure)
+        around @note:Note|@pitch:Pitch

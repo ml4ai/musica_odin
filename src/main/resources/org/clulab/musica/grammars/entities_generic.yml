@@ -36,6 +36,14 @@ rules:
     pattern: |
       [word=/(?i)^everything$/]
 
+ # todo: needs to capture cardinal numbers but NOT ordinals + 'times'
+  - name: frequency
+    label: Frequency
+    priority: 1
+    type: token
+    pattern: |
+      ([word=/(?i)^(once|twice|thrice)/]|[tag=/CD/])
+
   - name: locationrel
     label: Locationrel
     priority: 1

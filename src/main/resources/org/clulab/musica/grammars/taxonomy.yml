@@ -9,6 +9,7 @@
     - Pitch:
       - PitchSequence
 - Unit:
+  - Frequency
   - UnitMusic:
     - Step
     - Octave

@@ -8,7 +8,6 @@ rules:
    - name: Transpose-rule-syntax-1
      label: ${label}
      priority: ${rulepriority}
-     tyoke: token
      pattern: |
        trigger = [word=/(?i)^${transpose_triggers}/]
        onset: Onset = >nmod_in

@@ -4,6 +4,17 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+    - name: insert-1
+      label: ${label}
+      priority: ${rulepriority}
+      example: "Insert an A quarter note after the D in measure 3"
+      type: token
+      pattern: |
+        (?<trigger>[word=/(?i)^${insert_triggers}/]) @note:Note (@locationrel:Locationrel|@locationabs:Locationabs)?
+        (@note:Note|@chord:Chord|@pitchsequence:PitchSequence)?
+        ([]? @onset:Onset)?
+
+
 #    - name: insert-1
 #      label: Insert
 #      priority: 3

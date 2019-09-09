@@ -64,12 +64,12 @@ object TestUtils {
       // These should all be notes...
       ms.foreach(m => m.label should be (label))
 
-      // allow for 2 notes to be found
+//      // allow for 2 notes to be found
       if (label == "Note") {
         ms should (have length 2 or have length 1)
       }
       else {
-        // There shouldn't be any extra notes that we didn't want...
+//         There shouldn't be any extra notes that we didn't want...
       ms should have length 1
       }
 
@@ -205,6 +205,18 @@ object TestUtils {
         val onsetArgs = m.arguments.getOrElse("onset", Seq())
         shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
       }
+
+      // Test the Location
+      if (desired.loc_rel.nonEmpty) {
+        val locRelArgs = m.arguments.getOrElse("loc_rel", Seq())
+        shouldHaveDesired("Locationrel", locRelArgs, desired.loc_rel.get)
+      }
+//
+//      // Test the Preceding/following note
+//      if (desired.note_prec.nonEmpty) {
+//        val notePrecArgs = m.arguments.getOrElse("note_prec", Seq())
+//        shouldHaveDesired("Note", notePrecArgs, desired.note_prec.get)
+//      }
 
     }
 

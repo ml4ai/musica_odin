@@ -26,7 +26,8 @@ object ComplexEvents {
 
   // todo: need to add a relative location
   case class Insert(note: Option[Note] = None, onset: Option[Onset] = None,
-                    rest: Option[Rest] = None, chord: Option[Chord] = None) extends MusicaObj
+                    rest: Option[Rest] = None, chord: Option[Chord] = None,
+                    loc_rel: Option[LocationRel] = None, note_prec: Option[Note] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }

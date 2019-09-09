@@ -134,23 +134,23 @@ rules:
             # Simple Events -- Music
 ## --------------------------------------------
 
-    # do we need this?
-    - name: relative-location-music-1
-      label: LocRelMusic
-      priority: 5
-      type: token # surface rule
-      pattern: |
-        @locationrel:Locationrel (@onset:Onset|@note:Note|it)
-      #  (?<trigger>[word=/${loc-preps}/]) (((@note:Note|@rest:Rest) ((in|of) @measure:Measure)?)|it)
-      # [word=/(after|before|between|above|below|followed by)/]
-
-    - name: relative-location-music-2
-      label: LocRelMusic
-      priority: 5
-      pattern: |
-        trigger = @locationrel:Locationrel
-        onset: Onset? = /nmod_${loc_preps}/
-        note: Note? = /nmod_${loc_preps}/
+#    # do we need this?
+#    - name: relative-location-music-1
+#      label: LocRelMusic
+#      priority: 5
+#      type: token # surface rule
+#      pattern: |
+#        @locationrel:Locationrel (@onset:Onset|@note:Note|it)
+#      #  (?<trigger>[word=/${loc-preps}/]) (((@note:Note|@rest:Rest) ((in|of) @measure:Measure)?)|it)
+#      # [word=/(after|before|between|above|below|followed by)/]
+#
+#    - name: relative-location-music-2
+#      label: LocRelMusic
+#      priority: 5
+#      pattern: |
+#        trigger = @locationrel:Locationrel
+#        onset: Onset? = /nmod_${loc_preps}/
+#        note: Note? = /nmod_${loc_preps}/
 
     # no "type" so it's a syntax rule
     - name: note-1

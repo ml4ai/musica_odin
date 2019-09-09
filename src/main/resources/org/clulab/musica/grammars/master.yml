@@ -50,6 +50,12 @@ rules:
       label: Insert
       trigger: ${insert_triggers}
 
+  - import: org/clulab/musica/grammars/insert.yml
+    vars:
+      rulepriority: "6"
+      label: Insert
+      trigger: ${insert_triggers}
+
   - import: org/clulab/musica/grammars/template.yml
     vars:
       rulepriority: "6"

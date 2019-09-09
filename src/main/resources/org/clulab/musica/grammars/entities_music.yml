@@ -93,12 +93,14 @@ rules:
       pattern: |
         (?<trigger>[word=/^(measure|bar)/]) @cardinality:Cardinality
 
+    # todo: fix
     - name: measure-2
       label: Measure
       priority: 3
+      example: "a new bar"
       type: token # surface rule
       pattern: |
-        @specifier:Specifier (?<trigger>[word=/^(measure|bar)/])
+        @specifier:Specifier []? (?<trigger>[word=/^(measure|bar)/])
 
     - name: octave
       label: Octave
@@ -151,6 +153,14 @@ rules:
 #        trigger = @locationrel:Locationrel
 #        onset: Onset? = /nmod_${loc_preps}/
 #        note: Note? = /nmod_${loc_preps}/
+
+    - name: note-6-runofnotes
+      label: Note
+      example: "a run of notes"
+      priority: 2
+      type: token
+      pattern: |
+        (@specifier:Specifier)? [word=/(?i)^(sequence|run)/] of (?<trigger>[word=/^note/])
 
     # no "type" so it's a syntax rule
     - name: note-1

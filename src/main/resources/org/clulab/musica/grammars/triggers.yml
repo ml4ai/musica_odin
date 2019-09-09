@@ -27,7 +27,7 @@ ordinals: "first|second|third|fourth|fifth|sixth|seventh|ninth|tenth|1st|2nd|3rd
 proportions: "sixteenth|eight|quarter|half|whole"
 
 #music-specific vars
-chord: "chord|dyad|triad|third|fifth|seventh|ninth|eleventh|thirteenth|3rd|5th|7th|9th|11th|13th"
+chord: "chord|dyad|triad|third|fourth|fifth|seventh|ninth|eleventh|thirteenth|3rd|5th|7th|9th|11th|13th"
 chordtype: "major|minor|augmented|diminished|indeterminate|predominant|suspended|just|bitonal|atonal"
 key: "major|minor"
 notes: "A|A#|Ab|B|B#|Bb|C|C#|Cb|D|D#|Db|E|E#|Eb|F|F#|Fb|G|G#|Gb"

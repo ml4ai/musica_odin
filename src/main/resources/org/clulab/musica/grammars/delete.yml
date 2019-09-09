@@ -10,9 +10,9 @@ rules:
     example: "Delete everything in the second bar"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^${delete_triggers}/])
+      (?<trigger>[word=/(?i)^(${delete_triggers})/])
       (@everything:Everything|@note:Note|@rest:Rest|@chord:Chord|@pitch:Pitch|@measure:Measure)
-      ([]? @onset:Onset)?
+      (@locationrel:LocationRel|@locationabs:LocationAbs)? ([]? @onset:Onset)?
 
 #  - name: Delete-rule-passive-syntax
 #    label: ${label}
@@ -34,5 +34,5 @@ rules:
     type: token
     pattern: |
       (@everything:Everything|@note:Note|@rest:Rest|@chord:Chord|@pitch:Pitch|@measure:Measure)
-      ([]? @onset:Onset)? should? (${aux_be})
-      (?<trigger>[word=/(?i)^${delete_triggers}/])
+      (@locationrel:LocationRel|@locationabs:LocationAbs)? ([]? @onset:Onset)? should? (${aux_be})
+      (?<trigger>[word=/(?i)^(${delete_triggers})/])

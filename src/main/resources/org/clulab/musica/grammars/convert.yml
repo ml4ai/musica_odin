@@ -11,7 +11,7 @@ rules:
     example: "Convert the quarter note in measure 1 into a quarter rest"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^${convert_triggers}/])
+      (?<trigger>[word=/(?i)^(${convert_triggers})/])
       (@note:Note|@rest:Rest|@chord:Chord) ([]? @onset:Onset)? (into|to) (@note:Note|@rest:Rest|@chord:Chord)
 
 
@@ -21,7 +21,7 @@ rules:
     example: "Convert the quarter note in measure 1 into a quarter rest"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^${convert_triggers}/])
+      (?<trigger>[word=/(?i)^(${convert_triggers})/])
       (@note:Note|@rest:Rest|@chord:Chord) ([]? @onset:Onset)? to @chordtype:ChordType? @chord:Chord?
 
 
@@ -30,7 +30,7 @@ rules:
     priority: ${rulepriority}
     example: "Convert the quarter note in measure 1 into a quarter rest"
     pattern: |
-      trigger = [word=/(?i)^${convert_triggers}/]
+      trigger = [word=/(?i)^(${convert_triggers})/]
       note: Note? = >dobj
       chord: Chord? = >/nmod_*/
 
@@ -42,6 +42,6 @@ rules:
     example: "convert the G in measure 1 to an augmented second and the F into a rest"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^${convert_triggers}/]) []{2,10} and
+      (?<trigger>[word=/(?i)^(${convert_triggers})/]) []{2,10} and
       (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) (to|into)
       (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) []? @onset:Onset?

@@ -1,10 +1,12 @@
 #music-specific event triggers
 #change_duration_triggers: "shorten|lengthen|change|chang|convert|augment|diminish"
+
+# todo: split into shorten & lengthen
 change_duration_triggers: "shorten|lengthen|change|chang|augment|diminish"
 
 convert_triggers: "chang|change|convert|turn"
 
-delete_triggers: "delete|del|remove|drop"
+delete_triggers: "delete|del|remove|drop|erase|rid"
 
 insert_triggers: "insert|add"
 

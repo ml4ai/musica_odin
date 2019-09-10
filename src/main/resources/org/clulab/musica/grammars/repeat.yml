@@ -10,7 +10,7 @@ rules:
     example: "Repeat everything in the first measure"
     type: token
     pattern: |
-      (?<trigger>[word=/^${repeat_triggers}/]) ((@note:Note|@everything:Everything) []? @onset:Onset)|@measure:Measure)
+      (?<trigger>[word=/^(${repeat_triggers})/]) ((@note:Note|@everything:Everything) []? @onset:Onset)|@measure:Measure)
 
   - name: repeat-2-passive
     label: ${label}
@@ -18,5 +18,5 @@ rules:
     example: "Everything in the first measure should be repeated"
     type: token
     pattern: |
-      ((@note:Note|@everything:Everything) []? @onset:Onset)|@measure:Measure) (should)? [word=/^${aux_be}/]
-      (?<trigger>[word=/^${repeat_triggers}/]) (@locationabs:Locationabs (@measure:Measure)?)?
+      ((@note:Note|@everything:Everything) []? @onset:Onset)|@measure:Measure) (should)? [word=/^(${aux_be})/]
+      (?<trigger>[word=/^(${repeat_triggers})/]) (@locationabs:Locationabs (@measure:Measure)?)?

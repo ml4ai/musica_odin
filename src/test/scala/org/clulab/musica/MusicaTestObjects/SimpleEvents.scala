@@ -8,13 +8,15 @@ object SimpleEvents {
 
   case class Chord(cardinality: Option[String] = None, chordType: Option[ChordType] = None,
                    specifier: Option[Specifier] = None) extends MusicaObj {
+//    def this(d: String, s:String) = this(Some(ChordType(d)), Some(Specifier(s)))
+
     def toMentionString: String = {
       val args = new ArrayBuffer[String]
 //      cardinality.foreach(c => args.append(c.toMentionString))
       if (cardinality.nonEmpty) args.append(s"Cardinality(${cardinality.get})")
       chordType.foreach(d => args.append(d.toMentionString))
       specifier.foreach(s => args.append(s.toMentionString))
-      s"Step(${args.sorted.mkString(", ")})"
+      s"Chord(${args.sorted.mkString(", ")})"
     }
   }
 
@@ -44,7 +46,7 @@ object SimpleEvents {
       val args = new ArrayBuffer[String]
       specifier.foreach(s => args.append(s.toMentionString))
       duration.foreach(d => args.append(d.toMentionString))
-      s"Step(${args.sorted.mkString(", ")})"
+      s"Rest(${args.sorted.mkString(", ")})"
     }
   }
 

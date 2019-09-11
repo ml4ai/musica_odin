@@ -13,10 +13,10 @@ object AtomicObjects {
 //    def toMentionString: String = convertOrd2Int(toString)
   }
 
-//  // needed?
-//  case class Cardinality(c: String) extends MusicaObj {
-//    def toMentionString: String = toString
-//  }
+  // needed?
+  case class Cardinality(c: String) extends MusicaObj {
+    def toMentionString: String = toString
+  }
 
 //  case class Chord(c: String) extends MusicaObj {
 //    def toMentionString: String = toString

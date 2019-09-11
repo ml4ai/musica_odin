@@ -11,7 +11,7 @@ rules:
     priority: 1
     type: token  # surface rule
     pattern: |
-      [(tag=/CD/ | entity=/ORDINAL/) & word=/^(?!eighth)/]
+      [(tag=/CD/ | entity=/ORDINAL/) & word=/^(?!eighth|sixteenth)/]
 
   # for instances where 'second' etc are tagged as part of a date
   - name: cardinality-2

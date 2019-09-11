@@ -23,7 +23,7 @@ rules:
       priority: 1
       type: token  # surface rule
       pattern: |   # replace with ${notes} var?
-        [word=/^(${notes})[0-9]*s?\.?$/]
+        [word=/^(${notes})[0-9]*s?\.?$/] (sharp|flat)?
 
     # todo: fix -- works for ABCD and A-B-C-D but not A,B,C,D, A B C D, or A, B, C, D
     - name: pitch-for-seqs
@@ -40,7 +40,7 @@ rules:
       priority: 2
       type: token
       pattern: |
-        ([word=/^${notes}$/]){2,8}
+        ([word=/^${notes}$/]){2,8} [word=/(?!)sharp|flat/]
 
 ## --------------------------------------------
           # Composed concepts -- Music

@@ -4,19 +4,47 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+  # frequency doesn't work here, but does in passive rule--why?
   - name: repeat-1
     label: ${label}
     priority: ${rulepriority}
     example: "Repeat everything in the first measure"
     type: token
     pattern: |
-      (?<trigger>[word=/^(${repeat_triggers})/]) ((@note:Note|@everything:Everything) []? @onset:Onset)|@measure:Measure)
+      (?<trigger>[word=/^(${repeat_triggers})/]) (((@note:Note|@everything:Everything) []? @onset:Onset?)|@measure:Measure)
+      @frequency:Frequency? ([]? @locationabs:LocationAbs (@measure:Measure)?)?
 
-  - name: repeat-2-passive
+  - name: repeat-2
+    label: ${label}
+    priority: ${rulepriority}
+    example: "repeat the run of eighth notes after the whole note in the second measure"
+    type: token
+    pattern: |
+      (?<trigger>[word=/^(${repeat_triggers})/]) (((@note:Note|@everything:Everything) []? @onset:Onset?)|@measure:Measure)
+      (@locationrel:LocationRel (@note:Note|@rest:Rest) ([]? @onset:Onset)?) @frequency:Frequency?
+
+  # todo: why does repeat-1 not capture this, but making frequency mandatory works?
+  - name: repeat-3
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Repeat everything in the first measure twice"
+    type: token
+    pattern: |
+      (?<trigger>[word=/^(${repeat_triggers})/]) (((@note:Note|@everything:Everything) []? @onset:Onset?)|@measure:Measure)
+      @frequency:Frequency ([]? @locationabs:LocationAbs (@measure:Measure)?)?
+
+  - name: repeat-3-passive
     label: ${label}
     priority: ${rulepriority}
     example: "Everything in the first measure should be repeated"
     type: token
     pattern: |
-      ((@note:Note|@everything:Everything) []? @onset:Onset)|@measure:Measure) (should)? [word=/^(${aux_be})/]
-      (?<trigger>[word=/^(${repeat_triggers})/]) (@locationabs:Locationabs (@measure:Measure)?)?
+      (((@note:Note|@everything:Everything) []? @onset:Onset?)|@measure:Measure)
+      (@locationrel:LocationRel (@note:Note|@rest:Rest) ([]? @onset:Onset)?)?
+      (should)? [word=/^(${aux_be})/]?
+      (?<trigger>[word=/^(${repeat_triggers})/]) @frequency:Frequency?
+      ([]? @locationabs:LocationAbs (@measure:Measure)?)?
+
+#  - name: repeat-3-passive
+#    label: ${label}
+#    priority: ${rulepriority}

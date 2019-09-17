@@ -36,16 +36,15 @@ rules:
     pattern: |
       [word=/(?i)^everything$/]
 
- # todo: needs to capture cardinal numbers but NOT ordinals + 'times'
   - name: frequency
     label: Frequency
     priority: 1
     type: token
     pattern: |
-      ([word=/(?i)^(once|twice|thrice)/]|[tag=/CD/])
+      ([word=/(?i)^(once|twice|thrice)/]|([tag=/CD/] [word=/^time/]))
 
   - name: locationrel
-    label: Locationrel
+    label: LocationRel
     priority: 1
     type: token
     pattern: |
@@ -80,7 +79,7 @@ rules:
   ## --------------------------------------------
 
   - name: absolute-location-1
-    label: Locationabs
+    label: LocationAbs
     example: "Add a quarter rest at the start"
     priority: 3
     type: token
@@ -88,7 +87,7 @@ rules:
       @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) (with)?
 
   - name: absolute-location-2
-    label: Locationabs
+    label: LocationAbs
     example: "Add a quarter rest to the start of the second measure"
     priority: 4
     type: token

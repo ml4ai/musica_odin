@@ -11,7 +11,7 @@ rules:
       type: token
       pattern: |
         (?<trigger>[word=/(?i)^(${insert_triggers})/]) (@note:Note|@chord:Chord|@pitchsequence:PitchSequence)
-        (@locationrel:Locationrel|@locationabs:Locationabs)? (@note:Note|@chord:Chord|@pitchsequence:PitchSequence)?
+        (@locationrel:LocationRel|@locationabs:LocationAbs)? (@note:Note|@chord:Chord|@pitchsequence:PitchSequence)?
         ([]? @onset:Onset)?
 #        (?<trigger>[word=/(?i)^${insert_triggers}/]) (@note:Note|@chord:Chord|@pitchsequence:PitchSequence) []?
 #        (@locationrel:Locationrel|@locationabs:Locationabs)? (@note:Note|@chord:Chord|@pitchsequence:PitchSequence)?
@@ -22,7 +22,7 @@ rules:
       priority: ${rulepriority}
       type: token
       pattern: |
-        (?<trigger>[word=/(?i)^(${insert_triggers})/]) @note:Note []? @locationabs:Locationabs
+        (?<trigger>[word=/(?i)^(${insert_triggers})/]) @note:Note []? @locationabs:LocationAbs
 
     - name: insert-2-passive
       label: ${label}
@@ -31,7 +31,7 @@ rules:
       type: token
       pattern: |
         (@note:Note|@chord:Chord|@pitchsequence:PitchSequence) should? [word=/(?i)^(${aux_be})/]
-        (?<trigger>[word=/(?i)^(${insert_triggers})/]) (@locationrel:Locationrel|([]? @locationabs:Locationabs))?
+        (?<trigger>[word=/(?i)^(${insert_triggers})/]) (@locationrel:LocationRel|([]? @locationabs:LocationAbs))?
         (@note:Note|@chord:Chord|@pitchsequence:PitchSequence)? ([]? @onset:Onset)?
 
     - name: insert-3
@@ -42,7 +42,7 @@ rules:
       pattern: |
         (?<trigger>[word=/(?i)^(${insert_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
         (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))?
-        (@locationrel:Locationrel (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+        (@locationrel:LocationRel (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
         (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))? []? @onset:Onset?)?
 
     - name: insert-4
@@ -53,7 +53,7 @@ rules:
       pattern: |
         (?<trigger>[word=/(?i)^(${insert_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
         (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))?
-        @locationabs:Locationabs (([]? @onset:Onset)|@pitchsequence:PitchSequence)?
+        @locationabs:LocationAbs (([]? @onset:Onset)|@pitchsequence:PitchSequence)?
 #        (?<trigger>[word=/(?i)^${insert_triggers}/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
 #        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))? (at|to)?
 #        @locationabs:Locationabs (([]? @onset:Onset)|@pitchsequence:PitchSequence)?
@@ -76,7 +76,7 @@ rules:
       example: "At the start of the second measure, add a quarter note"
       type: token
       pattern: |
-        @locationabs:Locationabs (@pitchsequence:PitchSequence)? (@onset:Onset)? (?<trigger>[word=/(?i)^(${insert_triggers})/])
+        @locationabs:LocationAbs (@pitchsequence:PitchSequence)? (@onset:Onset)? (?<trigger>[word=/(?i)^(${insert_triggers})/])
         (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
 
     - name: insert-6-passive
@@ -85,7 +85,7 @@ rules:
       example: "At the start of the second measure, a quarter note should be added"
       type: token
       pattern: |
-        @locationabs:Locationabs (of @pitchsequence:PitchSequence)? (@onset:Onset)?
+        @locationabs:LocationAbs (of @pitchsequence:PitchSequence)? (@onset:Onset)?
         (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure) (should)?
         [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
 

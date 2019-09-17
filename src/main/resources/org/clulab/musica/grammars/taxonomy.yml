@@ -8,6 +8,7 @@
         - ChordType
     - Pitch:
       - PitchSequence
+    - Score
 - Unit:
   - Frequency
   - UnitMusic:
@@ -48,7 +49,7 @@
   - Cardinality
 - Direction      # 'up' or 'down'
 - Location:
-  - Locationrel:
+  - LocationRel:
       - LocRelMusic
-  - Locationabs
+  - LocationAbs
 - Negator

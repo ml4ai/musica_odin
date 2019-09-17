@@ -60,7 +60,7 @@ rules:
         rest: Rest? = >dobj
         chord: Chord? = >dobj
         measure: Measure? = >/nmod_*/
-        locationabs: Locationabs? = >/nmod_*/
+        locationabs: LocationAbs? = >/nmod_*/
 
     #jc added
     # with three tagged notes
@@ -96,8 +96,8 @@ rules:
         note: Note? = >nsubjpass
         pitch: Pitch? = >nsubjpass
         rest: Rest? = >nsubjpass
-        locationabs: Locationabs? = >/nmod_*/
-        locationrel: Locationrel? = >/nmod_*/
+        locationabs: LocationAbs? = >/nmod_*/
+        locationrel: LocationRel? = >/nmod_*/
 
     # jc added
     - name: ${addlabel}-passive_voice-syntax-2

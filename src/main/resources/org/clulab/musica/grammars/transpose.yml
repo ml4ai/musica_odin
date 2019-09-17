@@ -41,7 +41,7 @@ rules:
      type: token
      pattern: |
        (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@note:Note|@chord:Chord)
-       (@direction:Direction)? to (@note:Note|@pitch:Pitch|@chord:Chord) @locationrel:Locationrel?
+       (@direction:Direction)? to (@note:Note|@pitch:Pitch|@chord:Chord) @locationrel:LocationRel?
 
    - name: Transpose-rule-4
      label: ${label}
@@ -61,7 +61,7 @@ rules:
      pattern: |
        @note:Note (should)? ([] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
        @direction:Direction? @step:Step? ([]? @onset:Onset)? (from @note:Note)?
-       (to @note:Note @locationrel:Locationrel?)?
+       (to @note:Note @locationrel:LocationRel?)?
 
    - name: Transpose-rule-6
      label: ${label}
@@ -70,7 +70,7 @@ rules:
      type: token
      pattern: |
        @note:Note ([]? @onset:Onset)? (and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
-       it @direction:Direction? @step:Step? (from @note:Note)? (to @note:Note @locationrel:Locationrel?)?
+       it @direction:Direction? @step:Step? (from @note:Note)? (to @note:Note @locationrel:LocationRel?)?
 
    - name: Transpose-rule-passive
      label: ${label}
@@ -90,7 +90,7 @@ rules:
      pattern: |
        @note:Note (should)? [word=/^(${aux_be})/] ([] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
        @direction:Direction? @step:Step? ([]? @onset:Onset)? (from @note:Note)?
-       (to @note:Note @locationrel:Locationrel?)?
+       (to @note:Note @locationrel:LocationRel?)?
 
 
    - name: Transpose-rule-everything

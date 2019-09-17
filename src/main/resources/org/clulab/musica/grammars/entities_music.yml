@@ -100,7 +100,7 @@ rules:
       example: "a new bar"
       type: token # surface rule
       pattern: |
-        @specifier:Specifier []? (?<trigger>[word=/^(measure|bar)/])
+        @specifier:Specifier (@cardinality:Cardinality|[])? (?<trigger>[word=/^(measure|bar)/])
 
     - name: octave
       label: Octave
@@ -108,6 +108,13 @@ rules:
       type: token # surface rule
       pattern: |
         (@cardinality:Cardinality)? (?<trigger>[word=/^octave/])
+
+    - name: score
+      label: Score
+      priority: 3
+      type: token
+      pattern: |
+        @specifier:Specifier? (?<trigger> [word=/(?i)^score/])
 
     - name: sequence
       label: PitchSequence
@@ -157,10 +164,18 @@ rules:
     - name: note-6-runofnotes
       label: Note
       example: "a run of notes"
-      priority: 2
+      priority: 4
       type: token
       pattern: |
-        (@specifier:Specifier)? [word=/(?i)^(sequence|run)/] of (?<trigger>[word=/^note/])
+        @pitchsequence:PitchSequence of @note:Note
+
+    - name: note-7-runofnotes
+      label: Note
+      example: "those two eighth note runs"
+      priority: 4
+      type: token
+      pattern: |
+        @note:Note @pitchsequence:PitchSequence
 
     # no "type" so it's a syntax rule
     - name: note-1

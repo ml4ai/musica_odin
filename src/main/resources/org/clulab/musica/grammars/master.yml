@@ -63,7 +63,14 @@ rules:
       label: Invert
       trigger: ${invert_triggers}
 
-  - import: org/clulab/musica/grammars/template.yml
+#  - import: org/clulab/musica/grammars/template.yml
+#    vars:
+#      rulepriority: "6"
+#      addlabel: "Repeat"
+#      label: Repeat
+#      trigger: ${repeat_triggers}
+
+  - import: org/clulab/musica/grammars/repeat.yml
     vars:
       rulepriority: "6"
       addlabel: "Repeat"

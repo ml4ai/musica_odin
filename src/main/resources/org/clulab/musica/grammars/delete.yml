@@ -12,7 +12,7 @@ rules:
     pattern: |
       (?<trigger>[word=/(?i)^(${delete_triggers})/])
       (@everything:Everything|@note:Note|@rest:Rest|@chord:Chord|@pitch:Pitch|@measure:Measure)
-      (@locationrel:LocationRel|@locationabs:LocationAbs)? ([]? @onset:Onset)?
+      (@locationrel:LocationRel (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence)?|@locationabs:LocationAbs)? ([]? @onset:Onset)?
 
 #  - name: Delete-rule-passive-syntax
 #    label: ${label}
@@ -48,3 +48,20 @@ rules:
       (?<trigger>[word=/(?i)^(${delete_triggers})/]) @note:Note (in|from) @chord:Chord
       |
       @note:Note (in|from) @chord:Chord (should)? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${delete_triggers})/])
+
+  - name: Delete-4-note-from-set
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Delete the first of those two eighth notes"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${delete_triggers})/]) @specifier:Specifier of (@note:Note|@chord:Chord|@rest:Rest)
+
+  - name: Delete-5-note-from-set-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The first of those two eighth notes should be deleted"
+    type: token
+    pattern: |
+      @specifier:Specifier of (@note:Note|@chord:Chord|@rest:Rest) should? [word=/^(${aux_be})/]
+      (?<trigger>[word=/(?i)^(${delete_triggers})/]) 

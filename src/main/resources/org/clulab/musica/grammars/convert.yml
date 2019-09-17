@@ -45,3 +45,13 @@ rules:
       (?<trigger>[word=/(?i)^(${convert_triggers})/]) []{2,10} and
       (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) (to|into)
       (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) []? @onset:Onset?
+
+  - name: convert-5-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "the G in measure 1 should be converted into a quarter rest"
+    type: token
+    pattern: |
+      ([]? @onset:Onset)? (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence)
+      ([]? @onset:Onset)? should? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${convert_triggers})/])
+      (to|into) (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) ([]? @onset:Onset)?

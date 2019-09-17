@@ -168,6 +168,8 @@ rules:
       type: token
       pattern: |
         @pitchsequence:PitchSequence of @note:Note
+#        @specifier:Specifier (@cardinality:Cardinality+)? [word=/^run|sequence/] of
+#        @pitch:Pitch? @duration:Proportion? (?<trigger> [word=/(?i)^note/])
 
     - name: note-7-runofnotes
       label: Note
@@ -176,6 +178,9 @@ rules:
       type: token
       pattern: |
         @note:Note @pitchsequence:PitchSequence
+#        @specifier:Specifier? (@cardinality:Cardinality+)? @pitch:Pitch? @duration:Proportion?
+#        (?<trigger> [word=/(?i)^note/]) [word=/^run|sequence/]
+
 
     # no "type" so it's a syntax rule
     - name: note-1
@@ -201,7 +206,8 @@ rules:
       priority: 3
       type: token
       pattern: |
-        (@specifier:Specifier []{,2})? @pitch:Pitch? @duration:Proportion? (?<trigger> [word=/(?i)^note/])
+        (@specifier:Specifier [])? @pitch:Pitch? @duration:Proportion? (?<trigger> [word=/(?i)^note/])
+#        (@specifier:Specifier []{,2})? @pitch:Pitch? @duration:Proportion? (?<trigger> [word=/(?i)^note/])
 
     - name: note-4-surface
       label: Note

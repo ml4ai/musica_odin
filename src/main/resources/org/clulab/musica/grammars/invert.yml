@@ -12,3 +12,12 @@ rules:
       pattern: |
         (?<trigger>[word=/^${invert_triggers}/]) ((@note:Note|@everything:Everything) []? @onset:Onset)|@measure:Measure)
         around @note:Note|@pitch:Pitch
+
+    - name: invert-2-passive
+      label: ${label}
+      priority: ${rulepriority}
+      example: "The first measure should be inverted around middle C"
+      type: token
+      pattern: |
+        ((@note:Note|@everything:Everything) []? @onset:Onset)|@measure:Measure) should
+        [word=/^(${aux_be})/] (?<trigger>[word=/^${invert_triggers}/]) around @note:Note|@pitch:Pitch

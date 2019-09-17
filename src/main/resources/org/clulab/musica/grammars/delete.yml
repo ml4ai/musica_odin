@@ -4,7 +4,7 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
-  - name: Delete-1
+  - name: delete-1
     label: ${label}
     priority: ${rulepriority}
     example: "Delete everything in the second bar"
@@ -27,7 +27,7 @@ rules:
 #      rest: Rest? = >nsubjpass
 #      onset: Onset = >nsubjpass >/nmod_*/
 
-  - name: Delete-2-passive
+  - name: delete-2-passive
     label: ${label}
     priority: ${rulepriority}
     example: "The first quarter note should be deleted"
@@ -39,7 +39,7 @@ rules:
       (?<trigger>[word=/(?i)^(${delete_triggers})/])
 
 
-  - name: Delete-3-parts-of-chord
+  - name: delete-3-parts-of-chord
     label: ${label}
     priority: ${rulepriority}
     example: "Delete the upper note from the chord"
@@ -49,7 +49,7 @@ rules:
       |
       @note:Note (in|from) @chord:Chord (should)? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${delete_triggers})/])
 
-  - name: Delete-4-note-from-set
+  - name: delete-4-note-from-set
     label: ${label}
     priority: ${rulepriority}
     example: "Delete the first of those two eighth notes"
@@ -57,11 +57,11 @@ rules:
     pattern: |
       (?<trigger>[word=/(?i)^(${delete_triggers})/]) @specifier:Specifier of (@note:Note|@chord:Chord|@rest:Rest)
 
-  - name: Delete-5-note-from-set-passive
+  - name: delete-5-note-from-set-passive
     label: ${label}
     priority: ${rulepriority}
     example: "The first of those two eighth notes should be deleted"
     type: token
     pattern: |
       @specifier:Specifier of (@note:Note|@chord:Chord|@rest:Rest) should? [word=/^(${aux_be})/]
-      (?<trigger>[word=/(?i)^(${delete_triggers})/]) 
+      (?<trigger>[word=/(?i)^(${delete_triggers})/])

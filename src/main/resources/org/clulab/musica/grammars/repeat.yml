@@ -33,7 +33,7 @@ rules:
       (?<trigger>[word=/^(${repeat_triggers})/]) (((@note:Note|@everything:Everything) []? @onset:Onset?)|@measure:Measure)
       @frequency:Frequency ([]? @locationabs:LocationAbs (@measure:Measure)?)?
 
-  - name: repeat-3-passive
+  - name: repeat-4-passive
     label: ${label}
     priority: ${rulepriority}
     example: "Everything in the first measure should be repeated"

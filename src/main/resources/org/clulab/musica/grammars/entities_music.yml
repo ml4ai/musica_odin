@@ -25,8 +25,7 @@ rules:
       pattern: |   # replace with ${notes} var?
         [word=/^(${notes})[0-9]*s?\.?$/] (sharp|flat)?
 
-    # todo: fix -- works for ABCD and A-B-C-D but not A,B,C,D, A B C D, or A, B, C, D
-    - name: pitch-for-seqs
+    - name: pitch-sequences
       label: PitchSequence
       priority: 1
       type: token
@@ -34,13 +33,20 @@ rules:
         (?<trigger> [word=/((${notes})(,|-|\s)?){2,8}\.?/]) # should not need to be token-initial or final
       # (?<trigger> [word=/(${notes},?-?\s?)+\.?/])
 
-    # works for A B C D, but not A,B,C,D
-    - name: pitch-for-seqs-2
+    - name: pitch-sequences-2
       label: PitchSequence
       priority: 2
       type: token
       pattern: |
         ([word=/^${notes}$/]){2,8} [word=/(?!)sharp|flat/]
+
+    # for sequences with commas between elements
+    - name: pitch-sequences-3
+      label: PitchSequence
+      priority: 2
+      type: token
+      pattern: |
+        ([word=/^${notes}$/] [tag=/,/]){1,8} (and? [word=/^${notes}$/])?
 
 ## --------------------------------------------
           # Composed concepts -- Music
@@ -62,7 +68,7 @@ rules:
 
     - name: chord
       label: Chord
-      example: "A minor chord"
+      example: "A minor fourth"
       priority: 3
       type: token
       pattern: |
@@ -77,14 +83,21 @@ rules:
       pattern: |
         @specifier:Specifier (?<trigger>[word=/^chord/])
 
-#    # todo: should trigger be cardinality?
-#    - name: chord-underspecified
-#      label: Chord
-#      example: "the minor fifth"
-#      priority: 3
-#      type: token
-#      pattern: |
-#        (@specifier:Specifier)? (?<trigger>[word=/(?i)^${chordtype}/]) @cardinality:Cardinality
+    - name: key
+      label: Key
+      example: "the key of G"
+      priority: 2
+      type: token
+      pattern: |
+        @specifier:Specifier? (?<trigger>[word=/(?i)^key/]) of @pitch:Pitch
+
+    - name: key-underspecified
+      label: Key
+      example: "play it in C major."
+      priority: 2
+      type: token
+      pattern: |
+        in (?<trigger>(@pitch:Pitch ${key}?)) [tag=/\./]
 
     - name: measure-1
       label: Measure
@@ -138,6 +151,31 @@ rules:
       type: token  # surface rule
       pattern: |
         (?<= /(?i)^(up|down)$/) (@cardinality:Cardinality)
+
+
+    - name: time-signature
+      label: TimeSignature
+      priority: 1
+      type: token
+      pattern: |
+        [word=/(${time_signature_nums})(\/|-)(${time_signature_denoms})/] time?
+
+    # to capture fractions
+    - name: time-signature-2
+      label: TimeSignature
+      priority: 1
+      type: token
+      pattern: |
+        [tag=/CD/ & word=/[\S]+\/[\S]+/] time
+
+    # one case of underspecification
+    - name: time-signature-underspecified
+      label: TimeSignature
+      priority: 1
+      type: token
+      pattern:
+        in (?<trigger>[tag=/CD/]) [tag=/\./]
+
 
 ## --------------------------------------------
             # Simple Events -- Music

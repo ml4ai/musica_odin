@@ -41,7 +41,15 @@ rules:
     priority: 1
     type: token
     pattern: |
-      ([word=/(?i)^(once|twice|thrice)/]|([tag=/CD/] [word=/^time/]))
+      [word=/(?i)^(once|twice|thrice)/] [word=/^time/]
+
+  # avoid having 3/4 time be marked as frequency
+  - name: frequency-2
+    label: Frequency
+    priority: 1
+    type: token
+    pattern: |
+      [tag=/CD/ & !word=/.*\/.*/] [word=/^time/]
 
   - name: locationrel
     label: LocationRel

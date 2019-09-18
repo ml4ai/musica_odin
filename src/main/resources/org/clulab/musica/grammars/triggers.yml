@@ -32,6 +32,8 @@ proportions: "sixteenth|eight|quarter|half|whole"
 chord: "chord|dyad|triad|second|third|fourth|fifth|seventh|ninth|eleventh|thirteenth|3rd|5th|7th|9th|11th|13th"
 chordtype: "major|minor|augmented|diminished|indeterminate|predominant|suspended|just|bitonal|atonal"
 key: "major|minor"
+time_signature_nums: "two|three|four|five|six|seven|nine|twelve|2|3|4|5|6|7|9|12"
+time_signature_denoms: "two|four|eight"
 notes: "A|A#|Ab|B|B#|Bb|C|C#|Cb|D|D#|Db|E|E#|Eb|F|F#|Fb|G|G#|Gb"
 pitch_changes: "sharp|flat|natural|diesis|bemolle"
 

@@ -2,12 +2,13 @@
   - EntityGeneric:
     - Everything
   - EntityMusic:
-    - Note
-    - Rest
     - Chord:
         - ChordType
+    - Key
+    - Note
     - Pitch:
       - PitchSequence
+    - Rest
     - Score
 - Unit:
   - Frequency
@@ -19,6 +20,7 @@
     - Measure
     - Duration
     - Onset
+    - TimeSignature
 - Beat
 - Event:
   - Action:

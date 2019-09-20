@@ -4,6 +4,143 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+    - name: insert-1
+      label: ${label}
+      priority: ${rulepriority}
+      example: "Insert an A quarter note after the D in measure 3"
+      type: token
+      pattern: |
+        (?<trigger>[word=/(?i)^(${insert_triggers})/])
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+        (@locationrel:LocationRel|([]? @locationabs:LocationAbs []?))?
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)?
+        ([]? @onset:Onset)?
+#        (?<trigger>[word=/(?i)^${insert_triggers}/]) (@note:Note|@chord:Chord|@pitchsequence:PitchSequence) []?
+#        (@locationrel:Locationrel|@locationabs:Locationabs)? (@note:Note|@chord:Chord|@pitchsequence:PitchSequence)?
+#        ([]? @onset:Onset)?
+
+    - name: insert-1-test
+      label: ${label}
+      priority: ${rulepriority}
+      type: token
+      pattern: |
+        (?<trigger>[word=/(?i)^(${insert_triggers})/]) @note:Note []? @locationabs:LocationAbs
+
+    - name: insert-2-passive
+      label: ${label}
+      priority: ${rulepriority}
+      example: "An A quarter note is inserted after the D in measure 3"
+      type: token
+      pattern: |
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))?
+        should? [word=/(?i)^(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
+        (@locationrel:LocationRel|([]? @locationabs:LocationAbs))?
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)? ([]? @onset:Onset)?
+
+    - name: insert-3
+      label: ${label}
+      priority: ${rulepriority}
+      example: "Insert a quarter note and a quarter rest after the last eighth note"
+      type: token
+      pattern: |
+        (?<trigger>[word=/(?i)^(${insert_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))?
+        (@locationrel:LocationRel (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))? []? @onset:Onset?)?
+
+    - name: insert-4
+      label: ${label}
+      priority: ${rulepriority}
+      example: "Insert a quarter note at the end of the last measure"
+      type: token
+      pattern: |
+        (?<trigger>[word=/(?i)^(${insert_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))?
+        @locationabs:LocationAbs (([]? @onset:Onset)|@pitchsequence:PitchSequence)?
+#        (?<trigger>[word=/(?i)^${insert_triggers}/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+#        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))? (at|to)?
+#        @locationabs:Locationabs (([]? @onset:Onset)|@pitchsequence:PitchSequence)?
+
+# todo: should be able to be combined with insert 3; testing separately
+#    - name: insert-5-between
+#      label: ${label}
+#      priority: ${rulepriority}
+#      example: "Add a D eighth note between the C half note and the D quarter note"
+#      type: token
+#      pattern: |
+#        (?<trigger>[word=/(?i)^${insert_triggers}/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+#        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))?
+#        (@locationrel:Locationrel (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+#        and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure) []? @onset:Onset?)?
+
+    - name: insert-5
+      label: ${label}
+      priority: ${rulepriority}
+      example: "At the start of the second measure, add a quarter note"
+      type: token
+      pattern: |
+        @locationabs:LocationAbs (@pitchsequence:PitchSequence)? (@onset:Onset)? (?<trigger>[word=/(?i)^(${insert_triggers})/])
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+
+    - name: insert-6-passive
+      label: ${label}
+      priority: ${rulepriority}
+      example: "At the start of the second measure, a quarter note should be added"
+      type: token
+      pattern: |
+        @locationabs:LocationAbs (of @pitchsequence:PitchSequence)? (@onset:Onset)?
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))?
+        (should)? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
+
+    - name: insert-7-passive-between
+      label: ${label}
+      priority: ${rulepriority}
+      example:
+      type: token
+      pattern: |
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))? should
+        [word=/(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
+        (@locationrel:LocationRel (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))? []? @onset:Onset?)?
+
+    - name: insert-8-passive
+      label: ${label}
+      priority: ${rulepriority}
+      example: "Insert an A quarter note after the D in measure 3"
+      type: token
+      pattern: |
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
+        should [word=/(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
+        (@locationrel:LocationRel|([]? @locationabs:LocationAbs []?))?
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)?
+        ([]? @onset:Onset)?
+
+    # todo: commas count as a character, so [] can be used to bypass them--alter this in all testing
+    - name: insert-9-comma
+      label: ${label}
+      priority: ${rulepriority}
+      example: "After the quarter note, add an eighth note"
+      type: token
+      pattern: |
+        (@locationrel:LocationRel|(@locationabs:LocationAbs []?))?
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|([] @onset:Onset))
+        (?<trigger>[word=/(?i)^(${insert_triggers})/])
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+
+    - name: insert-10-comma-passive
+      label: ${label}
+      priority: ${rulepriority}
+      example: "After the quarter note, an eighth note should be added"
+      type: token
+      pattern: |
+        (@locationrel:LocationRel|(@locationabs:LocationAbs []?))?
+        ((@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)|([] @onset:Onset))
+        [] (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) should
+        [word=/(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
+
 #    - name: insert-1
 #      label: Insert
 #      priority: 3

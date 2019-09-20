@@ -11,7 +11,7 @@ rules:
     priority: 1
     type: token  # surface rule
     pattern: |
-      [(tag=/CD/ | entity=/ORDINAL/) & word=/^(?!eighth)/]
+      [(tag=/CD/ | entity=/ORDINAL/) & word=/^(?!eighth|sixteenth)/]
 
   # for instances where 'second' etc are tagged as part of a date
   - name: cardinality-2
@@ -36,6 +36,28 @@ rules:
     pattern: |
       [word=/(?i)^everything$/]
 
+  - name: frequency
+    label: Frequency
+    priority: 1
+    type: token
+    pattern: |
+      [word=/(?i)^(once|twice|thrice)/] [word=/^time/]
+
+  # avoid having 3/4 time be marked as frequency
+  - name: frequency-2
+    label: Frequency
+    priority: 1
+    type: token
+    pattern: |
+      [tag=/CD/ & !word=/.*\/.*/] [word=/^time/]
+
+  - name: locationrel
+    label: LocationRel
+    priority: 1
+    type: token
+    pattern: |
+      (?<trigger>[word=/${loc_preps}/]) by?
+
   - name: negator
     label: Negator
     priority: 1
@@ -56,6 +78,7 @@ rules:
     type: token  # surface rule
     pattern: |
       (?<quantifier>[tag=/^(DT|PDT)/]+) (@cardinality:Cardinality)?
+#      (?<quantifier>[tag=/^(DT|PDT)/]) (?<quantifier>[tag=/^(DT|PDT)/] & [word=/(?!)^[A-G]$/])? (@cardinality:Cardinality)?
   #        |
   #        (?<quantifier>[word=/(?i)^everything/])
 
@@ -64,7 +87,7 @@ rules:
   ## --------------------------------------------
 
   - name: absolute-location-1
-    label: Locationabs
+    label: LocationAbs
     example: "Add a quarter rest at the start"
     priority: 3
     type: token
@@ -72,30 +95,13 @@ rules:
       @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) (with)?
 
   - name: absolute-location-2
-    label: Locationabs
+    label: LocationAbs
     example: "Add a quarter rest to the start of the second measure"
     priority: 4
     type: token
     pattern: |
       @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) of @measure:Measure
 
-  # do we need this?
-  - name: relative-location-1
-    label: Locationrel
-    priority: 5
-    type: token # surface rule
-    pattern: |
-      (?<trigger>[word=/${loc_preps}/]) by? (@onset:Onset|@note:Note|it)
-    #  (?<trigger>[word=/${loc-preps}/]) (((@note:Note|@rest:Rest) ((in|of) @measure:Measure)?)|it)
-    # [word=/(after|before|between|above|below|followed by)/]
-
-  - name: relative-location-2
-    label: Locationrel
-    priority: 5
-    pattern: |
-      trigger = [word=/${loc_preps}/] by?
-      onset: Onset? = /nmod_${loc_preps}/
-      note: Note? = /nmod_${loc_preps}/
 
   ## potential alternative
   ## use only location words for rel-location and add music with a rule like:

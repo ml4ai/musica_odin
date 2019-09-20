@@ -10,9 +10,13 @@ object ConversionUtils {
 
   def mentionToString(m: Mention): String = {
     m.label match {
+//      case "Cardinality" => Cardinality(m.text).toMentionString
+      case "Chord" => chordMentionToChord(m).toMentionString
       case "Direction" => Direction(m.text).toMentionString // TBM
+      case "Everything" => Everything(m.text).toMentionString
       case "LocationAbs" => locationabsMentionToLocationAbs(m).toMentionString
       case "LocationRel" => locationrelMentionToLocationRel(m).toMentionString
+      case "Measure" => measureMentionToMeasure(m).toMentionString
       case "Note" => noteMentionToNote(m).toMentionString
       case "Onset" => onsetMentionToOnset(m).toMentionString
       case "Pitch" => pitchMentionToPitch(m).toMentionString
@@ -29,7 +33,8 @@ object ConversionUtils {
   }
 
   def chordMentionToChord(chord: Mention): Chord = {
-    val cardinality = chord.arguments.get("cardinality").map(_.head.text)
+//    val cardinality = chord.arguments.get("cardinality").map(_.head.text)
+    val cardinality = Option(headText("cardinality", chord).get)
     val chordtype = headText("chordType", chord).map(ChordType)
     val specifier = headText("specifier", chord).map(Specifier)
     Chord(cardinality, chordtype, specifier)

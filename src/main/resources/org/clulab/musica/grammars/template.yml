@@ -60,7 +60,7 @@ rules:
         rest: Rest? = >dobj
         chord: Chord? = >dobj
         measure: Measure? = >/nmod_*/
-        locationabs: Locationabs? = >/nmod_*/
+        locationabs: LocationAbs? = >/nmod_*/
 
     #jc added
     # with three tagged notes
@@ -96,8 +96,8 @@ rules:
         note: Note? = >nsubjpass
         pitch: Pitch? = >nsubjpass
         rest: Rest? = >nsubjpass
-        locationabs: Locationabs? = >/nmod_*/
-        locationrel: Locationrel? = >/nmod_*/
+        locationabs: LocationAbs? = >/nmod_*/
+        locationrel: LocationRel? = >/nmod_*/
 
     # jc added
     - name: ${addlabel}-passive_voice-syntax-2
@@ -164,3 +164,12 @@ rules:
       type: token
       pattern: |
         (?<trigger>[word=/(?i)^(${trigger})/]) @specifier:Specifier (that (are|is))? []{,2} @onset:Onset
+
+    - name: ${addlabel}-active_voice-surface-everything-2
+      label: ${label}
+      example: "Repeat everything in measure 2"
+      priority: ${rulepriority}
+      type: token
+      pattern: |
+        (?<trigger>[word=/(?i)^(${trigger})/]) (@everything:Everything|@note:Note|@chord:Chord|@sequence:Sequence)
+        ([]? @onset:Onset)?

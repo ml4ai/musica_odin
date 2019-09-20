@@ -4,47 +4,109 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
-   - name: Transpose-rule-1
+   # for when onset added to start as appositive
+   - name: Transpose-1-syntax
+     label: ${label}
+     priority: ${rulepriority}
+     pattern: |
+       trigger = [word=/(?i)^(${transpose_triggers})/]
+       onset: Onset = >nmod_in
+       note: Note = >dobj
+       chord: Chord = >dobj
+       direction: Direction? = >/nmod_(up|down)/ >case
+       step: Step? = >/nmod_(up|down)/
+
+   - name: Transpose-2
      label: ${label}
      priority: ${rulepriority}
      type: token
      pattern: |
-       (?<trigger>[word=/(?i)^${transpose_triggers}/]) (@note:Note|@chord:Chord)
-       ([]? @onset:Onset)? @direction:Direction? @step:Step
+       ([]? @onset:Onset)? (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@note:Note|@chord:Chord)
+       ([]? @onset:Onset)? @direction:Direction? @step:Step? ([]? @onset:Onset)?
 
-   - name: Transpose-rule-2
+   - name: Transpose-3
      label: ${label}
      priority: ${rulepriority}
      example: "Transpose all the notes up 5 half steps in measure 1."
      type: token
      pattern: |
-       (?<trigger>[word=/(?i)^${transpose_triggers}/]) (@note:Note|@chord:Chord)
+       (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@note:Note|@chord:Chord)
        @direction:Direction? @step:Step ([]? @onset:Onset)?
 
    # todo: add specificity to avoid things like 'change the whole note to a half note'
-   - name: Transpose-rule-3
+   - name: Transpose-4
      label: ${label}
      priority: ${rulepriority}
      example: "Move the G quarter note to the F above it"
      type: token
      pattern: |
-       (?<trigger>[word=/(?i)^${transpose_triggers}/]) (@note:Note|@chord:Chord)
-       (@direction:Direction)? to (@note:Note|@pitch:Pitch|@chord:Chord) @locationrel:Locationrel?
+       (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@note:Note|@chord:Chord)
+       (@direction:Direction)? to (@note:Note|@pitch:Pitch|@chord:Chord) @locationrel:LocationRel?
 
-   - name: Transpose-rule-passive
+   - name: Transpose-5
      label: ${label}
      priority: ${rulepriority}
      example: "The first quarter note in measure 1 is transposed down 2 steps"
      type: token
      pattern: |
-       @note:Note ([]? @onset:Onset)? []? [word=/^${aux_be}/]
-       (?<trigger>[word=/(?i)^${transpose_triggers}/]) (@direction:Direction)?  @step:Step
+       @note:Note ([]? @onset:Onset)? []? ([] and)?
+       (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@direction:Direction)?  @step:Step?
 
-   - name: Transpose-rule-everything
+  #  Note (should) (be) (VERB and) TRANS (Direction) (Step) (Onset) (from Note) (to Note) (location)
+   - name: Transpose-6
+     label: ${label}
+     priority: ${rulepriority}
+     example: "the eighth note should move up two steps from an A to the C above"
+     type: token
+     pattern: |
+       @note:Note (should)? ([] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
+       @direction:Direction? @step:Step? ([]? @onset:Onset)? (from @note:Note)?
+       (to @note:Note @locationrel:LocationRel?)?
+
+   - name: Transpose-7
+     label: ${label}
+     priority: ${rulepriority}
+     example: "take the first whole note and move it down one step"
+     type: token
+     pattern: |
+       @note:Note ([]? @onset:Onset)? (and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
+       it @direction:Direction? @step:Step? (from @note:Note)? (to @note:Note @locationrel:LocationRel?)?
+
+   - name: Transpose-8-passive
+     label: ${label}
+     priority: ${rulepriority}
+     example: "The first quarter note in measure 1 is transposed down 2 steps"
+     type: token
+     pattern: |
+       @note:Note ([]? @onset:Onset)? []? [word=/^(${aux_be})/] ([] and)?
+       (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@direction:Direction)?  @step:Step?
+       (to @note:Note)?
+
+#  Note (should) (be) (VERB and) TRANS (Direction) (Step) (Onset) (from Note) (to Note) (location)
+   - name: Transpose-9-passive
+     label: ${label}
+     priority: ${rulepriority}
+     example: "the eighth note should move up two steps from an A to the C above"
+     type: token
+     pattern: |
+       @note:Note (should)? [word=/^(${aux_be})/] ([] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
+       @direction:Direction? @step:Step? ([]? @onset:Onset)? (from @note:Note)?
+       (to @note:Note @locationrel:LocationRel?)?
+
+
+   - name: Transpose-10-everything
      label: ${label}
      priority: ${rulepriority}
      example: "Transpose all the notes up 5 half steps in measure 1."
      type: token
      pattern: |
-       (?<trigger>[word=/(?i)^${transpose_triggers}/])
+       (?<trigger>[word=/(?i)^(${transpose_triggers})/])
        @everything:Everything @direction:Direction? @step:Step ([]? @onset:Onset)?
+
+   - name: Transpose-10-everything-passive
+     label: ${label}
+     example: "Everything in measure 2 should be transposed up 1 half step"
+     type: token
+     pattern: |
+       @everything:Everything ([]? @onset:Onset)? (should?) [word=/^(${aux_be})/]
+       (?<trigger>[word=/(?i)^(${transpose_triggers})/]) @direction:Direction? @step:Step?

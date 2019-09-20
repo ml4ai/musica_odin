@@ -26,7 +26,10 @@ object ComplexEvents {
 
   // todo: need to add a relative location
   case class Insert(note: Option[Note] = None, onset: Option[Onset] = None,
-                    rest: Option[Rest] = None, chord: Option[Chord] = None) extends MusicaObj
+                    rest: Option[Rest] = None, chord: Option[Chord] = None,
+                    loc_rel: Option[LocationRel] = None, note_prec: Option[Note] = None,
+                    loc_abs: Option[LocationAbs] = None, measure: Option[Measure] = None,
+                    everything: Option[Everything] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }
@@ -37,8 +40,9 @@ object ComplexEvents {
     def toMentionString: String = toString
   }
 
-  case class Repeat(note: Option[Note] = None, chord: Option[Chord] = None,
-                    onset: Option[Onset] = None) extends MusicaObj
+  case class Repeat(note: Option[Note] = None, chord: Option[Chord] = None, onset: Option[Onset] = None,
+                    loc_rel: Option[LocationRel] = None, loc_abs: Option[LocationAbs] = None,
+                    everything: Option[Everything] = None, note_two: Option[Note] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }
@@ -58,7 +62,9 @@ object ComplexEvents {
   // todo: add another note: e.g. the first note is changed from note to note
   case class Transpose(note: Option[Note] = None, direction: Option[Direction] = None,
                        onset: Option[Onset] = None, step: Option[Step] = None, chord: Option[Chord] = None,
-                       final_note: Option[Note] = None) extends MusicaObj
+                       final_note: Option[Note] = None, loc_rel: Option[LocationRel] = None,
+                       loc_abs: Option[LocationAbs] = None, everything: Option[Everything] = None,
+                       pitch: Option[Pitch] = None) extends MusicaObj
   {
     def toMentionString: String = toString
   }

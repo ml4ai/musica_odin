@@ -1,9 +1,12 @@
 #music-specific event triggers
-change_duration_triggers: "shorten|lengthen|change|chang|convert"
+#change_duration_triggers: "shorten|lengthen|change|chang|convert|augment|diminish"
 
-convert_triggers: "chang|change|convert"
+# todo: split into shorten & lengthen
+change_duration_triggers: "shorten|lengthen|change|chang|augment|diminish"
 
-delete_triggers: "delete|del|remove|drop"
+convert_triggers: "chang|change|convert|turn"
+
+delete_triggers: "delete|del|remove|drop|erase|rid"
 
 insert_triggers: "insert|add"
 
@@ -15,7 +18,7 @@ replace_triggers: "replac"
 
 reverse_triggers: "reverse|retrograde|switch"
 
-transpose_triggers: "transpose|move|mov|drop|naturalize|change|chang|rais"
+transpose_triggers: "transpose|move|mov|drop|naturalize|change|chang|rais|lower"
 
 
 #generic vars
@@ -24,11 +27,14 @@ loc_preps: "after|before|between|above|below|followed"
 negators: "not|no"
 ordinals: "first|second|third|fourth|fifth|sixth|seventh|ninth|tenth|1st|2nd|3rd|4th|5th|6th|7th|8th|9th|10th"
 proportions: "sixteenth|eight|quarter|half|whole"
+modals: "should|could|may|can|need|might|would|must|ought"
 
 #music-specific vars
-chord: "chord|dyad|triad|third|fifth|seventh|ninth|eleventh|thirteenth|3rd|5th|7th|9th|11th|13th"
+chord: "chord|dyad|triad|second|third|fourth|fifth|seventh|ninth|eleventh|thirteenth|3rd|5th|7th|9th|11th|13th"
 chordtype: "major|minor|augmented|diminished|indeterminate|predominant|suspended|just|bitonal|atonal"
 key: "major|minor"
+time_signature_nums: "two|three|four|five|six|seven|nine|twelve|2|3|4|5|6|7|9|12"
+time_signature_denoms: "two|four|eight"
 notes: "A|A#|Ab|B|B#|Bb|C|C#|Cb|D|D#|Db|E|E#|Eb|F|F#|Fb|G|G#|Gb"
 pitch_changes: "sharp|flat|natural|diesis|bemolle"
 

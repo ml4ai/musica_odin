@@ -76,7 +76,6 @@ class TestTranspose extends ExtractionTest {
     testTransposeEvent(found, desired)
   }
 
-//   testing with two notes; currently doesn't work and direction causes problems
   val t4 = "Change the G quarter note to an F"
 
   passingTest should s"extract correctly from $t4" in {
@@ -190,7 +189,7 @@ class TestTranspose extends ExtractionTest {
     testTransposeEvent(found, desired)
   }
 
-  // requires 3 notes
+  // todo: requires 3 notes, and recognizing lowercase pitch
   val t9 = "In the 3rd bar you want to change the 3rd note from a d to an a"
 
   failingTest should s"extract correctly from $t9" in {
@@ -320,6 +319,8 @@ class TestTranspose extends ExtractionTest {
       onset = Some(onset)
     )
 
+    testTransposeEvent(found, desired)
+
   }
 
   // todo: determine how to deal with 'sharp'
@@ -339,10 +340,12 @@ class TestTranspose extends ExtractionTest {
       onset = Some(onset)
     )
 
+    testTransposeEvent(found, desired)
+
   }
 
-  // todo: needs location handling
-  // also needs ability to include a pitch
+  // todo: needs sequence handling
+  // also needs ability to include a pitch and location
   val t16 = "The first measure 8th note run should end with a quarter note changed to G, not F. "
 
   failingTest should s"extract correctly from $t16" in {
@@ -354,14 +357,20 @@ class TestTranspose extends ExtractionTest {
 
     val note = Note(Some(Duration("quarter")), None, Some(Specifier("a")))
     val onset = Onset(Some(Measure("the first")), None)
+    val pitch = Pitch("G")
+    val loc_abs = LocationAbs("end with")
     val desired = Transpose(
       note = Some(note),
-      onset = Some(onset)
+      onset = Some(onset),
+      loc_abs = Some(loc_abs),
+      pitch = Some(pitch)
     )
+
+    testTransposeEvent(found, desired)
 
   }
 
-  // needs to use pitch after note
+  // todo: needs to use pitch after note
   val t17 = "In the first measure, move to third note G to the B above it."
 
   failingTest should s"extract correctly from $t17" in {
@@ -371,15 +380,636 @@ class TestTranspose extends ExtractionTest {
     transposeEvents should have length(1)
     val found = transposeEvents.head
 
-    val note = Note(None, None, Some(Specifier("thrird")))
+    val note = Note(None, Some(Pitch("G")), Some(Specifier("third")))
     val onset = Onset(Some(Measure("the first")), None)
     val final_note = Note(None, Some(Pitch("B")), Some(Specifier("the")))
+    val loc_rel = LocationRel("above")
+    val desired = Transpose(
+      note = Some(note),
+      onset = Some(onset),
+      final_note = Some(final_note),
+      loc_rel = Some(loc_rel)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  // todo: Needs 3 notes
+  val t18 = "the half note in measure 1 should be taken and changed from an A to a D"
+
+  failingTest should s"extract correctly from $t18" in {
+    val mentions = extractMentions(t18)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("half")), None, Some(Specifier("the")))
+    val onset = Onset(Some(Measure("1")), None)
+    val final_note = Note(None, Some(Pitch("D")), Some(Specifier("a")))
     val desired = Transpose(
       note = Some(note),
       onset = Some(onset),
       final_note = Some(final_note)
     )
 
+    testTransposeEvent(found, desired)
+
   }
+
+  val t19 = "Everything should be moved up one step"
+
+  passingTest should s"extract correctly from $t19" in {
+    val mentions = extractMentions(t19)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val everything = Everything("Everything")
+    val direction = Direction("up")
+    val step = Step(cardinality = Some("one"), None)
+    val desired = Transpose(
+      direction = Some(direction),
+      step = Some(step),
+      everything = Some(everything)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+
+  val t20 = "Transpose everything down 1 half step"
+
+  passingTest should s"extract correctly from $t20" in {
+    val mentions = extractMentions(t20)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val everything = Everything("everything")
+    val direction = Direction("down")
+    val step = Step(cardinality = Some("1"), Some("half"))
+    val desired = Transpose(
+      direction = Some(direction),
+      step = Some(step),
+      everything = Some(everything)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  val t21 = "The A quarter note in measure 1 should be taken and changed to a G"
+
+  failingTest should s"extract correctly from $t21" in {
+    val mentions = extractMentions(t21)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("quarter")), Some(Pitch("A")), Some(Specifier("The")))
+    val onset = Onset(Some(Measure("1")), None)
+    val final_note = Note(None, Some(Pitch("G")), Some(Specifier("a")))
+    val desired = Transpose(
+      note = Some(note),
+      onset = Some(onset),
+      final_note = Some(final_note)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+
+  val t22 = "The B sixteenth note in measure 1 beat 2 moves up two steps"
+
+  passingTest should s"extract correctly from $t22" in {
+    val mentions = extractMentions(t22)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("sixteenth")), Some(Pitch("B")), Some(Specifier("The")))
+    val direction = Direction("up")
+    val onset = Onset(Some(Measure("1")), Some(Beat("2")))
+    val step = Step(cardinality = Some("two"), None)
+    val desired = Transpose(
+      note = Some(note),
+      direction = Some(direction),
+      onset = Some(onset),
+      step = Some(step)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+//  val t23 = "transpose everything to the key of G"
+
+  val t24 = "The third whole note should be taken and moved up one step"
+
+  passingTest should s"extract correctly from $t24" in {
+    val mentions = extractMentions(t24)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("whole")), None, Some(Specifier("The third")))
+    val direction = Direction("up")
+    val step = Step(cardinality = Some("one"), None)
+    val desired = Transpose(
+      note = Some(note),
+      direction = Some(direction),
+      step = Some(step)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+
+  val t25 = "The eighth note should be transposed down two steps"
+
+  passingTest should s"extract correctly from $t25" in {
+    val mentions = extractMentions(t25)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("eighth")), None, Some(Specifier("The")))
+    val direction = Direction("down")
+    val step = Step(cardinality = Some("two"), None)
+    val desired = Transpose(
+      note = Some(note),
+      direction = Some(direction),
+      step = Some(step)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+
+  val t26 = "All the eighth notes should be moved up one half step"
+
+  passingTest should s"extract correctly from $t26" in {
+    val mentions = extractMentions(t26)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("eighth")), None, Some(Specifier("All the")))
+    val direction = Direction("up")
+    val step = Step(cardinality = Some("one"), Some("half"))
+    val desired = Transpose(
+      note = Some(note),
+      direction = Some(direction),
+      step = Some(step)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+
+  val t27 = "The quarter note should be moved up two steps in beat 1 of measure 1"
+
+  passingTest should s"extract correctly from $t27" in {
+    val mentions = extractMentions(t27)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("quarter")), None, Some(Specifier("The")))
+    val direction = Direction("up")
+    val step = Step(cardinality = Some("two"), None)
+    val onset = Onset(Some(Measure("1")), Some(Beat("1")))
+    val desired = Transpose(
+      note = Some(note),
+      direction = Some(direction),
+      step = Some(step),
+      onset = Some(onset)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  // todo: needs 3 notes
+  val t28 = "The first quarter note should be lowered from an A to a G"
+
+  failingTest should s"extract correctly from $t28" in {
+    val mentions = extractMentions(t28)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("quarter")), None, Some(Specifier("The first")))
+    val final_note = Note(None, Some(Pitch("G")), Some(Specifier("a")))
+    val desired = Transpose(
+      note = Some(note),
+      final_note = Some(final_note)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  // todo: needs 3 notes and relative location
+  val t29 = "The eighth note should be transposed from an A to the G above it"
+
+  failingTest should s"extract correctly from $t29" in {
+    val mentions = extractMentions(t29)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("eighth")), None, Some(Specifier("The")))
+    val final_note = Note(None, Some(Pitch("G")), Some(Specifier("the")))
+    val desired = Transpose(
+      note = Some(note),
+      final_note = Some(final_note)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  // todo: add ability to have a second pitch
+  val t30 = "the eighth note should be transposed from A to G"
+
+  failingTest should s"extract correctly from $t30" in {
+    val mentions = extractMentions(t30)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("eighth")), None, Some(Specifier("The")))
+    val pitch = Pitch("A")
+    val desired = Transpose(
+      note = Some(note),
+      pitch = Some(pitch)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+
+  val t31 = "The D half note should move up 2 steps"
+
+  passingTest should s"extract correctly from $t31" in {
+    val mentions = extractMentions(t31)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("half")), Some(Pitch("D")), Some(Specifier("The")))
+    val direction = Direction("up")
+    val step = Step(cardinality = Some("2"), None)
+    val desired = Transpose(
+      note = Some(note),
+      direction = Some(direction),
+      step = Some(step)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  // todo: Needs 3 notes
+  val t32 = "The eighth note should move up two tones from an A to a C"
+
+  failingTest should s"extract correctly from $t32" in {
+    val mentions = extractMentions(t32)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("eighth")), None, Some(Specifier("The")))
+    val direction = Direction("up")
+    val step = Step(cardinality = Some("two"), None)
+    val final_note = Note(None, Some(Pitch("C")), Some(Specifier("a")))
+    val desired = Transpose(
+      note = Some(note),
+      direction = Some(direction),
+      step = Some(step)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  val t33 = "The eighth note should move up two steps to a C"
+
+  passingTest should s"extract correctly from $t33" in {
+    val mentions = extractMentions(t33)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("eighth")), None, Some(Specifier("The")))
+    val direction = Direction("up")
+    val step = Step(cardinality = Some("two"), None)
+    val final_note = Note(None, Some(Pitch("C")), Some(Specifier("a")))
+    val desired = Transpose(
+      note = Some(note),
+      direction = Some(direction),
+      step = Some(step),
+      final_note = Some(final_note)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  // todo: needs 3 notes
+  val t34 = "The first whole note moves up from a D to an E"
+
+  failingTest should s"extract correctly from $t34" in {
+    val mentions = extractMentions(t34)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("whole")), None, Some(Specifier("The first")))
+    val direction = Direction("up")
+    val final_note = Note(None, Some(Pitch("E")), Some(Specifier("an")))
+    val desired = Transpose(
+      note = Some(note),
+      direction = Some(direction),
+      final_note = Some(final_note)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  // todo: needs a way to deal with semitones
+  val t35 = "All the eighth notes move up two semitones"
+
+  failingTest should s"extract correctly from $t35" in {
+    val mentions = extractMentions(t35)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("eighth")), None, Some(Specifier("All the")))
+    val direction = Direction("up")
+    val step = Step(cardinality = Some("two"), Some("semi"))
+    val desired = Transpose(
+      note = Some(note),
+      direction = Some(direction),
+      step = Some(step)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  // todo: needs to deal with 'second measure'; 'sharp' in pitch
+  val t36 = "in the second measure, the F sharp quarter note should be moved down two steps"
+
+  failingTest should s"extract correctly from $t36" in {
+    val mentions = extractMentions(t36)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("quarter")), Some(Pitch("F sharp")), Some(Specifier("All the")))
+    val direction = Direction("down")
+    val step = Step(cardinality = Some("two"), None)
+    val onset = Onset(Some(Measure("the second")), None)
+    val desired = Transpose(
+      note = Some(note),
+      direction = Some(direction),
+      step = Some(step)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  // todo: rules don't capture appositive onset
+  val t37 = "In measure 1 beat 2, move the major fourth down 2 steps"
+
+  failingTest should s"extract correctly from $t37" in {
+    val mentions = extractMentions(t37)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val chord = Chord(cardinality = Some("fourth"), Some(ChordType("major")), Some(Specifier("the")))
+    val direction = Direction("down")
+    val step = Step(cardinality = Some("2"), None)
+    val onset = Onset(Some(Measure("1")), Some(Beat("2")))
+    val desired = Transpose(
+      direction = Some(direction),
+      step = Some(step),
+      chord = Some(chord),
+      onset = Some(onset)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  // todo: need multiple pitches
+  val t38 = "Take the chord in measure 1 and change it from A and C to B and D"
+
+  failingTest should s"extract correctly from $t38" in {
+    val mentions = extractMentions(t38)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val chord = Chord(cardinality = Some("fourth"), Some(ChordType("major")), Some(Specifier("the")))
+    val direction = Direction("down")
+    val step = Step(cardinality = Some("2"), None)
+    val onset = Onset(Some(Measure("1")), Some(Beat("2")))
+    val desired = Transpose(
+      direction = Some(direction),
+      step = Some(step),
+      chord = Some(chord),
+      onset = Some(onset)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+
+  val t39 = "Take the first whole note and move it down one step"
+
+  passingTest should s"extract correctly from $t39" in {
+    val mentions = extractMentions(t39)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("whole")), None, Some(Specifier("the first")))
+    val direction = Direction("down")
+    val step = Step(cardinality = Some("one"), None)
+    val desired = Transpose(
+      direction = Some(direction),
+      step = Some(step),
+      note = Some(note)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  val t40 = "Take the A quarter note in measure 1 and lower it to a G"
+
+  passingTest should s"extract correctly from $t40" in {
+    val mentions = extractMentions(t40)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("quarter")), Some(Pitch("A")), Some(Specifier("the")))
+    val onset = Onset(Some(Measure("1")), None)
+    val final_note = Note(None, Some(Pitch("G")), Some(Specifier("a")))
+    val desired = Transpose(
+      note = Some(note),
+      onset = Some(onset),
+      final_note = Some(final_note)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  val t41 = "Move all the eighth notes up one half step"
+
+  passingTest should s"extract correctly from $t41" in {
+    val mentions = extractMentions(t41)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("eighth")), None, Some(Specifier("all the")))
+    val step = Step(cardinality = Some("one"), Some("half"))
+    val desired = Transpose(
+      note = Some(note),
+      step = Some(step)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  val t42 = "move the quarter note up two steps in beat 3 of measure 2"
+
+  passingTest should s"extract correctly from $t42" in {
+    val mentions = extractMentions(t42)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("quarter")), None, Some(Specifier("the")))
+    val step = Step(cardinality = Some("two"), None)
+    val onset = Onset(Some(Measure("2")), Some(Beat("3")))
+    val desired = Transpose(
+      note = Some(note),
+      step = Some(step),
+      onset = Some(onset)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  // todo: needs 3 notes
+  val t43 = "transpose the eighth note from an A to a G"
+
+  failingTest should s"extract correctly from $t43" in {
+    val mentions = extractMentions(t43)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("eighth")), None, Some(Specifier("the")))
+    val final_note = Note(None, Some(Pitch("G")), Some(Specifier("a")))
+    val desired = Transpose(
+      note = Some(note),
+      final_note = Some(final_note)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  // todo: needs 3 notes
+  val t44 = "transpose the eighth note from a G to the A above it"
+
+  failingTest should s"extract correctly from $t44" in {
+    val mentions = extractMentions(t44)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("eighth")), None, Some(Specifier("the")))
+    val final_note = Note(None, Some(Pitch("A")), Some(Specifier("the")))
+    val loc_rel = LocationRel("above")
+    val desired = Transpose(
+      note = Some(note),
+      final_note = Some(final_note),
+      loc_rel = Some(loc_rel)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
+  // todo: needs 2 pitch values
+  val t45 = "transpose the second quarter note from F to B"
+
+  failingTest should s"extract correctly from $t45" in {
+    val mentions = extractMentions(t45)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val note = Note(Some(Duration("quarter")), None, Some(Specifier("the second")))
+    val pitch = Pitch("F")
+    val desired = Transpose(
+      note = Some(note),
+      pitch = Some(pitch)
+    )
+
+    testTransposeEvent(found, desired)
+
+  }
+
 
 }

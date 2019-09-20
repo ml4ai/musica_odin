@@ -64,12 +64,12 @@ object TestUtils {
       // These should all be notes...
       ms.foreach(m => m.label should be (label))
 
-      // allow for 2 notes to be found
+//      // allow for 2 notes to be found
       if (label == "Note") {
         ms should (have length 2 or have length 1)
       }
       else {
-        // There shouldn't be any extra notes that we didn't want...
+//         There shouldn't be any extra notes that we didn't want...
       ms should have length 1
       }
 
@@ -99,8 +99,8 @@ object TestUtils {
 //      }
 //
 //      if (desired.final_note.nonEmpty) {
-//        val noteArgs = m.arguments.getOrElse("note2", Seq())
-//        shouldHaveDesired("Note2", noteArgs, desired.final_note.get)
+//        val noteArgs = m.arguments.getOrElse("final_note", Seq())
+//        shouldHaveDesired("Note", noteArgs, desired.final_note.get)
 //      }
 
 //      if (desired.generic_note.nonEmpty) {
@@ -125,6 +125,12 @@ object TestUtils {
         val stepArgs = m.arguments.getOrElse("step", Seq())
         shouldHaveDesired("Step", stepArgs, desired.step.get)
       }
+
+      if (desired.chord.nonEmpty) {
+        val chordArgs = m.arguments.getOrElse("chord", Seq())
+        shouldHaveDesired("Chord", chordArgs, desired.chord.get)
+      }
+
     }
 
 
@@ -141,6 +147,11 @@ object TestUtils {
       if (desired.onset.nonEmpty) {
         val onsetArgs = m.arguments.getOrElse("onset", Seq())
         shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      }
+
+      if (desired.rest.nonEmpty) {
+        val restArgs = m.arguments.getOrElse("rest", Seq())
+        shouldHaveDesired("Rest", restArgs, desired.rest.get)
       }
 
       // Test the optional second Note
@@ -205,6 +216,38 @@ object TestUtils {
         val onsetArgs = m.arguments.getOrElse("onset", Seq())
         shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
       }
+
+      // Test the Location
+//      if (desired.loc_rel.nonEmpty) {
+//        val locRelArgs = m.arguments.getOrElse("loc_rel", Seq())
+//        shouldHaveDesired("Locationrel", locRelArgs, desired.loc_rel.get)
+//      }
+//
+//      if (desired.loc_abs.nonEmpty) {
+//        val locAbsArgs = m.arguments.getOrElse("loc_abs", Seq())
+//        shouldHaveDesired("Locationabs", locAbsArgs, desired.loc_abs.get)
+//      }
+
+//      if (desired.chord.nonEmpty) {
+//        val chordArgs = m.arguments.getOrElse("chord", Seq())
+//        shouldHaveDesired("Chord", chordArgs, desired.chord.get)
+//      }
+
+      if (desired.rest.nonEmpty) {
+        val restArgs = m.arguments.getOrElse("rest", Seq())
+        shouldHaveDesired("Rest", restArgs, desired.rest.get)
+      }
+
+      if (desired.measure.nonEmpty) {
+        val measureArgs = m.arguments.getOrElse("measure", Seq())
+        shouldHaveDesired("Measure", measureArgs, desired.measure.get)
+      }
+//
+//      // Test the Preceding/following note
+//      if (desired.note_prec.nonEmpty) {
+//        val notePrecArgs = m.arguments.getOrElse("note_prec", Seq())
+//        shouldHaveDesired("Note", notePrecArgs, desired.note_prec.get)
+//      }
 
     }
 

@@ -27,6 +27,7 @@ loc_preps: "after|before|between|above|below|followed"
 negators: "not|no"
 ordinals: "first|second|third|fourth|fifth|sixth|seventh|ninth|tenth|1st|2nd|3rd|4th|5th|6th|7th|8th|9th|10th"
 proportions: "sixteenth|eight|quarter|half|whole"
+modals: "should|could|may|can|need|might|would|must|ought"
 
 #music-specific vars
 chord: "chord|dyad|triad|second|third|fourth|fifth|seventh|ninth|eleventh|thirteenth|3rd|5th|7th|9th|11th|13th"

@@ -6,6 +6,8 @@ change_duration_triggers: "shorten|lengthen|change|chang|augment|diminish|turn"
 
 convert_triggers: "chang|change|convert|turn"
 
+copy_triggers: "copy"
+
 delete_triggers: "delete|del|remove|drop|erase|rid"
 
 insert_triggers: "insert|add"
@@ -18,7 +20,9 @@ repeat_triggers: "repeat|duplicat"
 
 replace_triggers: "replac"
 
-reverse_triggers: "reverse|retrograde|switch"
+reverse_triggers: "reverse|retrograde"
+
+switch_triggers: "switch|swap"
 
 transpose_triggers: "transpose|move|mov|drop|naturalize|change|chang|rais|lower|mak|turn"
 

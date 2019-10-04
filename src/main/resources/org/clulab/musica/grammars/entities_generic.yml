@@ -28,6 +28,20 @@ rules:
     pattern: |
       [word=/(up|down|lower|higher)/]
 
+  - name: earlier
+    label: Earlier
+    priority: 1
+    type: token
+    pattern: |
+      [word=/(earlier|early)/]
+
+  - name: earlier-2
+    label: Earlier
+    priority: 1
+    type: token
+    pattern:
+      to the left
+
     # todo: Add 'everything' to test framework
   - name: everything
     label: Everything
@@ -51,12 +65,33 @@ rules:
     pattern: |
       [tag=/CD/ & !word=/.*\/.*/] [word=/^time/]
 
+  - name: later
+    label: Later
+    priority: 1
+    type: token
+    pattern: |
+      [word=/later|after/]
+
+  - name: later-2
+    label: Later
+    priority: 1
+    type: token
+    pattern: |
+      to the right
+
   - name: locationrel
     label: LocationRel
     priority: 1
     type: token
     pattern: |
       (?<trigger>[word=/${loc_preps}/]) by?
+
+  - name: locationrel-2
+    label: LocationRel
+    priority: 1
+    type: token
+    pattern: |
+      on (?<trigger>[word=/top/]) of?
 
   - name: negator
     label: Negator

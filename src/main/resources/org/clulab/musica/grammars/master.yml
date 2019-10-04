@@ -32,6 +32,11 @@ rules:
       rulepriority: "6"
       label: Convert
 
+  - import: org/clulab/musica/grammars/copy.yml
+    vars:
+      rulepriority: "6"
+      label: Copy
+
 #  - import: org/clulab/musica/grammars/template.yml
 #    vars:
 #      rulepriority: "6"
@@ -90,6 +95,10 @@ rules:
       label: Reverse
       trigger: ${reverse_triggers}
 
+  - import: org/clulab/musica/grammars/switch.yml
+    vars:
+      rulepriority: "6"
+      label: Switch
 
   - import: org/clulab/musica/grammars/transpose.yml
     vars:

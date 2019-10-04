@@ -1,0 +1,14 @@
+
+vars: org/clulab/musica/grammars/triggers.yml
+
+
+rules:
+
+  - name: copy-1
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Copy the D in the first measure to the end of measure 5"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${copy_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+      ((in|from) @onset:Onset)? ((to|into) (@locationrel:LocationRel)? []? @onset:Onset)?

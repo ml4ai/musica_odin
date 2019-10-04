@@ -152,7 +152,6 @@ rules:
       pattern: |
         (?<= /(?i)^(up|down)$/) (@cardinality:Cardinality)
 
-
     - name: time-signature
       label: TimeSignature
       priority: 1
@@ -176,8 +175,16 @@ rules:
       pattern:
         in (?<trigger>[tag=/CD/]) [tag=/\./]
 
+    - name: time-step
+      label: TimeStep
+      priority: 2
+      type: token
+      pattern: |
+        (@specifier:Specifier|@cardinality:Cardinality)? (?<trigger>[word=/^(measure|beat)/])
+        (@earlier:Earlier|@later:Later)
 
-## --------------------------------------------
+
+        ## --------------------------------------------
             # Simple Events -- Music
 ## --------------------------------------------
 

@@ -22,12 +22,14 @@
     - Onset
     - Offset
     - TimeSignature
+    - TimeStep
 - Beat
 - Event:
   - Action:
     - Change
     - ChangeDuration
     - Convert
+    - Copy
     - Delete
     - Insert
     - Invert
@@ -35,10 +37,10 @@
     - Repeat
     - Replace
     - Reverse
+    - Switch
     - Transpose
   #  - Generate
   #  - Add
-  #  - Copy
   #  - What
   #  - Describe
   #  - Put
@@ -56,4 +58,7 @@
       - LocRelMusic
   - LocationAbs
   - LocationInterval
+- Temporality:
+    - Earlier
+    - Later
 - Negator

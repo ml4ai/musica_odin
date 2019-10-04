@@ -2,7 +2,7 @@
 #change_duration_triggers: "shorten|lengthen|change|chang|convert|augment|diminish"
 
 # todo: split into shorten & lengthen
-change_duration_triggers: "shorten|lengthen|change|chang|augment|diminish"
+change_duration_triggers: "shorten|lengthen|change|chang|augment|diminish|turn"
 
 convert_triggers: "chang|change|convert|turn"
 

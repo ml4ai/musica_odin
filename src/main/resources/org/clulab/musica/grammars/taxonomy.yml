@@ -20,6 +20,7 @@
     - Measure
     - Duration
     - Onset
+    - Offset
     - TimeSignature
 - Beat
 - Event:
@@ -54,4 +55,5 @@
   - LocationRel:
       - LocRelMusic
   - LocationAbs
+  - LocationInterval
 - Negator

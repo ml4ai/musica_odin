@@ -12,18 +12,21 @@ insert_triggers: "insert|add"
 
 invert_triggers: "invert|flip"
 
+move_triggers: "move|put|place|shift"
+
 repeat_triggers: "repeat|duplicat"
 
 replace_triggers: "replac"
 
 reverse_triggers: "reverse|retrograde|switch"
 
-transpose_triggers: "transpose|move|mov|drop|naturalize|change|chang|rais|lower"
+transpose_triggers: "transpose|move|mov|drop|naturalize|change|chang|rais|lower|mak|turn"
 
 
 #generic vars
 aux_be: "is|are|was|were|be"
-loc_preps: "after|before|between|above|below|followed"
+#loc_preps: "after|before|between|above|below|followed"
+loc_preps: "after|before|above|below|followed"
 negators: "not|no"
 ordinals: "first|second|third|fourth|fifth|sixth|seventh|ninth|tenth|1st|2nd|3rd|4th|5th|6th|7th|8th|9th|10th"
 proportions: "sixteenth|eight|quarter|half|whole"

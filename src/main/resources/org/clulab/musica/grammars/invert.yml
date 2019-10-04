@@ -4,20 +4,40 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
-    - name: invert-1
-      label: ${label}
-      priority: ${rulepriority}
-      example: "Invert the first measure around middle C"
-      type: token
-      pattern: |
-        (?<trigger>[word=/^${invert_triggers}/]) ((@note:Note|@everything:Everything) []? @onset:Onset)|@measure:Measure)
-        around @note:Note|@pitch:Pitch
+  - name: invert-2-location-interval
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Invert the first measure around middle C"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${invert_triggers})/]) @everything:Everything
+      @locationinterval:LocationInterval
 
-    - name: invert-2-passive
-      label: ${label}
-      priority: ${rulepriority}
-      example: "The first measure should be inverted around middle C"
-      type: token
-      pattern: |
-        ((@note:Note|@everything:Everything) []? @onset:Onset)|@measure:Measure) should
-        [word=/^(${aux_be})/] (?<trigger>[word=/^${invert_triggers}/]) around @note:Note|@pitch:Pitch
+  - name: invert-1
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Invert the first measure around middle C"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${invert_triggers})/]) (@note:Note|@everything:Everything|@measure:Measure)
+      ([]? @onset:Onset)? (around (@note:Note|@pitch:Pitch))?
+
+#(around (@note:Note|@pitch:Pitch))?
+
+#    - name: invert-2-between
+#      label: ${label}
+#      priority: ${rulepriority}
+#      example: "Invert everything between the first measure and the third measure"
+#      type: token
+#      pattern: |
+#        (?<trigger>[word=/^(${invert_triggers})/]) (@note:Note|@everything:Everything) @locationinterval:LocationInterval
+#        around @note:Note|@pitch:Pitch
+#
+#    - name: invert-3-passive
+#      label: ${label}
+#      priority: ${rulepriority}
+#      example: "The first measure should be inverted around middle C"
+#      type: token
+#      pattern: |
+#        ((@note:Note|@everything:Everything) []? @onset:Onset)|@measure:Measure) should
+#        [word=/^(${aux_be})/] (?<trigger>[word=/^(${invert_triggers})/]) around @note:Note|@pitch:Pitch

@@ -11,9 +11,9 @@ rules:
     type: token
     pattern: |
       (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything) [word=/^(${modals})/]
-      to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^${change_duration_triggers}/]) ([]? @onset:Onset)?
+      to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^${change_duration_triggers}/]) @location:Location?
       (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
-      (to (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? ([]? @onset:Onset)?
+      (to (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? @location:Location?
 
   - name: changeduration-4-passive
     label: ${label}
@@ -21,7 +21,7 @@ rules:
     priority: ${rulepriority}
     type: token
     pattern: |
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) ([]? @onset:Onset)? []? [word=/^(${aux_be})/]
+      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) @location:Location? []? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^${change_duration_triggers}/]) (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
       (to (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
 
@@ -31,7 +31,7 @@ rules:
     example: "In the 3rd beat of the second measure, the quarter note should be lengthened to a half note"
     type: token
     pattern: |
-      @onset:Onset [tag=/,/] (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) should? [word=/^(${aux_be})/]
+      @location:Location? [tag=/,/] (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) should? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^${change_duration_triggers}/]) (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
       ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
 
@@ -41,11 +41,9 @@ rules:
     priority: ${rulepriority}
     type: token
     pattern: |
-      (@onset:Onset [tag=/,/])? (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
+      (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
       (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything) (in @pitchsequence:PitchSequence)?
-      ((@locationrel:LocationRel (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))|
-      (@locationabs:LocationAbs? []? @onset:Onset))?
-      (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? ((to|into)
+      @location:Location? (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? ((to|into)
       (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
 
   - name: changeduration-1-older
@@ -54,10 +52,10 @@ rules:
     priority: ${rulepriority}
     type: token
     pattern: |
-      (@onset:Onset [tag=/,/])? (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
+      (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
       (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything)
-      ([]? @onset:Onset)? (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? ((to|into)
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? ([] @onset:Onset)?
+      @location:Location? (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? ((to|into)
+      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? @location:Location?
 
   - name: changeduration-2
     label: ${label}
@@ -66,11 +64,9 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything)
-      ((@locationrel:LocationRel (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))|
-      ([]? @locationabs:LocationAbs))
-      ([]? @onset:Onset)? from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) ((to|into)
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? ([] @onset:Onset)?
+      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything) @location:Location?
+      from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) ((to|into)
+      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? @location:Location?
 
   - name: changeduration-x
     label: ${label}
@@ -80,7 +76,7 @@ rules:
     pattern: |
       (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
       (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything)
-      ([]? @locationabs:LocationAbs) (to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence)
+      @location:Location? (to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence)
 
   - name: changeduration-5-with-appositive
     label: ${label}
@@ -88,7 +84,7 @@ rules:
     priority: ${rulepriority}
     type: token
     pattern: |
-      @onset:Onset [tag=/,/] (?<trigger>[word=/(?i)^${change_duration_triggers}/])
+      @location:Location [tag=/,/] (?<trigger>[word=/(?i)^${change_duration_triggers}/])
       (@note:Note|@rest:Rest|@pitchsequence:PitchSequence)
       (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
       ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
@@ -99,8 +95,7 @@ rules:
     priority: ${rulepriority}
     type: token
     pattern: |
-      (@locationrel:LocationRel (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))
-      ([] @onset:Onset)? [tag=/,/] (?<trigger>[word=/(?i)^${change_duration_triggers}/])
+      @location:Location [tag=/,/] (?<trigger>[word=/(?i)^${change_duration_triggers}/])
       (@note:Note|@rest:Rest|@pitchsequence:PitchSequence)
       (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
       ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
@@ -111,7 +106,7 @@ rules:
     priority: ${rulepriority}
     type: token
     pattern: |
-      @locationabs:LocationAbs [tag=/,/]
+      @location:Location [tag=/,/]
       (?<trigger>[word=/(?i)^${change_duration_triggers}/])
       (@note:Note|@rest:Rest|@pitchsequence:PitchSequence)
       ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
@@ -122,7 +117,7 @@ rules:
     priority: ${rulepriority}
     type: token
     pattern: |
-      ([] @onset:Onset)? [tag=/,/] (@locationrel:LocationRel (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))
+      @location:Location [tag=/,/] @location:Location
       [tag=/,/] (?<trigger>[word=/(?i)^${change_duration_triggers}/])
       (@note:Note|@rest:Rest|@pitchsequence:PitchSequence)
       (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
@@ -134,8 +129,8 @@ rules:
     example: "lengthen the first quarter note in the run to a whole note."
     type: token
     pattern: |
-      (@onset:Onset [tag=/,/])? (?<trigger>[word=/(?i)^${change_duration_triggers}/]) (@note:Note|@chord:Chord)
-      in @pitchsequence:PitchSequence ([]? @onset:Onset)? (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
+      (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^${change_duration_triggers}/]) (@note:Note|@chord:Chord)
+      in @pitchsequence:PitchSequence @location:Location? (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
       ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
 
   - name: changeduration-9-relative-location
@@ -144,9 +139,8 @@ rules:
     example: "lengthen the B quarter note after the C eighth note to a half note."
     type: token
     pattern: |
-      (@onset:Onset [tag=/,/])? (?<trigger>[word=/(?i)^${change_duration_triggers}/])
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) ([]? (@locationrel:LocationRel
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))|(@locationabs:LocationAbs []? @onset:Onset))?
+      (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^${change_duration_triggers}/])
+      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) @location:Location?
       (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
       ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
 

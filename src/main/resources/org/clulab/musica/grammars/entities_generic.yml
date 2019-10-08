@@ -109,13 +109,21 @@ rules:
 
 ## testing
   #todo: is this really a location? should it be a specifier?
+  - name: location-0-in
+    label: Location
+    example: "Delete the first two notes in the run of notes"
+    priority: 3
+    type: token
+    pattern: |
+      (?<trigger>[word=/in/]) (@note:Note|@measure:Measure|@rest:Rest|@pitchsequence:PitchSequence|@chord:Chord)
+
   - name: location-1-absolute
     label: Location
     example: "Add a quarter rest at the start"
     priority: 3
     type: token
     pattern: |
-      (?<trigger>[word=/^(starting|ending|beginning)/]) with
+      (?<trigger>[word=/^(starting|ending|beginning)/]) (with|in|on)
       (@note:Note|@measure:Measure|@rest:Rest|@pitchsequence:PitchSequence|@chord:Chord) (in @measure:Measure)?
 
   - name: location-2-absolute
@@ -124,7 +132,7 @@ rules:
     priority: 4
     type: token
     pattern: |
-      @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) of @measure:Measure
+      (at|to)? @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) of @measure:Measure
 
   - name: location-3-relative
     label: Location
@@ -146,13 +154,33 @@ rules:
     priority: 4
     type: token
     pattern: |
-      (?<trigger>[word=/in|at|on/])
+      (?<trigger>[word=/starting|ending|beginning/]) (in|at|on)
       ((@measure:Measure []?)? @beat:Beat |
       @measure:Measure ([]? @beat:Beat)? |
       (@beat:Beat []?)? @measure:Measure |
       @beat:Beat ([]? @measure:Measure)?)
 
   - name: location-6-onset
+    label: Location
+    priority: 4
+    type: token
+    pattern: |
+      (?<trigger>[word=/starting|ending|beginning/]) (in|at|on)
+      (@measure:Measure []? @beat:Beat |
+      @beat:Beat []? @measure:Measure)
+
+  - name: location-7-onset
+    label: Location
+    priority: 4
+    type: token
+    pattern: |
+      (?<trigger>[word=/in|at|on/])
+      ((@measure:Measure []?)? @beat:Beat |
+      @measure:Measure ([]? @beat:Beat)? |
+      (@beat:Beat []?)? @measure:Measure |
+      @beat:Beat ([]? @measure:Measure)?)
+
+  - name: location-8-onset
     label: Location
     priority: 4
     type: token

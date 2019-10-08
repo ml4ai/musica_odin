@@ -10,5 +10,37 @@ rules:
     example: "Copy the D in the first measure to the end of measure 5"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${copy_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+      (?<trigger>[word=/(?i)^(${copy_triggers})/])
+      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure|@everything:Everything)
       ((in|from) @onset:Onset)? ((to|into) (@locationrel:LocationRel)? []? @onset:Onset)?
+
+  - name: copy-2-rel-location
+    label: ${label}
+    priority: ${rulepriority}
+    example: "copy everything in the first two measures"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${copy_triggers})/])
+      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure|@everything:Everything)
+      @locationrel:LocationRel (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+      ((in|from) @onset:Onset)? ((to|into) @locationabs:LocationAbs)?
+
+  - name: copy-3-to-abs-location
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Copy everything to the end of the score"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${copy_triggers})/])
+      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure|@everything:Everything)
+      ((to|into) @locationabs:LocationAbs)?
+
+  - name: copy-2-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The D in the first measure should be copied to the end of measure 5"
+    type: token
+    pattern: |
+      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything)
+      ((in|from) @onset:Onset)? []{0,2} [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${copy_triggers})/])
+      ((to|into) (@locationrel:LocationRel)? []? @onset:Onset)?

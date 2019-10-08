@@ -2,11 +2,11 @@
 #change_duration_triggers: "shorten|lengthen|change|chang|convert|augment|diminish"
 
 # todo: split into shorten & lengthen
-change_duration_triggers: "shorten|lengthen|change|chang|augment|diminish|turn"
+change_duration_triggers: "shorten|lengthen|change|chang|augment|diminish|turn|mak"
 
 convert_triggers: "chang|change|convert|turn"
 
-copy_triggers: "copy"
+copy_triggers: "copy|copi"
 
 delete_triggers: "delete|del|remove|drop|erase|rid"
 
@@ -24,7 +24,7 @@ reverse_triggers: "reverse|retrograde"
 
 switch_triggers: "switch|swap"
 
-transpose_triggers: "transpose|move|mov|drop|naturalize|change|chang|rais|lower|mak|turn"
+transpose_triggers: "transpose|move|mov|drop|naturalize|change|chang|rais|lower|mak|turn|shift"
 
 
 #generic vars

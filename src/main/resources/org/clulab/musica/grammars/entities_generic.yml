@@ -93,15 +93,16 @@ rules:
     pattern: |
       [word=/(?i)^(${proportions})/]
 
+  # todo: this currently handles 'the first measure' and 'the first eighth note' the same way, but
+  # the first measure will need to be converted into measure 1, while the first eighth note won't
+  # is this a problem?
   - name: specifier-1
     label: Specifier
     priority: 2
     type: token  # surface rule
     pattern: |
-      (?<quantifier>[tag=/^(DT|PDT)/]+) (@cardinality:Cardinality)?
-#      (?<quantifier>[tag=/^(DT|PDT)/]) (?<quantifier>[tag=/^(DT|PDT)/] & [word=/(?!)^[A-G]$/])? (@cardinality:Cardinality)?
-  #        |
-  #        (?<quantifier>[word=/(?i)^everything/])
+      (?<quantifier>[tag=/^(DT|PDT)/]+ (((@cardinality:Cardinality|[word=/^(${finals})/]) ((and|or)
+      (@cardinality:Cardinality|[word=/^(${finals})/]))?)+)?)
 
   ## --------------------------------------------
   # Composed Items -- not? music specific

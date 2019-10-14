@@ -10,7 +10,7 @@ rules:
      priority: ${rulepriority}
      pattern: |
        trigger = [word=/(?i)^(${transpose_triggers})/]
-       onset: Onset = >nmod_in
+       location: Location? = >nmod_in
        note: Note = >dobj
        chord: Chord = >dobj
        direction: Direction? = >/nmod_(up|down)/ >case
@@ -21,8 +21,8 @@ rules:
      priority: ${rulepriority}
      type: token
      pattern: |
-       ([]? @onset:Onset)? (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@note:Note|@chord:Chord)
-       ([]? @onset:Onset)? @direction:Direction? @step:Step? ([]? @onset:Onset)?
+       @location:Location? (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@note:Note|@chord:Chord)
+       @location:Location? @direction:Direction? @step:Step? @location:Location?
 
    - name: Transpose-3
      label: ${label}
@@ -31,7 +31,7 @@ rules:
      type: token
      pattern: |
        (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@note:Note|@chord:Chord)
-       @direction:Direction? @step:Step ([]? @onset:Onset)?
+       @direction:Direction? @step:Step @location:Location?
 
    # todo: add specificity to avoid things like 'change the whole note to a half note'
    - name: Transpose-4
@@ -41,7 +41,7 @@ rules:
      type: token
      pattern: |
        (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@note:Note|@chord:Chord)
-       (@direction:Direction)? to (@note:Note|@pitch:Pitch|@chord:Chord) @locationrel:LocationRel?
+       (@direction:Direction)? to (@note:Note|@pitch:Pitch|@chord:Chord) @location:Location?
 
    - name: Transpose-5
      label: ${label}
@@ -49,7 +49,7 @@ rules:
      example: "The first quarter note in measure 1 is transposed down 2 steps"
      type: token
      pattern: |
-       @note:Note ([]? @onset:Onset)? []? ([] and)?
+       @note:Note @location:Location? []? ([] and)?
        (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@direction:Direction)?  @step:Step?
 
   #  Note (should) (be) (VERB and) TRANS (Direction) (Step) (Onset) (from Note) (to Note) (location)
@@ -60,8 +60,8 @@ rules:
      type: token
      pattern: |
        @note:Note (should)? ([] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
-       @direction:Direction? @step:Step? ([]? @onset:Onset)? (from @note:Note)?
-       (to @note:Note @locationrel:LocationRel?)?
+       @direction:Direction? @step:Step? @location:Location? (from @note:Note)?
+       (to @note:Note @location:Location?)?
 
    - name: Transpose-7
      label: ${label}
@@ -69,8 +69,8 @@ rules:
      example: "take the first whole note and move it down one step"
      type: token
      pattern: |
-       @note:Note ([]? @onset:Onset)? (and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
-       it @direction:Direction? @step:Step? (from @note:Note)? (to @note:Note @locationrel:LocationRel?)?
+       @note:Note @location:Location? (and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
+       it @direction:Direction? @step:Step? (from @note:Note)? (to @note:Note @location:Location?)?
 
    - name: Transpose-8-passive
      label: ${label}
@@ -78,7 +78,7 @@ rules:
      example: "The first quarter note in measure 1 is transposed down 2 steps"
      type: token
      pattern: |
-       @note:Note ([]? @onset:Onset)? []? [word=/^(${aux_be})/] ([] and)?
+       @note:Note @location:Location? []? [word=/^(${aux_be})/] ([] and)?
        (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@direction:Direction)?  @step:Step?
        (to @note:Note)?
 
@@ -90,8 +90,8 @@ rules:
      type: token
      pattern: |
        @note:Note (should)? [word=/^(${aux_be})/] ([] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
-       @direction:Direction? @step:Step? ([]? @onset:Onset)? (from @note:Note)?
-       (to @note:Note @locationrel:LocationRel?)?
+       @direction:Direction? @step:Step? @location:Location? (from @note:Note)?
+       (to @note:Note @location:Location?)?
 
 
    - name: Transpose-10-everything
@@ -101,12 +101,12 @@ rules:
      type: token
      pattern: |
        (?<trigger>[word=/(?i)^(${transpose_triggers})/])
-       @everything:Everything @direction:Direction? @step:Step ([]? @onset:Onset)?
+       @everything:Everything @direction:Direction? @step:Step @location:Location?
 
    - name: Transpose-10-everything-passive
      label: ${label}
      example: "Everything in measure 2 should be transposed up 1 half step"
      type: token
      pattern: |
-       @everything:Everything ([]? @onset:Onset)? (should?) [word=/^(${aux_be})/]
+       @everything:Everything @location:Location? (should?) [word=/^(${aux_be})/]
        (?<trigger>[word=/(?i)^(${transpose_triggers})/]) @direction:Direction? @step:Step?

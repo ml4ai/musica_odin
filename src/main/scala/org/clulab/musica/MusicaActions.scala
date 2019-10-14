@@ -172,6 +172,8 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
     Insert events should contain (MusEnt, LocationOfInsertion, Frequency)
      */
 
+    // if musEnt is underspecified, save
+
     for (m <- mentions) {
 
       if (m.label == "Repeat") {

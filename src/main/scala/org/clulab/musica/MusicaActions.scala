@@ -43,6 +43,87 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
     }
   }
 
+  def transpose2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+
+    /*
+    take a Transpose event and change it to a Convert event
+    Transpose events should contain (MusEnt, Location, Direction, Step)
+    Convert events should contain (MusEnt, StartingLoc, MusEnt, EndingLoc)
+    */
+
+    def pitch2int(s: String): Int = {
+      // this is unnecessarily abstracted, but doing this for now to see more easily
+
+      // mini-LUT built for semitones difference in treble clef; starts at middle C, goes up to G
+      // octave numbering starts at C
+      // true for key of C -- if we are in other keys this may not be the same
+      // e.g. in key of G, if 'F' is written, it could be F#
+      // does not include sharps or flats
+      val chart = Map("C4" -> 0, "D4" -> 2,"E4" -> 4,"F4" -> 5, "G4" -> 7, "A4" -> 9, "B4" -> 11,
+        "C5" -> 12, "D5" -> 14, "E5" -> 16, "F5" -> 17, "G5" -> 19)
+
+      // return the value
+      chart(s)
+
+    }
+
+    def dirStepEnt2Ent(m: Mention): (Option[String], Option[String], Option[String], Option[String]) = {
+      // take direction and step plus starting MusEnt and calculate ending MusEnt
+      // needs LUT?
+
+      val step = m.arguments("step")
+      val direction = m.arguments("direction")
+      val musEnt = m.arguments("note")
+      val location = m.arguments("location")
+
+      // use LUT to find the ending note
+      // will need to have OCTAVE information in addition to pitch?
+      val endEnt = MusicaActions.PITCH2SEMITONEDIFF(musEnt)
+
+      // return
+      (musEnt, location, endEnt, location)
+
+    }
+
+    //iterate through the mentions in the sequence
+    for (m <- mentions) {
+
+      // if mention is of type Transpose
+      if (m.label == "Transpose") {
+
+        // call dirStepEnt2Ent
+        val (musEnt, startLocation, endEnt, endLocation) = dirStepEnt2Ent(m)
+        // put this into the format for a Convert event
+        val convertAttachment = Convert(musEnt, startLocation, endEnt, endLocation)
+
+
+        yield m.withAttachment(convertAttachment)
+      }
+    }
+
+      // return updated Convert Event with StartingLoc and EndingLoc the same
+  }
+
+  def move2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+
+    /*
+    take a Move event and change it to a Convert event
+    Move events should contain (MusEnt, StartingLoc, EndingLoc)
+    Convert events should contain (MusEnt, StartingLoc, MusEnt, EndingLoc)
+    */
+
+    for (m <- mentions) {
+
+      val musEnt = m.text.partition()
+      val startingLoc = m.text.partition()
+      val endingLoc = m.text.partition()
+
+      (musEnt, startingLoc, musEnt, endingLoc)
+
+      yield m.withAttachment()
+    }
+
+  }
 
 //  // every action muct have a specific format:
 //  // mentions are the mentions extracted by THIS rule THIS time through the odin cascade
@@ -101,6 +182,8 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 object MusicaActions {
   val ACCIDENTALS = Set('#', 'b') // todo etc
   val NUMBERS = Set('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+  val PITCH2SEMITONEDIFF: Map[String, Int] = Map("C4" -> 0, "D4" -> 2,"E4" -> 4,"F4" -> 5,
+    "G4" -> 7, "A4" -> 9, "B4" -> 11, "C5" -> 12, "D5" -> 14, "E5" -> 16, "F5" -> 17, "G5" -> 19)
 
   def apply(taxonomyPath: String) =
     new MusicaActions(readTaxonomy(taxonomyPath))

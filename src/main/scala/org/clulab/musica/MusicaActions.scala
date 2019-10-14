@@ -71,6 +71,7 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
       // take direction and step plus starting MusEnt and calculate ending MusEnt
       // needs LUT?
 
+      // todo: how to extract the arguments properly
       val step = m.arguments("step")
       val direction = m.arguments("direction")
       val musEnt = m.arguments("note")
@@ -78,8 +79,14 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
       // use LUT to find the ending note
       // will need to have OCTAVE information in addition to pitch?
-      val endEnt = MusicaActions.PITCH2SEMITONEDIFF(musEnt)
+      var endEntInt = 0
+      if (direction == "up") {
+        endEntInt = MusicaActions.PITCH2SEMITONEDIFF(musEnt) + step
+      } else {
+        endEntInt = MusicaActions.PITCH2SEMITONEDIFF(musEnt) - step
+      }
 
+      val endEnt = MusicaActions.SEMITONEDIFF2PITCH(endEntInt)
       // return
       (musEnt, location, endEnt, location)
 
@@ -93,17 +100,19 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
         // call dirStepEnt2Ent
         val (musEnt, startLocation, endEnt, endLocation) = dirStepEnt2Ent(m)
-        // put this into the format for a Convert event
+        // todo: put this into the format for a Convert event
         val convertAttachment = Convert(musEnt, startLocation, endEnt, endLocation)
 
-
-        yield m.withAttachment(convertAttachment)
+        // return updated Convert Event with StartingLoc and EndingLoc the same
+        // tried yield syntax as in the below example, but it didn't work properly
+        m.withAttachment(convertAttachment)
       }
     }
 
-      // return updated Convert Event with StartingLoc and EndingLoc the same
+
   }
 
+  // todo: look at this one first! this should be an easy one to start with
   def move2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
 
     /*
@@ -114,13 +123,43 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
     for (m <- mentions) {
 
-      val musEnt = m.text.partition()
-      val startingLoc = m.text.partition()
-      val endingLoc = m.text.partition()
+      if (m.label == "move") {
+        // todo: how to extract the arguments properly
+        val musEnt = m.arguments("note")
+        val startingLoc = m.arguments("location")
+        val endingLoc = m.arguments("location")
 
-      (musEnt, startingLoc, musEnt, endingLoc)
+        // todo: put this into the format for a Convert event
+        val convertAttachment = Convert(musEnt, startingLoc, musEnt, endingLoc)
 
-      yield m.withAttachment()
+        m.withAttachment(convertAttachment)
+      }
+    }
+
+  }
+
+  def changeDur2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+
+    /*
+    take a Move event and change it to a Convert event
+    Move events should contain (MusEnt, StartingLoc, EndingLoc)
+    Convert events should contain (MusEnt, StartingLoc, MusEnt, EndingLoc)
+    */
+
+    for (m <- mentions) {
+
+      if (m.label == "change_duration") {
+
+        // todo: how to extract the arguments properly
+        val musEnt = m.arguments("note")
+        val location = m.arguments("location")
+        val endEnt = m.arguments("note")
+
+        // todo: put this into the format for a Convert event
+        val convertAttachment = Convert(musEnt, location, endEnt, location)
+
+        m.withAttachment(convertAttachment)
+      }
     }
 
   }
@@ -184,6 +223,8 @@ object MusicaActions {
   val NUMBERS = Set('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
   val PITCH2SEMITONEDIFF: Map[String, Int] = Map("C4" -> 0, "D4" -> 2,"E4" -> 4,"F4" -> 5,
     "G4" -> 7, "A4" -> 9, "B4" -> 11, "C5" -> 12, "D5" -> 14, "E5" -> 16, "F5" -> 17, "G5" -> 19)
+  val SEMITONEDIFF2PITCH: Map[Int, String] = Map(0 -> "C4", 2 -> "D4",4 -> "E4", 5 -> "F4",
+    7 -> "G4", 9 -> "A4", 11 -> "B4", 12 -> "C5", 14 -> "D5", 16 -> "E5", 17 -> "F5", 19 -> "G5")
 
   def apply(taxonomyPath: String) =
     new MusicaActions(readTaxonomy(taxonomyPath))

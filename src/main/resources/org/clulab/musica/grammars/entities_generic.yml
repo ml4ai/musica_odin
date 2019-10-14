@@ -28,6 +28,13 @@ rules:
     pattern: |
       [word=/(up|down|lower|higher)/]
 
+  - name: direction-2-indirect
+    label: Direction
+    priority: 1
+    type: token
+    pattern: |
+      [word=/(above|below)/]
+
   - name: earlier
     label: Earlier
     priority: 1

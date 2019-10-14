@@ -51,21 +51,21 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
     Convert events should contain (MusEnt, StartingLoc, MusEnt, EndingLoc)
     */
 
-    def pitch2int(s: String): Int = {
-      // this is unnecessarily abstracted, but doing this for now to see more easily
-
-      // mini-LUT built for semitones difference in treble clef; starts at middle C, goes up to G
-      // octave numbering starts at C
-      // true for key of C -- if we are in other keys this may not be the same
-      // e.g. in key of G, if 'F' is written, it could be F#
-      // does not include sharps or flats
-      val chart = Map("C4" -> 0, "D4" -> 2,"E4" -> 4,"F4" -> 5, "G4" -> 7, "A4" -> 9, "B4" -> 11,
-        "C5" -> 12, "D5" -> 14, "E5" -> 16, "F5" -> 17, "G5" -> 19)
-
-      // return the value
-      chart(s)
-
-    }
+//    def pitch2int(s: String): Int = {
+//      // this is unnecessarily abstracted, but doing this for now to see more easily
+//
+//      // mini-LUT built for semitones difference in treble clef; starts at middle C, goes up to G
+//      // octave numbering starts at C
+//      // true for key of C -- if we are in other keys this may not be the same
+//      // e.g. in key of G, if 'F' is written, it could be F#
+//      // does not include sharps or flats
+//      val chart = Map("C4" -> 0, "D4" -> 2,"E4" -> 4,"F4" -> 5, "G4" -> 7, "A4" -> 9, "B4" -> 11,
+//        "C5" -> 12, "D5" -> 14, "E5" -> 16, "F5" -> 17, "G5" -> 19)
+//
+//      // return the value
+//      chart(s)
+//
+//    }
 
     def dirStepEnt2Ent(m: Mention): (Option[String], Option[String], Option[String], Option[String]) = {
       // take direction and step plus starting MusEnt and calculate ending MusEnt
@@ -123,9 +123,9 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
     for (m <- mentions) {
 
-      if (m.label == "move") {
+      if (m.label == "Move") {
         // todo: how to extract the arguments properly
-        val musEnt = m.arguments("note")
+        val musEnt = m.arguments("note") //or other musEnt
         val startingLoc = m.arguments("location")
         val endingLoc = m.arguments("location")
 
@@ -148,15 +148,46 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
     for (m <- mentions) {
 
-      if (m.label == "change_duration") {
+      if (m.label == "Change_duration") {
 
         // todo: how to extract the arguments properly
-        val musEnt = m.arguments("note")
+        val musEnt = m.arguments("note") //or other musEnt
         val location = m.arguments("location")
         val endEnt = m.arguments("note")
 
         // todo: put this into the format for a Convert event
         val convertAttachment = Convert(musEnt, location, endEnt, location)
+
+        m.withAttachment(convertAttachment)
+      }
+    }
+
+  }
+
+  def repeat2Insert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+
+    /*
+    take a Repeat event and change it to an Insert event
+    Repeat events should contain (MusEnt, InitialLocation, LocationOfRepetition, Frequency)
+    Insert events should contain (MusEnt, LocationOfInsertion, Frequency)
+     */
+
+    for (m <- mentions) {
+
+      if (m.label == "Repeat") {
+
+        // it seems like this might only be important if we have something like:
+        // "repeat the notes in measure 4 twice"
+        // where we have to refer to the score in order to see what values those notes have
+        // then use that to complete the Insert event. submethod?
+
+        // todo: how to extract the arguments properly
+        val musEnt = m.arguments("note") //or other musEnt
+        val location = m.arguments("location")
+        val endEnt = m.arguments("note")
+
+        // todo: put this into the format for a Convert event
+        val convertAttachment = Insert(musEnt, location, endEnt, location)
 
         m.withAttachment(convertAttachment)
       }

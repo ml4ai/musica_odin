@@ -6,6 +6,9 @@ import org.clulab.odin.impl.Taxonomy
 import org.clulab.utils.FileUtils
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
+import org.clulab.musica.MusicaEngine._
+
+import scala.collection.mutable.ArrayBuffer
 
 
 case class PitchInfo(pitch: String, octave: Option[Int], accidental: Option[String]) extends Attachment
@@ -121,21 +124,46 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
     Convert events should contain (MusEnt, StartingLoc, MusEnt, EndingLoc)
     */
 
+    // For reference -- other syntax
+//    for {
+//      m <- mentions
+//      if m.label == "Move"
+//      musEnt = m.arguments("note") //or other musEnt
+//      startingLoc = m.arguments("locationFrom")
+//      endingLoc = m.arguments("locationTo")
+//
+//      newArgs = Map(SRC_ENT -> musEnt, SRC_LOC -> startingLoc, DEST_ENT -> musEnt, DEST_LOC -> endingLoc)
+//      compositionalFoundBy = m.foundBy + "++move2Convert"
+//      convertMention = m.asInstanceOf[EventMention].copy(
+//        labels = taxonomy.hypernymsFor("Convert"),
+//        arguments = newArgs,
+//        foundBy = compositionalFoundBy)
+//    } yield convertMention
+
+
+    val out = new ArrayBuffer[Mention]
+
     for (m <- mentions) {
 
       if (m.label == "Move") {
         // todo: how to extract the arguments properly
-        val musEnt = m.arguments("note") //or other musEnt
-        val startingLoc = m.arguments("location")
-        val endingLoc = m.arguments("location")
+        val musEnt = m.arguments(MUS_ENT) //or other musEnt
+        val startingLoc = m.arguments(SRC_LOC)
+        val endingLoc = m.arguments(DEST_LOC)
 
         // todo: put this into the format for a Convert event
-        val convertAttachment = Convert(musEnt, startingLoc, musEnt, endingLoc)
+        val newArgs = Map(SRC_ENT -> musEnt, SRC_LOC -> startingLoc, DEST_ENT -> musEnt, DEST_LOC -> endingLoc)
+        val compositionalFoundBy = m.foundBy + "++move2Convert"
+        val convertMention = m.asInstanceOf[EventMention].copy(
+          labels = taxonomy.hypernymsFor("Convert"),
+          arguments = newArgs,
+          foundBy = compositionalFoundBy)
 
-        m.withAttachment(convertAttachment)
+        out.append(convertMention)
       }
     }
 
+    out
   }
 
   def changeDur2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {

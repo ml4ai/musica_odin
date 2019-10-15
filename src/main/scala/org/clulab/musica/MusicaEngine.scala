@@ -85,6 +85,12 @@ class MusicaEngine (val config: Config = ConfigFactory.load("musica")) extends C
 
 object MusicaEngine {
 
+  val MUS_ENT = "musicalEntity"
+  val SRC_ENT = "sourceEntity"
+  val SRC_LOC = "sourceLocation"
+  val DEST_ENT = "destEntity"
+  val DEST_LOC = "destLocation"
+
   val logger = LoggerFactory.getLogger(this.getClass())
   val PREFIX: String = "MusicaEngine"
 

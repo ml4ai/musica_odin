@@ -146,16 +146,17 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
     for (m <- mentions) {
 
       if (m.label == "Move") {
-        // todo: how to extract the arguments properly
-        val musEnt = m.arguments(MUS_ENT) //or other musEnt
+
+        // get argument values
+        val musEnt = m.arguments(MUS_ENT)
         val startingLoc = m.arguments.getOrElse(SRC_LOC, Seq())
         val endingLoc = m.arguments.getOrElse(DEST_LOC, Seq())
 
-        // todo: put this into the format for a Convert event
-//        val newTrigger
+        // map to a new set of args
         val newArgs = Map(SRC_ENT -> musEnt, SRC_LOC -> startingLoc, DEST_ENT -> musEnt, DEST_LOC -> endingLoc)
         val compositionalFoundBy = m.foundBy + "++move2Convert"
 
+        // change mention to a CONVERT mention
         val convertMention = m match {
           case em: EventMention => {
             val newLabels = taxonomy.hypernymsFor("Convert")
@@ -174,11 +175,6 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
           case _ => ???
         }
 
-//        val convertMention = m.asInstanceOf[EventMention].copy(
-//          labels = taxonomy.hypernymsFor("Convert"),
-//          arguments = newArgs,
-//          foundBy = compositionalFoundBy)
-
         out.append(convertMention)
       }
     }
@@ -186,64 +182,101 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
     out
   }
 
-  
-//  def changeDur2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
-//
-//    /*
-//    take a Move event and change it to a Convert event
-//    Move events should contain (MusEnt, StartingLoc, EndingLoc)
-//    Convert events should contain (MusEnt, StartingLoc, MusEnt, EndingLoc)
-//    */
-//
-//    for (m <- mentions) {
-//
-//      if (m.label == "Change_duration") {
-//
-//        // todo: how to extract the arguments properly
-//        val musEnt = m.arguments("note") //or other musEnt
-//        val location = m.arguments("location")
-//        val endEnt = m.arguments("note")
-//
-//        // todo: put this into the format for a Convert event
-//        val convertAttachment = Convert(musEnt, location, endEnt, location)
-//
-//        m.withAttachment(convertAttachment)
-//      }
-//    }
-//
-//  }
->>>>>>> 3edb5f21c335b43c32f9973cb62baabd5c6f1b22
 
-//  def repeat2Insert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
-//
-//    /*
-//    take a Repeat event and change it to an Insert event
-//    Repeat events should contain (MusEnt, InitialLocation, LocationOfRepetition, Frequency)
-//    Insert events should contain (MusEnt, LocationOfInsertion, Frequency)
-//     */
-//
-//    for (m <- mentions) {
-//
-//      if (m.label == "Repeat") {
-//
-//        // it seems like this might only be important if we have something like:
-//        // "repeat the notes in measure 4 twice"
-//        // where we have to refer to the score in order to see what values those notes have
-//        // then use that to complete the Insert event. submethod?
-//
-//        // todo: how to extract the arguments properly
-//        val musEnt = m.arguments("note") //or other musEnt
-//        val location = m.arguments("location")
-//        val endEnt = m.arguments("note")
-//
-//        // todo: put this into the format for a Convert event
-//        val convertAttachment = Insert(musEnt, location, endEnt, location)
-//
-//        m.withAttachment(convertAttachment)
-//      }
-//    }
-//
-//  }
+  def changeDur2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+
+    /*
+    take a Move event and change it to a Convert event
+    Change Duration events should contain (SourceEnt, Location, DestEnt)
+    Convert events should contain (SourceEnt, SourceLoc, DestEnt, DestLoc)
+    */
+
+    val out = new ArrayBuffer[Mention]
+
+    for (m <- mentions) {
+
+      if (m.label == "Change_duration") {
+
+        // get arg values
+        val srcEnt = m.arguments(SRC_ENT)
+        val location = m.arguments(LOC)
+        val destEnt = m.arguments(DEST_ENT)
+
+        // map to a new set of args
+        val newArgs = Map(SRC_ENT -> srcEnt, SRC_LOC -> location, DEST_ENT -> destEnt, DEST_LOC -> location)
+        val compositionalFoundBy = m.foundBy + "++changeDur2Convert"
+
+        // change mention to a CONVERT mention
+        val convertMention = m match {
+          case em: EventMention => {
+            val newLabels = taxonomy.hypernymsFor("Convert")
+            val newTrigger = em.trigger.copy(labels = newLabels)
+            em.copy(
+              labels = newLabels,
+              trigger = newTrigger,
+              arguments = newArgs,
+              foundBy = compositionalFoundBy)
+          }
+          case rm: RelationMention =>
+            rm.copy(
+              labels = taxonomy.hypernymsFor("Convert"),
+              arguments = newArgs,
+              foundBy = compositionalFoundBy)
+          case _ => ???
+        }
+
+        out.append(convertMention)
+      }
+    }
+
+  }
+
+
+  def repeat2Insert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+
+    /*
+    take a Repeat event and change it to an Insert event
+    Repeat events should contain (MusEnt, SourceLoc, DestLoc, Frequency)
+    Insert events should contain (MusEnt, Location, Frequency)
+     */
+    val out = new ArrayBuffer[Mention]
+
+    for (m <- mentions) {
+
+      if (m.label == "Repeat") {
+
+        // get arg values
+        val musEnt = m.arguments(MUS_ENT)
+        val location = m.arguments(DEST_LOC)
+        val freq = m.arguments(FREQ)
+
+        // map to a new set of args
+        val newArgs = Map(MUS_ENT -> musEnt, LOC -> location, FREQ -> freq)
+        val compositionalFoundBy = m.foundBy + "++repeat2Insert"
+
+        // change mention to a CONVERT mention
+        val convertMention = m match {
+          case em: EventMention => {
+            val newLabels = taxonomy.hypernymsFor("Insert")
+            val newTrigger = em.trigger.copy(labels = newLabels)
+            em.copy(
+              labels = newLabels,
+              trigger = newTrigger,
+              arguments = newArgs,
+              foundBy = compositionalFoundBy)
+          }
+          case rm: RelationMention =>
+            rm.copy(
+              labels = taxonomy.hypernymsFor("Insert"),
+              arguments = newArgs,
+              foundBy = compositionalFoundBy)
+          case _ => ???
+        }
+
+        out.append(convertMention)
+      }
+    }
+  }
 
 //  // every action muct have a specific format:
 //  // mentions are the mentions extracted by THIS rule THIS time through the odin cascade

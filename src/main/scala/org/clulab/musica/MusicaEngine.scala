@@ -85,11 +85,22 @@ class MusicaEngine (val config: Config = ConfigFactory.load("musica")) extends C
 
 object MusicaEngine {
 
+  // reused names
+  // CONVERT uses SRC_ENT, SRC_LOC, DEST_ENT, DEST_LOC
+  // DELETE uses MUS_ENT, LOC
+  // INSERT uses MUS_ENT, LOC, FREQ
+  // INVERT uses MUS_ENT, AXIS
+  // REVERSE uses MUS_ENT, LOC
+  // SWITCH uses SRC_ENT, SRC_LOC, DEST_ENT, DEST_LOC
+
   val MUS_ENT = "musicalEntity"
   val SRC_ENT = "sourceEntity"
   val SRC_LOC = "sourceLocation"
   val DEST_ENT = "destEntity"
   val DEST_LOC = "destLocation"
+  val AXIS = "axis"
+  val FREQ = "frequency"
+  val LOC = "location"
 
   val logger = LoggerFactory.getLogger(this.getClass())
   val PREFIX: String = "MusicaEngine"

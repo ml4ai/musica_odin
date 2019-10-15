@@ -11,8 +11,7 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${switch_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
-      and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) ((@locationrel:LocationRel)
-      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence))? ([]? @onset:Onset)?
+      and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) @location:Location?
 
   - name: switch-2
     label: ${label}
@@ -21,5 +20,23 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${switch_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
-      ((@locationrel:LocationRel) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence))?
-      ([]? @onset:Onset)?
+      @location:Location?
+
+  - name: switch-3-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The first C and the first D in measure 2 should be switched"
+      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+      and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) @location:Location?
+      [word=/^(${modals})/] to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${switch_triggers})/])
+      @location:Location?
+
+  - name: switch-4-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The first two chords should be switched in measure 1"
+    type: token
+    pattern: |
+      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) @location:Location?
+      [word=/^(${modals})/] to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${switch_triggers})/])
+      @location:Location?

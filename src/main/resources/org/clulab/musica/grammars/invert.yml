@@ -4,40 +4,40 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
-  - name: invert-2-location-interval
-    label: ${label}
-    priority: ${rulepriority}
-    example: "Invert the first measure around middle C"
-    type: token
-    pattern: |
-      (?<trigger>[word=/(?i)^(${invert_triggers})/]) @everything:Everything
-      @locationinterval:LocationInterval
-
   - name: invert-1
     label: ${label}
     priority: ${rulepriority}
     example: "Invert the first measure around middle C"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${invert_triggers})/]) (@note:Note|@everything:Everything|@measure:Measure)
-      ([]? @onset:Onset)? (around (@note:Note|@pitch:Pitch))?
+      (?<trigger>[word=/(?i)^(${invert_triggers})/])
+      (@everything:Everything|@note:Note|@chord:Chord|@measure:Measure)
+      @location:Location? (around (@note:Note|@pitch:Pitch))?
 
-#(around (@note:Note|@pitch:Pitch))?
+  - name: invert-2-location-at-start
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In the first measure, invert all the notes around D4"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?) (?<trigger>[word=/(?i)^(${invert_triggers})/])
+      (@everything:Everything|@note:Note|@chord:Chord) (around (@note:Note|@pitch:Pitch))?
 
-#    - name: invert-2-between
-#      label: ${label}
-#      priority: ${rulepriority}
-#      example: "Invert everything between the first measure and the third measure"
-#      type: token
-#      pattern: |
-#        (?<trigger>[word=/^(${invert_triggers})/]) (@note:Note|@everything:Everything) @locationinterval:LocationInterval
-#        around @note:Note|@pitch:Pitch
-#
-#    - name: invert-3-passive
-#      label: ${label}
-#      priority: ${rulepriority}
-#      example: "The first measure should be inverted around middle C"
-#      type: token
-#      pattern: |
-#        ((@note:Note|@everything:Everything) []? @onset:Onset)|@measure:Measure) should
-#        [word=/^(${aux_be})/] (?<trigger>[word=/^(${invert_triggers})/]) around @note:Note|@pitch:Pitch
+  - name: invert-3-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The first measure should be inverted around middle C"
+    type: token
+    pattern: |
+      (@note:Note|@everything:Everything|@measure:Measure|@chord:Chord) @location:Location? [word=/^(${modals})/]
+      to? [word=/^(${aux_be})/] (?<trigger>[word=/^(${invert_triggers})/]) (around (@note:Note|@pitch:Pitch))?
+
+  - name: invert-4-passive-location-at-start
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In the first measure, everything should be inverted around A4"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?) (@note:Note|@everything:Everything|@measure:Measure|@chord:Chord)
+      [word=/^(${modals})/] to? [word=/^(${aux_be})/] (?<trigger>[word=/^(${invert_triggers})/])
+      (around (@note:Note|@pitch:Pitch))?

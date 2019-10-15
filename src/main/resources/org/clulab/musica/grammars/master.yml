@@ -37,24 +37,10 @@ rules:
       rulepriority: "6"
       label: Copy
 
-#  - import: org/clulab/musica/grammars/template.yml
-#    vars:
-#      rulepriority: "6"
-#      addlabel: "Delete"
-#      label: Delete
-#      trigger: ${delete_triggers}
-
   - import: org/clulab/musica/grammars/delete.yml
     vars:
       rulepriority: "6"
       label: Delete
-
-#  - import: org/clulab/musica/grammars/template.yml
-#    vars:
-#      rulepriority: "6"
-#      addlabel: "Insert"
-#      label: Insert
-#      trigger: ${insert_triggers}
 
   - import: org/clulab/musica/grammars/insert.yml
     vars:

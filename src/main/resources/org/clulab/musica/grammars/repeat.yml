@@ -11,8 +11,8 @@ rules:
     example: "Repeat everything in the first measure"
     type: token
     pattern: |
-      (?<trigger>[word=/^(${repeat_triggers})/]) (((@note:Note|@everything:Everything) []? @onset:Onset?)|@measure:Measure)
-      @frequency:Frequency? ([]? @locationabs:LocationAbs (@measure:Measure)?)?
+      (?<trigger>[word=/^(${repeat_triggers})/]) (@note:Note|@everything:Everything|@measure:Measure)
+      @location:Location? @frequency:Frequency? @location:Location?
 
   - name: repeat-2
     label: ${label}
@@ -20,8 +20,8 @@ rules:
     example: "repeat the run of eighth notes after the whole note in the second measure"
     type: token
     pattern: |
-      (?<trigger>[word=/^(${repeat_triggers})/]) (((@note:Note|@everything:Everything) []? @onset:Onset?)|@measure:Measure)
-      (@locationrel:LocationRel (@note:Note|@rest:Rest) ([]? @onset:Onset)?) @frequency:Frequency?
+      (?<trigger>[word=/^(${repeat_triggers})/]) (@note:Note|@everything:Everything|@measure:Measure)
+      @location:Location? @location:Location? @frequency:Frequency?
 
   # todo: why does repeat-1 not capture this, but making frequency mandatory works?
   - name: repeat-3
@@ -30,8 +30,8 @@ rules:
     example: "Repeat everything in the first measure twice"
     type: token
     pattern: |
-      (?<trigger>[word=/^(${repeat_triggers})/]) (((@note:Note|@everything:Everything) []? @onset:Onset?)|@measure:Measure)
-      @frequency:Frequency ([]? @locationabs:LocationAbs (@measure:Measure)?)?
+      (?<trigger>[word=/^(${repeat_triggers})/]) (@note:Note|@everything:Everything|@measure:Measure)
+      @location:Location? @frequency:Frequency @location:Location?
 
   - name: repeat-4-passive
     label: ${label}
@@ -39,12 +39,6 @@ rules:
     example: "Everything in the first measure should be repeated"
     type: token
     pattern: |
-      (((@note:Note|@everything:Everything) []? @onset:Onset?)|@measure:Measure)
-      (@locationrel:LocationRel (@note:Note|@rest:Rest) ([]? @onset:Onset)?)?
-      (should)? [word=/^(${aux_be})/]?
-      (?<trigger>[word=/^(${repeat_triggers})/]) @frequency:Frequency?
-      ([]? @locationabs:LocationAbs (@measure:Measure)?)?
-
-#  - name: repeat-3-passive
-#    label: ${label}
-#    priority: ${rulepriority}
+      (@note:Note|@everything:Everything|@measure:Measure) @location:Location?
+      [word=/^(${modals})/] to? [word=/^(${aux_be})/]? (?<trigger>[word=/^(${repeat_triggers})/])
+      @frequency:Frequency? (@note:Note|@everything:Everything|@measure:Measure) @location:Location?

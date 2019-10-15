@@ -1,0 +1,40 @@
+
+vars: org/clulab/musica/grammars/triggers.yml
+
+
+rules:
+
+  - name: move-1
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Move the D in the first measure to the end of measure 5"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${move_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+      ((in|from) @onset:Onset)? ((to|into) (@locationrel:LocationRel)? []? @onset:Onset)?
+
+#  - name: move-2
+#    label: ${label}
+#    priority: ${rulepriority}
+#    example: "Move the first note to measure 5."
+#    type: token
+#    pattern: |
+#      (?<trigger>[word=/(?i)^(${move_triggers})/]) @note:Note to @onset:Onset
+
+  - name: move-3-rel-loc
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Put the first C on top of the G"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${move_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+      ((in|from) @onset:Onset)? (@locationrel:LocationRel) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)?
+
+  - name: move-4-earlier-later
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Move the C quarter note two measures to the right"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${move_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@everything:Everything|
+      @pitchsequence:PitchSequence) @timestep:TimeStep

@@ -24,6 +24,14 @@ rules:
       priority: ${rulepriority}
       type: token
       pattern: |
+        (?<trigger>[word=/(?i)^(${insert_triggers})/])
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure) ([]? @onset:Onset)?
+
+    - name: insert-x-test
+      label: ${label}
+      priority: ${rulepriority}
+      type: token
+      pattern: |
         (?<trigger>[word=/(?i)^(${insert_triggers})/]) @note:Note []? @locationabs:LocationAbs
 
     - name: insert-2-passive
@@ -125,8 +133,18 @@ rules:
       example: "After the quarter note, add an eighth note"
       type: token
       pattern: |
-        (@locationrel:LocationRel|(@locationabs:LocationAbs []?))?
-        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|([] @onset:Onset))
+        (@locationrel:LocationRel (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))
+        ([] @onset:Onset)? [tag=/,/]
+        (?<trigger>[word=/(?i)^(${insert_triggers})/])
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+
+    - name: insert-9-comma-abs-loc
+      label: ${label}
+      priority: ${rulepriority}
+      example: "At the start of measure 1, add an eighth note"
+      type: token
+      pattern: |
+        @locationabs:LocationAbs [tag=/,/]
         (?<trigger>[word=/(?i)^(${insert_triggers})/])
         (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
 
@@ -136,9 +154,19 @@ rules:
       example: "After the quarter note, an eighth note should be added"
       type: token
       pattern: |
-        (@locationrel:LocationRel|(@locationabs:LocationAbs []?))?
-        ((@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)|([] @onset:Onset))
-        [] (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) should
+        (@locationrel:LocationRel (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))
+        ([] @onset:Onset)? [tag=/,/]
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) should
+        [word=/(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
+
+    - name: insert-10-comma-passive-abs-loc
+      label: ${label}
+      priority: ${rulepriority}
+      example: "After the quarter note, an eighth note should be added"
+      type: token
+      pattern: |
+        @locationabs:LocationAbs [tag=/,/]
+        (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) should
         [word=/(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
 
 #    - name: insert-1
@@ -149,3 +177,8 @@ rules:
 #        duration: Duration? = >/(amod|compound)/
 #        pitch: Pitch? = >/(amod|compound)/
 #        specifier: Specifier? = >det
+#                 (@locationrel:LocationRel|(@locationabs:LocationAbs []?))?
+#                 (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|([] @onset:Onset)) [tag=/,/]
+
+#                 (@locationrel:LocationRel|(@locationabs:LocationAbs []?))?
+#        ((@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)|([] @onset:Onset)) [tag=/,/]

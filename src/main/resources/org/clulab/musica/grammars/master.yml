@@ -32,6 +32,11 @@ rules:
       rulepriority: "6"
       label: Convert
 
+  - import: org/clulab/musica/grammars/copy.yml
+    vars:
+      rulepriority: "6"
+      label: Copy
+
 #  - import: org/clulab/musica/grammars/template.yml
 #    vars:
 #      rulepriority: "6"
@@ -57,12 +62,17 @@ rules:
       label: Insert
       trigger: ${insert_triggers}
 
-  - import: org/clulab/musica/grammars/template.yml
+  - import: org/clulab/musica/grammars/invert.yml
     vars:
       rulepriority: "6"
       addlabel: "Invert"
       label: Invert
       trigger: ${invert_triggers}
+
+  - import: org/clulab/musica/grammars/move.yml
+    vars:
+      rulepriority: "6"
+      label: Move
 
   - import: org/clulab/musica/grammars/template.yml
     vars:
@@ -85,6 +95,10 @@ rules:
       label: Reverse
       trigger: ${reverse_triggers}
 
+  - import: org/clulab/musica/grammars/switch.yml
+    vars:
+      rulepriority: "6"
+      label: Switch
 
   - import: org/clulab/musica/grammars/transpose.yml
     vars:

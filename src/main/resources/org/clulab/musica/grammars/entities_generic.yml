@@ -28,6 +28,27 @@ rules:
     pattern: |
       [word=/(up|down|lower|higher)/]
 
+  - name: direction-2-indirect
+    label: Direction
+    priority: 1
+    type: token
+    pattern: |
+      [word=/(above|below)/]
+
+  - name: earlier
+    label: Earlier
+    priority: 1
+    type: token
+    pattern: |
+      [word=/(earlier|early)/]
+
+  - name: earlier-2
+    label: Earlier
+    priority: 1
+    type: token
+    pattern:
+      to the left
+
     # todo: Add 'everything' to test framework
   - name: everything
     label: Everything
@@ -51,12 +72,19 @@ rules:
     pattern: |
       [tag=/CD/ & !word=/.*\/.*/] [word=/^time/]
 
-  - name: locationrel
-    label: LocationRel
+  - name: later
+    label: Later
     priority: 1
     type: token
     pattern: |
-      (?<trigger>[word=/${loc_preps}/]) by?
+      [word=/later|after/]
+
+  - name: later-2
+    label: Later
+    priority: 1
+    type: token
+    pattern: |
+      to the right
 
   - name: negator
     label: Negator
@@ -72,36 +100,134 @@ rules:
     pattern: |
       [word=/(?i)^(${proportions})/]
 
+  # todo: this currently handles 'the first measure' and 'the first eighth note' the same way, but
+  # the first measure will need to be converted into measure 1, while the first eighth note won't
+  # is this a problem?
   - name: specifier-1
     label: Specifier
     priority: 2
     type: token  # surface rule
     pattern: |
-      (?<quantifier>[tag=/^(DT|PDT)/]+) (@cardinality:Cardinality)?
-#      (?<quantifier>[tag=/^(DT|PDT)/]) (?<quantifier>[tag=/^(DT|PDT)/] & [word=/(?!)^[A-G]$/])? (@cardinality:Cardinality)?
-  #        |
-  #        (?<quantifier>[word=/(?i)^everything/])
+      (?<quantifier>[tag=/^(DT|PDT)/]+ (((@cardinality:Cardinality|[word=/^(${finals})/]) ((and|or)
+      (@cardinality:Cardinality|[word=/^(${finals})/]))?)+)?)
 
   ## --------------------------------------------
   # Composed Items -- not? music specific
   ## --------------------------------------------
 
-  - name: absolute-location-1
-    label: LocationAbs
+## testing
+  #todo: is this really a location? should it be a specifier?
+  - name: location-0-in
+    label: Location
+    example: "Delete the first two notes in the run of notes"
+    priority: 3
+    type: token
+    pattern: |
+      (?<trigger>[word=/in/]) (@note:Note|@measure:Measure|@rest:Rest|@pitchsequence:PitchSequence|@chord:Chord)
+
+  - name: location-1-absolute
+    label: Location
     example: "Add a quarter rest at the start"
     priority: 3
     type: token
     pattern: |
-      @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) (with)?
+      (?<trigger>[word=/^(starting|ending|beginning)/]) (with|in|on)
+      (@note:Note|@measure:Measure|@rest:Rest|@pitchsequence:PitchSequence|@chord:Chord) (in @measure:Measure)?
 
-  - name: absolute-location-2
-    label: LocationAbs
+  - name: location-2-absolute
+    label: Location
     example: "Add a quarter rest to the start of the second measure"
     priority: 4
     type: token
     pattern: |
-      @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) of @measure:Measure
+      (at|to)? @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) of @measure:Measure
 
+  - name: location-3-relative
+    label: Location
+    priority: 4
+    type: token
+    pattern: |
+      (?<trigger>[word=/${loc_preps}/]) by? (@note:Note|@measure:Measure|@rest:Rest|@pitchsequence:PitchSequence|@chord:Chord)
+      (in @measure:Measure)?
+
+  - name: location-4-relative
+    label: Location
+    priority: 4
+    type: token
+    pattern: |
+      on (?<trigger>[word=/top/]) of? (@note:Note|@chord:Chord) (in @measure:Measure)?
+
+  - name: location-5-onset
+    label: Location
+    priority: 4
+    type: token
+    pattern: |
+      (?<trigger>[word=/starting|ending|beginning/]) (in|at|on)
+      ((@measure:Measure []?)? @beat:Beat |
+      @measure:Measure ([]? @beat:Beat)? |
+      (@beat:Beat []?)? @measure:Measure |
+      @beat:Beat ([]? @measure:Measure)?)
+
+  - name: location-6-onset
+    label: Location
+    priority: 4
+    type: token
+    pattern: |
+      (?<trigger>[word=/starting|ending|beginning/]) (in|at|on)
+      (@measure:Measure []? @beat:Beat |
+      @beat:Beat []? @measure:Measure)
+
+  - name: location-7-onset
+    label: Location
+    priority: 4
+    type: token
+    pattern: |
+      (?<trigger>[word=/in|at|on/])
+      ((@measure:Measure []?)? @beat:Beat |
+      @measure:Measure ([]? @beat:Beat)? |
+      (@beat:Beat []?)? @measure:Measure |
+      @beat:Beat ([]? @measure:Measure)?)
+
+  - name: location-8-onset
+    label: Location
+    priority: 4
+    type: token
+    pattern: |
+      (?<trigger>[word=/in|at|on/])
+      (@measure:Measure []? @beat:Beat |
+      @beat:Beat []? @measure:Measure)
+
+
+##older version
+#  - name: absolute-location-1
+#    label: LocationAbs
+#    example: "Add a quarter rest at the start"
+#    priority: 3
+#    type: token
+#    pattern: |
+#      @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) (with)?
+#
+#  - name: absolute-location-2
+#    label: LocationAbs
+#    example: "Add a quarter rest to the start of the second measure"
+#    priority: 4
+#    type: token
+#    pattern: |
+#      @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) of @measure:Measure
+#
+#  - name: locationrel
+#    label: LocationRel
+#    priority: 4
+#    type: token
+#    pattern: |
+#      (?<trigger>[word=/${loc_preps}/]) by? (@note:Note|@measure:Measure|@rest:Rest|@pitchsequence:PitchSequence|@chord:Chord)
+#
+#  - name: locationrel-2
+#    label: LocationRel
+#    priority: 4
+#    type: token
+#    pattern: |
+#      on (?<trigger>[word=/top/]) of? (@note:Note|@chord:Chord)
 
   ## potential alternative
   ## use only location words for rel-location and add music with a rule like:

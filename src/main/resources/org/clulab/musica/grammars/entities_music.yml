@@ -152,7 +152,6 @@ rules:
       pattern: |
         (?<= /(?i)^(up|down)$/) (@cardinality:Cardinality)
 
-
     - name: time-signature
       label: TimeSignature
       priority: 1
@@ -176,8 +175,16 @@ rules:
       pattern:
         in (?<trigger>[tag=/CD/]) [tag=/\./]
 
+    - name: time-step
+      label: TimeStep
+      priority: 2
+      type: token
+      pattern: |
+        (@specifier:Specifier|@cardinality:Cardinality)? (?<trigger>[word=/^(measure|beat)/])
+        (@earlier:Earlier|@later:Later)
 
-## --------------------------------------------
+
+        ## --------------------------------------------
             # Simple Events -- Music
 ## --------------------------------------------
 
@@ -219,7 +226,7 @@ rules:
 #        @specifier:Specifier? (@cardinality:Cardinality+)? @pitch:Pitch? @duration:Proportion?
 #        (?<trigger> [word=/(?i)^note/]) [word=/^run|sequence/]
 
-
+    # todo: does 'the first and last notes' count as two 'note' or just one? if two, how to do it?
     # no "type" so it's a syntax rule
     - name: note-1
       label: Note
@@ -229,6 +236,15 @@ rules:
         duration: Proportion? = >/(amod|compound)/
         pitch: Pitch? = >/(amod|compound)/
         specifier: Specifier? = >/^det/
+
+#    - name: note-2
+#      label: Note
+#      priority: 3
+#      pattern: |
+#        trigger = [word=/(?i)^note/]
+#        duration: Proportion? = >/(amod|compound)/
+#        pitch: Pitch? = >/(amod|compound)/
+#        specifier: Specifier? = >/^det/
 
     - name: note-2-underspecified
       label: Note
@@ -274,23 +290,48 @@ rules:
 #      pattern: |
 
 
-    - name: onset-1
-      label: Onset
-      priority: 4
-      type: token
-      pattern: |  # what does []? indicate?
-        ((@measure:Measure []?)? @beat:Beat |
-        @measure:Measure ([]? @beat:Beat)? |
-        (@beat:Beat []?)? @measure:Measure |
-        @beat:Beat ([]? @measure:Measure)?)
+#    - name: onset-1
+#      label: Onset
+#      priority: 4
+#      type: token
+#      pattern: |  # what does []? indicate?
+#        ((@measure:Measure []?)? @beat:Beat |
+#        @measure:Measure ([]? @beat:Beat)? |
+#        (@beat:Beat []?)? @measure:Measure |
+#        @beat:Beat ([]? @measure:Measure)?)
+#
+#    - name: onset-2
+#      label: Onset
+#      priority: 4
+#      type: token
+#      pattern: |
+#        @measure:Measure []? @beat:Beat |
+#        @beat:Beat []? @measure:Measure
+#
+#    - name: offset-1
+#      label: Offset
+#      priority: 4
+#      type: token
+#      pattern: |  # what does []? indicate?
+#        ((@measure:Measure []?)? @beat:Beat |
+#        @measure:Measure ([]? @beat:Beat)? |
+#        (@beat:Beat []?)? @measure:Measure |
+#        @beat:Beat ([]? @measure:Measure)?)
+#
+#    - name: offset-2
+#      label: Offset
+#      priority: 4
+#      type: token
+#      pattern: |
+#        @measure:Measure []? @beat:Beat |
+#        @beat:Beat []? @measure:Measure
 
-    - name: onset-2
-      label: Onset
-      priority: 4
+    - name: location-interval
+      label: LocationInterval
+      priority: 5
       type: token
       pattern: |
-        @measure:Measure []? @beat:Beat |
-        @beat:Beat []? @measure:Measure
+        (?<trigger> [word=/(?i)^between/]) @onset:Onset and @offset:Offset
 
     # jc added
     - name: rest-1

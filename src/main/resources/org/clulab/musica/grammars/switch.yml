@@ -1,0 +1,25 @@
+
+vars: org/clulab/musica/grammars/triggers.yml
+
+
+rules:
+
+  - name: switch-1
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Switch the D and the C in measure 1"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${switch_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+      and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) ((@locationrel:LocationRel)
+      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence))? ([]? @onset:Onset)?
+
+  - name: switch-2
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Swap the first and third notes in measure 2"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${switch_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+      ((@locationrel:LocationRel) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence))?
+      ([]? @onset:Onset)?

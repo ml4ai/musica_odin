@@ -2,9 +2,11 @@
 #change_duration_triggers: "shorten|lengthen|change|chang|convert|augment|diminish"
 
 # todo: split into shorten & lengthen
-change_duration_triggers: "shorten|lengthen|change|chang|augment|diminish"
+change_duration_triggers: "shorten|lengthen|change|chang|augment|diminish|turn|mak"
 
 convert_triggers: "chang|change|convert|turn"
+
+copy_triggers: "copy|copi"
 
 delete_triggers: "delete|del|remove|drop|erase|rid"
 
@@ -12,20 +14,26 @@ insert_triggers: "insert|add"
 
 invert_triggers: "invert|flip"
 
+move_triggers: "move|put|place|shift"
+
 repeat_triggers: "repeat|duplicat"
 
 replace_triggers: "replac"
 
-reverse_triggers: "reverse|retrograde|switch"
+reverse_triggers: "reverse|retrograde"
 
-transpose_triggers: "transpose|move|mov|drop|naturalize|change|chang|rais|lower"
+switch_triggers: "switch|swap"
+
+transpose_triggers: "transpose|move|mov|drop|naturalize|change|chang|rais|lower|mak|turn|shift"
 
 
 #generic vars
 aux_be: "is|are|was|were|be"
-loc_preps: "after|before|between|above|below|followed"
+#loc_preps: "after|before|between|above|below|followed"
+loc_preps: "after|before|above|below|followed"
 negators: "not|no"
 ordinals: "first|second|third|fourth|fifth|sixth|seventh|ninth|tenth|1st|2nd|3rd|4th|5th|6th|7th|8th|9th|10th"
+finals: "last|final|ultimate|penultimate"
 proportions: "sixteenth|eight|quarter|half|whole"
 modals: "should|could|may|can|need|might|would|must|ought"
 

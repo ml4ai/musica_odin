@@ -12,7 +12,7 @@ rules:
     pattern: |
       (?<trigger>[word=/(?i)^(${copy_triggers})/])
       (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure|@everything:Everything)
-      ((in|from) @onset:Onset)? ((to|into) (@locationrel:LocationRel)? []? @onset:Onset)?
+      @location:Location? @location:Location?
 
   - name: copy-2-rel-location
     label: ${label}
@@ -22,8 +22,7 @@ rules:
     pattern: |
       (?<trigger>[word=/(?i)^(${copy_triggers})/])
       (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure|@everything:Everything)
-      @locationrel:LocationRel (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
-      ((in|from) @onset:Onset)? ((to|into) @locationabs:LocationAbs)?
+      @location:Location? @location:Location? @location:Location?
 
   - name: copy-3-to-abs-location
     label: ${label}

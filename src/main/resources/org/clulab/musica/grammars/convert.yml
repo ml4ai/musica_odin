@@ -11,10 +11,18 @@ rules:
     example: "Convert the quarter note in measure 1 into a quarter rest"
     type: token
     pattern: |
-      ([]? @onset:Onset [tag=/,/]?)?
-      (?<trigger>[word=/(?i)^(${convert_triggers})/]) @note:Note (@locationrel:LocationRel []?
-      (@note:Note|@rest:Rest|@chord:Chord))? ([]? @onset:Onset)? (into|to)
-      (@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) ([]? @onset:Onset)?
+      (?<trigger>[word=/(?i)^(${convert_triggers})/]) @note:Note @location:Location? (into|to)
+      (@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence)
+
+#  - name: convert-note-1
+#    label: ${label}
+#    priority: ${rulepriority}
+#    example: "Convert the quarter note in measure 1 into a quarter rest"
+#    type: token
+#    pattern: |
+#      (@location:Location [tag=/,/]?)?
+#      (?<trigger>[word=/(?i)^(${convert_triggers})/]) @note:Note location:Location? (into|to)
+#      (@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) @location:Location?
 
   - name: convert-note-2-conjunction
     label: ${label}
@@ -23,7 +31,7 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${convert_triggers})/]) []{2,10} and @note:Note (to|into)
-      (@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) []? @onset:Onset?
+      (@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) @location:Location?
 
   - name: convert-note-3-passive
     label: ${label}
@@ -31,9 +39,9 @@ rules:
     example: "the G in measure 1 should be converted into a quarter rest"
     type: token
     pattern: |
-      ([]? @onset:Onset)? [tag=/,/]? @note:Note ([]? @onset:Onset)? should? [word=/^(${aux_be})/]
+      (@location:Location [tag=/,/]?)? @note:Note @location:Location? should? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${convert_triggers})/])
-      (to|into) (@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) ([]? @onset:Onset)?
+      (to|into) (@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) @location:Location?
 
   # CONVERT REST TO X
   - name: convert-rest-1
@@ -43,8 +51,7 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${convert_triggers})/]) @rest:Rest
-      (@locationrel:LocationRel []? (@note:Note|@rest:Rest|@chord:Chord))?
-      ([]? @onset:Onset)? (into|to) (@note:Note|@chord:Chord|@pitchsequence:PitchSequence)
+      @location:Location? (into|to) (@note:Note|@chord:Chord|@pitchsequence:PitchSequence)
 
   - name: convert-rest-2-conjunction
     label: ${label}
@@ -54,7 +61,7 @@ rules:
     pattern: |
       (?<trigger>[word=/(?i)^(${convert_triggers})/]) []{2,10} and
       (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) (to|into)
-      (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) []? @onset:Onset?
+      (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) @location:Location?
 
   - name: convert-rest-3-passive
     label: ${label}
@@ -62,9 +69,9 @@ rules:
     example: "the G in measure 1 should be converted into a quarter rest"
     type: token
     pattern: |
-      ([]? @onset:Onset)? @rest:Rest
-      ([]? @onset:Onset)? should? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${convert_triggers})/])
-      (to|into) (@note:Note|@chord:Chord|@pitchsequence:PitchSequence) ([]? @onset:Onset)?
+      @location:Location? @rest:Rest
+      @location:Location? should? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${convert_triggers})/])
+      (to|into) (@note:Note|@chord:Chord|@pitchsequence:PitchSequence) @location:Location?
 
   # CONVERT CHORD TO REST
   # todo: Determine if changing from one chord type to another is a 'convert' event
@@ -76,8 +83,7 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${convert_triggers})/]) @chord:Chord
-      (@locationrel:LocationRel []? (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence))?
-      ([]? @onset:Onset)? (into|to) (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence)
+      @location:Location? (into|to) (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence)
 
   - name: convert-chord-2-conjunction
     label: ${label}
@@ -86,7 +92,7 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${convert_triggers})/]) []{2,10} and @chord:Chord (to|into)
-      (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) []? @onset:Onset?
+      (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) @location:Location?
 
   - name: convert-chord-3-passive
     label: ${label}
@@ -94,6 +100,6 @@ rules:
     example: "the G in measure 1 should be converted into a quarter rest"
     type: token
     pattern: |
-      ([]? @onset:Onset)? @chord:Chord ([]? @onset:Onset)? should? [word=/^(${aux_be})/]
+      @location:Location? @chord:Chord @location:Location? should? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${convert_triggers})/]) (to|into)
-      (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) ([]? @onset:Onset)?
+      (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) @location:Location?

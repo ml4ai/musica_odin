@@ -115,20 +115,18 @@ rules:
   # Composed Items -- not? music specific
   ## --------------------------------------------
 
-## testing
-  #todo: is this really a location? should it be a specifier?
-  - name: location-0-in
+  - name: location-0-in-from
     label: Location
     example: "Delete the first two notes in the run of notes"
-    priority: 3
+    priority: 4
     type: token
     pattern: |
-      (?<trigger>[word=/in/]) (@note:Note|@measure:Measure|@rest:Rest|@pitchsequence:PitchSequence|@chord:Chord)
+      (?<trigger>[word=/(in|from)/]) (@note:Note|@measure:Measure|@pitchsequence:PitchSequence|@chord:Chord)
 
   - name: location-1-absolute
     label: Location
     example: "Add a quarter rest at the start"
-    priority: 3
+    priority: 4
     type: token
     pattern: |
       (?<trigger>[word=/^(starting|ending|beginning)/]) (with|in|on)
@@ -197,44 +195,10 @@ rules:
       (@measure:Measure []? @beat:Beat |
       @beat:Beat []? @measure:Measure)
 
-
-##older version
-#  - name: absolute-location-1
-#    label: LocationAbs
-#    example: "Add a quarter rest at the start"
-#    priority: 3
-#    type: token
-#    pattern: |
-#      @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) (with)?
-#
-#  - name: absolute-location-2
-#    label: LocationAbs
-#    example: "Add a quarter rest to the start of the second measure"
-#    priority: 4
-#    type: token
-#    pattern: |
-#      @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) of @measure:Measure
-#
-#  - name: locationrel
-#    label: LocationRel
-#    priority: 4
-#    type: token
-#    pattern: |
-#      (?<trigger>[word=/${loc_preps}/]) by? (@note:Note|@measure:Measure|@rest:Rest|@pitchsequence:PitchSequence|@chord:Chord)
-#
-#  - name: locationrel-2
-#    label: LocationRel
-#    priority: 4
-#    type: token
-#    pattern: |
-#      on (?<trigger>[word=/top/]) of? (@note:Note|@chord:Chord)
-
-  ## potential alternative
-  ## use only location words for rel-location and add music with a rule like:
-  # todo: fix
-#    - name: relative-location-music
-#      label: LocRelMusic
-#      priority: 6
-#      type: token
-#      pattern: |
-#        @locationrel:Locationrel by? (@entityMusic:EntityMusic)
+  - name: location-9-simple-between
+    label: Location
+    priority: 4
+    type: token
+    pattern: |
+      (?<trigger>[word=/between/]) (@note:Note|@rest:Rest|@measure:Measure)
+      (and (@note:Note|@rest:Rest|@measure:Measure))?

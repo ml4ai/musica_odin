@@ -3,3 +3,53 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 
 rules:
+
+  - name: replace-1
+    label: ${label}
+    priority: ${rulepriority}
+    example: "replace the A in measure 1 with a B"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${replace_triggers})/])
+      (@sourceEntity:EntityMusic|@everything:Everything) @location:Location? (with|by)
+      @destEntity:EntityMusic @location:Location?
+
+  - name: replace-2-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The A in measure 1 should be replaced with a B"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)? (@sourceEntity:EntityMusic|@everything:Everything) @location:Location?
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/(?i)^(${replace_triggers})/]) (with|by)
+      @destEntity:EntityMusic @location:Location?
+
+#  - name: replace-3-syntax
+#    label: ${label}
+#    priority: ${rulepriority}
+#    example: "replace the first two quarter notes with a half note"
+#    pattern: |
+#      trigger = [word=/(?i)^(${replace_triggers})/]
+#      sourceEntity:EntityMusic = >dobj
+#      destEntity:EntityMusic? = >dobj? >/(nmod_in|nmod_at)/? >/(nmod_with|nmod_by)/
+#      location:Location? = >/(dobj|nmod_with)/? >/(nmod_in|nmod_at)/
+#
+#  - name: replace-4-syntax-passive
+#    label: ${label}
+#    priority: ${rulepriority}
+#    example: "the first two quarter notes should be replaced with a half note"
+#    pattern: |
+#      trigger = [word=/(?i)^(${replace_triggers})/]
+#      sourceEntity:EntityMusic = >nsubjpass
+#      destEntity:EntityMusic? = >nsubjpass? >/(nmod_in|nmod_at)/? >/(nmod_with|nmod_by)/
+#      location:Location? = >/(nsubjpass|nmod_with)/? >/(nmod_in|nmod_at)/
+
+#  - name: replace-5-syntax-conjunction
+#    label: ${label}
+#    priority: ${rulepriority}
+#    example: "replace the first note with a whole note and the last note with a B"
+#    pattern: |
+#      trigger = [word=/(?i)^(${replace_triggers})/]
+#      sourceEntity:EntityMusic = >/(nmod_with|nmod_by)/ >conj_and
+#      destEntity:EntityMusic? =  >/(nmod_with|nmod_by)/ >conj_and >/(nmod_with|nmod_by)/
+##      location:Location? = >/(dobj|nmod_with)/? >/(nmod_in|nmod_at)/

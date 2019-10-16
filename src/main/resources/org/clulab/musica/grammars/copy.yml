@@ -32,7 +32,7 @@ rules:
     pattern: |
       (?<trigger>[word=/(?i)^(${copy_triggers})/])
       (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure|@everything:Everything)
-      ((to|into) @locationabs:LocationAbs)?
+      @location:Location?
 
   - name: copy-2-passive
     label: ${label}
@@ -41,5 +41,5 @@ rules:
     type: token
     pattern: |
       (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything)
-      ((in|from) @onset:Onset)? []{0,2} [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${copy_triggers})/])
-      ((to|into) (@locationrel:LocationRel)? []? @onset:Onset)?
+      @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
+      (?<trigger>[word=/(?i)^(${copy_triggers})/]) @location:Location?

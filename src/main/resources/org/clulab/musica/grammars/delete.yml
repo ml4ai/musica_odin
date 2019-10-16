@@ -34,7 +34,7 @@ rules:
     type: token
     pattern: |
       (@everything:Everything|@note:Note|@rest:Rest|@chord:Chord|@pitch:Pitch|@measure:Measure)
-      @location:Location? should? (${aux_be})
+      @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${delete_triggers})/])
 
 
@@ -46,8 +46,8 @@ rules:
     pattern: |
       (?<trigger>[word=/(?i)^(${delete_triggers})/]) @note:Note (in|from) @chord:Chord @location:Location?
       |
-      @note:Note (in|from) @chord:Chord (should)? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${delete_triggers})/])
-      @location:Location?
+      @note:Note (in|from) @chord:Chord [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
+      (?<trigger>[word=/(?i)^(${delete_triggers})/]) @location:Location?
 
   - name: delete-4-note-from-set
     label: ${label}
@@ -64,5 +64,5 @@ rules:
     example: "The first of those two eighth notes should be deleted"
     type: token
     pattern: |
-      @specifier:Specifier of (@note:Note|@chord:Chord|@rest:Rest) @location:Location? should? [word=/^(${aux_be})/]
-      (?<trigger>[word=/(?i)^(${delete_triggers})/])
+      @specifier:Specifier of (@note:Note|@chord:Chord|@rest:Rest) @location:Location? [word=/^(${modals})/]?
+      to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${delete_triggers})/])

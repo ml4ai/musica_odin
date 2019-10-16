@@ -4,7 +4,15 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
-  # frequency doesn't work here, but does in passive rule--why?
+#  # frequency doesn't work here, but does in passive rule--why?
+#  - name: repeat-1-syntax
+#    label: ${label}
+#    priority: ${rulepriority}
+#    example: "Repeat everything in the first measure"
+#    pattern: |
+#      trigger = [word=/^(${repeat_triggers})/]
+#      musicalEntity:EntityMusic =
+
   - name: repeat-1
     label: ${label}
     priority: ${rulepriority}
@@ -40,5 +48,5 @@ rules:
     type: token
     pattern: |
       (@note:Note|@everything:Everything|@measure:Measure) @location:Location?
-      [word=/^(${modals})/] to? [word=/^(${aux_be})/]? (?<trigger>[word=/^(${repeat_triggers})/])
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/^(${repeat_triggers})/])
       @frequency:Frequency? (@note:Note|@everything:Everything|@measure:Measure) @location:Location?

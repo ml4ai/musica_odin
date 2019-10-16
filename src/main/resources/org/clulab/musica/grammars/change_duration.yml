@@ -10,10 +10,10 @@ rules:
     priority: ${rulepriority}
     type: token
     pattern: |
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything) [word=/^(${modals})/]
+      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything) [word=/^(${modals})/]?
       to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^${change_duration_triggers}/]) @location:Location?
       (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
-      (to (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? @location:Location?
+      ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? @location:Location?
 
   - name: changeduration-4-passive
     label: ${label}
@@ -21,9 +21,10 @@ rules:
     priority: ${rulepriority}
     type: token
     pattern: |
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) @location:Location? []? [word=/^(${aux_be})/]
-      (?<trigger>[word=/(?i)^${change_duration_triggers}/]) (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
-      (to (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
+      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) @location:Location? [word=/^(${modals})/]? to?
+      [word=/^(${aux_be})/] ?<trigger>[word=/(?i)^${change_duration_triggers}/])
+      (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
+      ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
 
   - name: changeduration-6-passive-with-appositive
     label: ${label}
@@ -31,8 +32,9 @@ rules:
     example: "In the 3rd beat of the second measure, the quarter note should be lengthened to a half note"
     type: token
     pattern: |
-      @location:Location? [tag=/,/] (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) should? [word=/^(${aux_be})/]
-      (?<trigger>[word=/(?i)^${change_duration_triggers}/]) (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
+      @location:Location? [tag=/,/] (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) [word=/^(${modals})/]?
+      to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^${change_duration_triggers}/])
+      (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
       ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
 
   - name: changeduration-1

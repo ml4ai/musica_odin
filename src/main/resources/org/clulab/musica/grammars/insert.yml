@@ -22,7 +22,7 @@ rules:
       pattern: |
         (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
         (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))?
-        should? [word=/(?i)^(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
+        [word=/^(${modals})/]? to? [word=/(?i)^(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
         @location:Location?
 
     - name: insert-3
@@ -54,7 +54,7 @@ rules:
         (@location:Location [tag=/,/]?)?
         (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
         (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))?
-        (should)? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
+        [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
 
     - name: insert-6-passive-between
       label: ${label}
@@ -63,8 +63,8 @@ rules:
       type: token
       pattern: |
         (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure)
-        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))? should
-        [word=/(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
+        (and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure))?
+        [word=/^(${modals})/]? to? [word=/(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
         @location:Location? (and @location:Location)?
 
 #    - name: insert-1

@@ -129,7 +129,7 @@ rules:
     priority: 4
     type: token
     pattern: |
-      (?<trigger>[word=/^(starting|ending|beginning)/]) (with|in|on)
+      (?<trigger>[word=/^(starting|ending|beginning)/]) [word=/(?i)(with|in|on)/]
       (@note:Note|@measure:Measure|@rest:Rest|@pitchsequence:PitchSequence|@chord:Chord) (in @measure:Measure)?
 
   - name: location-2-absolute
@@ -138,14 +138,14 @@ rules:
     priority: 4
     type: token
     pattern: |
-      (at|to)? @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) of @measure:Measure
+      [word=/(?i)(at|to)/]? @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) of @measure:Measure
 
   - name: location-3-relative
     label: Location
     priority: 4
     type: token
     pattern: |
-      (?<trigger>[word=/${loc_preps}/]) by? (@note:Note|@measure:Measure|@rest:Rest|@pitchsequence:PitchSequence|@chord:Chord)
+      (?<trigger>[word=/(?i)${loc_preps}/]) by? (@note:Note|@measure:Measure|@rest:Rest|@pitchsequence:PitchSequence|@chord:Chord)
       (in @measure:Measure)?
 
   - name: location-4-relative
@@ -153,14 +153,14 @@ rules:
     priority: 4
     type: token
     pattern: |
-      on (?<trigger>[word=/top/]) of? (@note:Note|@chord:Chord) (in @measure:Measure)?
+      [word=/(?i)on/] (?<trigger>[word=/top/]) of? (@note:Note|@chord:Chord) (in @measure:Measure)?
 
   - name: location-5-onset
     label: Location
     priority: 4
     type: token
     pattern: |
-      (?<trigger>[word=/starting|ending|beginning/]) (in|at|on)
+      (?<trigger>[word=/(?i)(starting|ending|beginning)/]) (in|at|on)
       ((@measure:Measure []?)? @beat:Beat |
       @measure:Measure ([]? @beat:Beat)? |
       (@beat:Beat []?)? @measure:Measure |
@@ -171,7 +171,7 @@ rules:
     priority: 4
     type: token
     pattern: |
-      (?<trigger>[word=/starting|ending|beginning/]) (in|at|on)
+      (?<trigger>[word=/(?i)(starting|ending|beginning)/]) (in|at|on)
       (@measure:Measure []? @beat:Beat |
       @beat:Beat []? @measure:Measure)
 
@@ -180,7 +180,7 @@ rules:
     priority: 4
     type: token
     pattern: |
-      (?<trigger>[word=/in|at|on/])
+      (?<trigger>[word=/(?i)(in|at|on)/])
       ((@measure:Measure []?)? @beat:Beat |
       @measure:Measure ([]? @beat:Beat)? |
       (@beat:Beat []?)? @measure:Measure |
@@ -191,7 +191,7 @@ rules:
     priority: 4
     type: token
     pattern: |
-      (?<trigger>[word=/in|at|on/])
+      (?<trigger>[word=/(?i)(in|at|on)/])
       (@measure:Measure []? @beat:Beat |
       @beat:Beat []? @measure:Measure)
 
@@ -200,5 +200,5 @@ rules:
     priority: 4
     type: token
     pattern: |
-      (?<trigger>[word=/between/]) (@note:Note|@rest:Rest|@measure:Measure)
+      (?<trigger>[word=/(?i)between/]) (@note:Note|@rest:Rest|@measure:Measure)
       (and (@note:Note|@rest:Rest|@measure:Measure))?

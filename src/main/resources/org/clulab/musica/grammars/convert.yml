@@ -63,8 +63,8 @@ rules:
     example: "the G in measure 1 should be converted into a quarter rest"
     type: token
     pattern: |
-      (@location:Location [tag=/,/]?)? @note:Note @location:Location? should? [word=/^(${aux_be})/]
-      (?<trigger>[word=/(?i)^(${convert_triggers})/])
+      (@location:Location [tag=/,/]?)? @note:Note @location:Location? [word=/^(${modals})/]?
+      to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${convert_triggers})/])
       (to|into) (@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) @location:Location?
 
   # CONVERT REST TO X
@@ -93,8 +93,8 @@ rules:
     example: "the G in measure 1 should be converted into a quarter rest"
     type: token
     pattern: |
-      @location:Location? @rest:Rest
-      @location:Location? should? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${convert_triggers})/])
+      @location:Location? @rest:Rest @location:Location? [word=/^(${modals})/]? to?
+      [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${convert_triggers})/])
       (to|into) (@note:Note|@chord:Chord|@pitchsequence:PitchSequence) @location:Location?
 
   # CONVERT CHORD TO REST
@@ -124,6 +124,6 @@ rules:
     example: "the G in measure 1 should be converted into a quarter rest"
     type: token
     pattern: |
-      @location:Location? @chord:Chord @location:Location? should? [word=/^(${aux_be})/]
-      (?<trigger>[word=/(?i)^(${convert_triggers})/]) (to|into)
+      @location:Location? @chord:Chord @location:Location? [word=/^(${modals})/]? to?
+      [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${convert_triggers})/]) (to|into)
       (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) @location:Location?

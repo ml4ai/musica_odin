@@ -29,7 +29,7 @@ rules:
     example: "The first measure should be inverted around middle C"
     type: token
     pattern: |
-      (@note:Note|@everything:Everything|@measure:Measure|@chord:Chord) @location:Location? [word=/^(${modals})/]
+      (@note:Note|@everything:Everything|@measure:Measure|@chord:Chord) @location:Location? [word=/^(${modals})/]?
       to? [word=/^(${aux_be})/] (?<trigger>[word=/^(${invert_triggers})/]) (around (@note:Note|@pitch:Pitch))?
 
   - name: invert-4-passive-location-at-start
@@ -39,5 +39,5 @@ rules:
     type: token
     pattern: |
       (@location:Location [tag=/,/]?) (@note:Note|@everything:Everything|@measure:Measure|@chord:Chord)
-      [word=/^(${modals})/] to? [word=/^(${aux_be})/] (?<trigger>[word=/^(${invert_triggers})/])
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/^(${invert_triggers})/])
       (around (@note:Note|@pitch:Pitch))?

@@ -3,3 +3,32 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 
 rules:
+
+  - name: reverse-1
+    label: ${label}
+    priority: ${rulepriority}
+    example: "reverse the order of the notes in the first two measures"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${reverse_triggers})/]) (the order of)?
+      (@musicalEntity:Note|@musicalEntity:Chord|@everything:Everything) @location:Location?
+
+  - name: reverse-2-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "the order of the notes in the first two measures should be reversed"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)?  (the order of)?
+      (@musicalEntity:Note|@musicalEntity:Chord|@everything:Everything) @location:Location?
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/(?i)^(${reverse_triggers})/])
+      @location:Location?
+
+#  - name: reverse-2
+#    label: ${label}
+#    priority: ${rulepriority}
+#    example: "reverse the order of the notes in the first two measures"
+#    type: token
+#    pattern: |
+#      (@location:Location [tag=/,/]?) (?<trigger>[word=/(?i)^(${reverse_triggers})/]) (the order of)?
+#      (@musicalEntity:Note|@musicalEntity:Chord|@everything:Everything)

@@ -60,13 +60,6 @@ rules:
       rulepriority: "6"
       label: Move
 
-  - import: org/clulab/musica/grammars/template.yml
-    vars:
-      rulepriority: "6"
-      addlabel: "Repeat"
-      label: Repeat
-      trigger: ${repeat_triggers}
-
   - import: org/clulab/musica/grammars/repeat.yml
     vars:
       rulepriority: "6"
@@ -74,12 +67,15 @@ rules:
       label: Repeat
       trigger: ${repeat_triggers}
 
-  - import: org/clulab/musica/grammars/template.yml
+  - import: org/clulab/musica/grammars/replace.yml
     vars:
       rulepriority: "6"
-      addlabel: "Reverse"
+      label: Replace
+
+  - import: org/clulab/musica/grammars/reverse.yml
+    vars:
+      rulepriority: "6"
       label: Reverse
-      trigger: ${reverse_triggers}
 
   - import: org/clulab/musica/grammars/switch.yml
     vars:

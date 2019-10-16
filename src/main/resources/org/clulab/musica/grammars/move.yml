@@ -25,22 +25,14 @@ rules:
 #      sourceLocation:Location? = >nmod_in
 #      destLocation:Location? = >nmod_to
 
-#  - name: move-2
-#    label: ${label}
-#    priority: ${rulepriority}
-#    example: "Move the first note to measure 5."
-#    type: token
-#    pattern: |
-#      (?<trigger>[word=/(?i)^(${move_triggers})/]) @note:Note to @onset:Onset
-
   - name: move-3-rel-loc
     label: ${label}
     priority: ${rulepriority}
     example: "Put the first C on top of the G"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${move_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
-      @location:Location? @location:Location?
+      (?<trigger>[word=/(?i)^(${move_triggers})/]) (@musicalEntity:EntityMusic)
+      @sourceLocation:Location? @destLocation:Location?
 
   - name: move-4-earlier-later
     label: ${label}
@@ -48,5 +40,5 @@ rules:
     example: "Move the C quarter note two measures to the right"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${move_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@everything:Everything|
-      @pitchsequence:PitchSequence) @timestep:TimeStep
+      (?<trigger>[word=/(?i)^(${move_triggers})/]) (@everything:Everything|@musicalEntity:EntityMusic)
+      @timestep:TimeStep

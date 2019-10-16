@@ -11,8 +11,8 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${invert_triggers})/])
-      (@everything:Everything|@note:Note|@chord:Chord|@measure:Measure)
-      @location:Location? (around (@note:Note|@pitch:Pitch))?
+      (@everything:Everything|@musicalEntity:Note|@musicalEntity:Chord|@musicalEntity:Measure)
+      @location:Location? (around (@axis:Note|@axis:Pitch))?
 
   - name: invert-2-location-at-start
     label: ${label}
@@ -21,7 +21,7 @@ rules:
     type: token
     pattern: |
       (@location:Location [tag=/,/]?) (?<trigger>[word=/(?i)^(${invert_triggers})/])
-      (@everything:Everything|@note:Note|@chord:Chord) (around (@note:Note|@pitch:Pitch))?
+      (@everything:Everything|@musicalEntity:Note|@musicalEntity:Chord) (around (@axis:Note|@axis:Pitch))?
 
   - name: invert-3-passive
     label: ${label}
@@ -29,8 +29,9 @@ rules:
     example: "The first measure should be inverted around middle C"
     type: token
     pattern: |
-      (@note:Note|@everything:Everything|@measure:Measure|@chord:Chord) @location:Location? [word=/^(${modals})/]?
-      to? [word=/^(${aux_be})/] (?<trigger>[word=/^(${invert_triggers})/]) (around (@note:Note|@pitch:Pitch))?
+      (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure|@musicalEntity:Chord)
+      @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
+      (?<trigger>[word=/^(${invert_triggers})/]) (around (@axis:Note|@axis:Pitch))?
 
   - name: invert-4-passive-location-at-start
     label: ${label}
@@ -38,6 +39,7 @@ rules:
     example: "In the first measure, everything should be inverted around A4"
     type: token
     pattern: |
-      (@location:Location [tag=/,/]?) (@note:Note|@everything:Everything|@measure:Measure|@chord:Chord)
+      (@location:Location [tag=/,/]?)
+      (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure|@musicalEntity:Chord)
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/^(${invert_triggers})/])
-      (around (@note:Note|@pitch:Pitch))?
+      (around (@axis:Note|@axis:Pitch))?

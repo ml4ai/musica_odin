@@ -11,9 +11,10 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${copy_triggers})/])
-      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure|@everything:Everything)
-      @location:Location? @location:Location?
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @sourceLocation:Location? @destLocation:Location?
 
+  # todo: why are there three locations? how do we know which is source and which is dest?
   - name: copy-2-rel-location
     label: ${label}
     priority: ${rulepriority}
@@ -21,7 +22,7 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${copy_triggers})/])
-      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure|@everything:Everything)
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @location:Location? @location:Location? @location:Location?
 
   - name: copy-3-to-abs-location
@@ -31,7 +32,7 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${copy_triggers})/])
-      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure|@everything:Everything)
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @location:Location?
 
   - name: copy-2-passive
@@ -40,6 +41,6 @@ rules:
     example: "The D in the first measure should be copied to the end of measure 5"
     type: token
     pattern: |
-      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything)
-      @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
-      (?<trigger>[word=/(?i)^(${copy_triggers})/]) @location:Location?
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
+      (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location?

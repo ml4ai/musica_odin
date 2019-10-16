@@ -10,9 +10,10 @@ rules:
     example: "Switch the D and the C in measure 1"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${switch_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
-      and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) @location:Location?
+      (?<trigger>[word=/(?i)^(${switch_triggers})/]) @sourceEntity:EntityMusic
+      and @destEntity:EntityMusic @location:Location?
 
+  # todo: how do we represent this in terms of source and destination entities?
   - name: switch-2
     label: ${label}
     priority: ${rulepriority}
@@ -28,11 +29,11 @@ rules:
     example: "The first C and the first D in measure 2 should be switched"
     type: token
     pattern: |
-      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
-      and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) @location:Location?
+      @sourceEntity:EntityMusic and @destEntity:EntityMusic @location:Location?
       [word=/^(${modals})/] to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${switch_triggers})/])
       @location:Location?
 
+  # todo: how do we represent this in terms of source and destination entities?
   - name: switch-4-passive
     label: ${label}
     priority: ${rulepriority}

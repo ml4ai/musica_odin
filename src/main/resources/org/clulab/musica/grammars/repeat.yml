@@ -19,8 +19,9 @@ rules:
     example: "Repeat everything in the first measure"
     type: token
     pattern: |
-      (?<trigger>[word=/^(${repeat_triggers})/]) (@note:Note|@everything:Everything|@measure:Measure)
-      @location:Location? @frequency:Frequency? @location:Location?
+      (?<trigger>[word=/^(${repeat_triggers})/])
+      (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure)
+      @sourceLocation:Location? @frequency:Frequency? @destLocation:Location?
 
   - name: repeat-2
     label: ${label}
@@ -28,8 +29,9 @@ rules:
     example: "repeat the run of eighth notes after the whole note in the second measure"
     type: token
     pattern: |
-      (?<trigger>[word=/^(${repeat_triggers})/]) (@note:Note|@everything:Everything|@measure:Measure)
-      @location:Location? @location:Location? @frequency:Frequency?
+      (?<trigger>[word=/^(${repeat_triggers})/])
+      (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure)
+      @sourceLocation:Location? @destLocation:Location? @frequency:Frequency?
 
   # todo: why does repeat-1 not capture this, but making frequency mandatory works?
   - name: repeat-3
@@ -38,8 +40,9 @@ rules:
     example: "Repeat everything in the first measure twice"
     type: token
     pattern: |
-      (?<trigger>[word=/^(${repeat_triggers})/]) (@note:Note|@everything:Everything|@measure:Measure)
-      @location:Location? @frequency:Frequency @location:Location?
+      (?<trigger>[word=/^(${repeat_triggers})/])
+      (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure)
+      @sourceLocation:Location? @frequency:Frequency @destLocation:Location?
 
   - name: repeat-4-passive
     label: ${label}
@@ -47,6 +50,6 @@ rules:
     example: "Everything in the first measure should be repeated"
     type: token
     pattern: |
-      (@note:Note|@everything:Everything|@measure:Measure) @location:Location?
+      (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure) @sourceLocation:Location?
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/^(${repeat_triggers})/])
-      @frequency:Frequency? (@note:Note|@everything:Everything|@measure:Measure) @location:Location?
+      @frequency:Frequency? @destLocation:Location?

@@ -10,7 +10,7 @@ rules:
      example: "The first quarter note in measure 1 is transposed down 2 steps"
      type: token
      pattern: |
-       @note:Note @location:Location? []? ([] and)?
+       @musicalEntity:Note @location:Location? []? ([] and)?
        (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@direction:Direction)?  @step:Step?
 
   #  Note (should) (be) (VERB and) TRANS (Direction) (Step) (Onset) (from Note) (to Note) (location)
@@ -20,7 +20,7 @@ rules:
      example: "the eighth note should move up two steps from an A to the C above"
      type: token
      pattern: |
-       (@location:Location [tag=/,/]?)? @note:Note (should)? ([] and)?
+       (@location:Location [tag=/,/]?)? @musicalEntity:Note (should)? ([] and)?
        (?<trigger>[word=/(?i)^(${transpose_triggers})/])
        @direction:Direction? @step:Step? @location:Location? (from @note:Note)?
        (to @note:Note @location:Location?)?
@@ -163,31 +163,3 @@ rules:
 #       chord: Chord = >dobj
 #       direction: Direction? = >/nmod_(up|down)/ >case
 #       step: Step? = >/nmod_(up|down)/
-
-#   - name: Transpose-2
-#     label: ${label}
-#     priority: ${rulepriority}
-#     type: token
-#     pattern: |
-#       (@location:Location [tag=/,/]?)? @location:Location? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
-#       (@note:Note|@chord:Chord) @location:Location? @direction:Direction? @step:Step? @location:Location?
-
-#   - name: Transpose-3
-#     label: ${label}
-#     priority: ${rulepriority}
-#     example: "Transpose all the notes up 5 half steps in measure 1."
-#     type: token
-#     pattern: |
-#       (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@note:Note|@chord:Chord)
-#       @direction:Direction? @step:Step @location:Location?
-
-#   # todo: add specificity to avoid things like 'change the whole note to a half note'
-#   - name: Transpose-4
-#     label: ${label}
-#     priority: ${rulepriority}
-#     example: "Move the G quarter note to the F above it"
-#     type: token
-#     pattern: |
-#       (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
-#       (@note:Note|@chord:Chord) (@direction:Direction)? to (@note:Note|@pitch:Pitch|@chord:Chord)
-#       @location:Location?

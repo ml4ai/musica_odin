@@ -11,7 +11,7 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${delete_triggers})/])
-      (@everything:Everything|@note:Note|@rest:Rest|@chord:Chord|@pitch:Pitch|@measure:Measure)
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @location:Location?
 
 #  - name: Delete-rule-passive-syntax
@@ -33,7 +33,7 @@ rules:
     example: "The first quarter note should be deleted"
     type: token
     pattern: |
-      (@everything:Everything|@note:Note|@rest:Rest|@chord:Chord|@pitch:Pitch|@measure:Measure)
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${delete_triggers})/])
 
@@ -55,8 +55,8 @@ rules:
     example: "Delete the first of those two eighth notes"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${delete_triggers})/]) @specifier:Specifier of (@note:Note|@chord:Chord|@rest:Rest)
-      @location:Location?
+      (?<trigger>[word=/(?i)^(${delete_triggers})/]) @specifier:Specifier of
+      (@musicalEntity:Note|@musicalEntity:Chord|@musicalEntity:Rest) @location:Location?
 
   - name: delete-5-note-from-set-passive
     label: ${label}
@@ -64,5 +64,5 @@ rules:
     example: "The first of those two eighth notes should be deleted"
     type: token
     pattern: |
-      @specifier:Specifier of (@note:Note|@chord:Chord|@rest:Rest) @location:Location? [word=/^(${modals})/]?
-      to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${delete_triggers})/])
+      @specifier:Specifier of (@musicalEntity:Note|@musicalEntity:Chord|@musicalEntity:Rest) @location:Location?
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${delete_triggers})/])

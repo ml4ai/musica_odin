@@ -4,14 +4,26 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
-  - name: move-1
-    label: ${label}
-    priority: ${rulepriority}
-    example: "Move the D in the first measure to the end of measure 5"
-    type: token
-    pattern: |
-      (?<trigger>[word=/(?i)^(${move_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
-      ((in|from) @onset:Onset)? ((to|into) (@locationrel:LocationRel)? []? @onset:Onset)?
+#  - name: move-1
+#    label: ${label}
+#    priority: ${rulepriority}
+#    example: "Move the D in the first measure to the end of measure 5"
+#    type: token
+#    action: move2Convert
+#    pattern: |
+#      (?<trigger>[word=/(?i)^(${move_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+#      ((in|from) @onset:Onset)? ((to|into) (@locationrel:LocationRel)? []? @onset:Onset)?
+
+#  - name: move-1
+#    label: ${label}
+#    priority: ${rulepriority}
+#    example: "Move the D in the first measure to the end of measure 5"
+#    action: move2Convert
+#    pattern: |
+#      trigger = [word=/(?i)^(${move_triggers})/]
+#      musicalEntity:EntityMusic = >dobj
+#      sourceLocation:Location? = >nmod_in
+#      destLocation:Location? = >nmod_to
 
 #  - name: move-2
 #    label: ${label}
@@ -28,7 +40,7 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${move_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
-      ((in|from) @onset:Onset)? (@locationrel:LocationRel) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)?
+      @location:Location? @location:Location?
 
   - name: move-4-earlier-later
     label: ${label}

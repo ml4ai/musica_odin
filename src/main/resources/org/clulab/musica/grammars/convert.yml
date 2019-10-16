@@ -11,8 +11,32 @@ rules:
     example: "Convert the quarter note in measure 1 into a quarter rest"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${convert_triggers})/]) @note:Note @location:Location? (into|to)
-      (@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence)
+      (?<trigger>[word=/(?i)^(${convert_triggers})/]) @sourceEntity:Note @location:Location? (into|to)
+      (@destEntity:Rest|@destEntity:Chord|@destEntity:PitchSequence)
+
+  - name: convert-note-1b-syntax
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Convert the quarter note in measure 1 into a quarter rest"
+    pattern: |
+      trigger = [word=/(?i)^(${convert_triggers})/]
+      sourceEntity: Note = >dobj
+      location: Location = >/nmod_in|nmod_at/
+      destEntity: Rest? = >/nmod_into|nmod_to/
+      destEntity: Chord? = >/nmod_into|nmod_to/
+      destEntity: PitchSequence? = >/nmod_into|nmod_to/
+
+  - name: convert-note-2b-syntax-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Convert the quarter note in measure 1 into a quarter rest"
+    pattern: |
+      trigger = [word=/(?i)^(${convert_triggers})/]
+      sourceEntity: Note = >nsubjpass
+      location: Location = (>nsubjpass)? >/nmod_in|nmod_at/
+      destEntity: Rest? = >/nmod_into|nmod_to/
+      destEntity: Chord? = >/nmod_into|nmod_to/
+      destEntity: PitchSequence? = >/nmod_into|nmod_to/
 
 #  - name: convert-note-1
 #    label: ${label}

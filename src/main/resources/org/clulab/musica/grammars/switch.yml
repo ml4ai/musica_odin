@@ -26,6 +26,8 @@ rules:
     label: ${label}
     priority: ${rulepriority}
     example: "The first C and the first D in measure 2 should be switched"
+    type: token
+    pattern: |
       (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
       and (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) @location:Location?
       [word=/^(${modals})/] to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${switch_triggers})/])

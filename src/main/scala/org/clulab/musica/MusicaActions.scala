@@ -182,7 +182,6 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
     out
   }
 
-
   def changeDur2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
 
     /*
@@ -229,8 +228,106 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
       }
     }
 
+    out
   }
 
+  def replace2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+
+    /*
+    take a Replace event and change it to a Convert event
+    Replace events should contain (SourceEnt, Location, DestEnt)
+    Convert events should contain (SourceEnt, SourceLoc, DestEnt, DestLoc)
+    */
+
+    val out = new ArrayBuffer[Mention]
+
+    for (m <- mentions) {
+
+      if (m.label == "Replace") {
+
+        // get arg values
+        val srcEnt = m.arguments(SRC_ENT)
+        val location = m.arguments(LOC)
+        val destEnt = m.arguments(DEST_ENT)
+
+        // map to a new set of args
+        val newArgs = Map(SRC_ENT -> srcEnt, SRC_LOC -> location, DEST_ENT -> destEnt, DEST_LOC -> location)
+        val compositionalFoundBy = m.foundBy + "++replace2Convert"
+
+        // change mention to a CONVERT mention
+        val convertMention = m match {
+          case em: EventMention => {
+            val newLabels = taxonomy.hypernymsFor("Replace")
+            val newTrigger = em.trigger.copy(labels = newLabels)
+            em.copy(
+              labels = newLabels,
+              trigger = newTrigger,
+              arguments = newArgs,
+              foundBy = compositionalFoundBy)
+          }
+          case rm: RelationMention =>
+            rm.copy(
+              labels = taxonomy.hypernymsFor("Convert"),
+              arguments = newArgs,
+              foundBy = compositionalFoundBy)
+          case _ => ???
+        }
+
+        out.append(convertMention)
+      }
+    }
+
+    out
+  }
+
+  def copy2Insert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+
+    /*
+    take a Copy event and change it to an Insert event
+    Copy events should contain (MusEnt, SourceLoc, DestLoc) // todo: add Freq to copy event
+    Insert events should contain (MusEnt, Location, Frequency)
+     */
+
+    val out = new ArrayBuffer[Mention]
+
+    for (m <- mentions) {
+
+      if (m.label == "Copy") {
+
+        // get arg values
+        val musEnt = m.arguments(MUS_ENT)
+        val location = m.arguments(DEST_LOC)
+        val freq = m.arguments(FREQ) // todo: this isn't in the mention!
+
+        // map to a new set of args
+        val newArgs = Map(MUS_ENT -> musEnt, LOC -> location, FREQ -> freq)
+        val compositionalFoundBy = m.foundBy + "++copy2Insert"
+
+        // change mention to an INSERT mention
+        val insertMention = m match {
+          case em: EventMention => {
+            val newLabels = taxonomy.hypernymsFor("Insert")
+            val newTrigger = em.trigger.copy(labels = newLabels)
+            em.copy(
+              labels = newLabels,
+              trigger = newTrigger,
+              arguments = newArgs,
+              foundBy = compositionalFoundBy)
+          }
+          case rm: RelationMention =>
+            rm.copy(
+              labels = taxonomy.hypernymsFor("Insert"),
+              arguments = newArgs,
+              foundBy = compositionalFoundBy)
+          case _ => ???
+        }
+
+        out.append(insertMention)
+      }
+    }
+
+    out
+  }
 
   def repeat2Insert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
 
@@ -254,8 +351,8 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
         val newArgs = Map(MUS_ENT -> musEnt, LOC -> location, FREQ -> freq)
         val compositionalFoundBy = m.foundBy + "++repeat2Insert"
 
-        // change mention to a CONVERT mention
-        val convertMention = m match {
+        // change mention to an INSERT mention
+        val insertMention = m match {
           case em: EventMention => {
             val newLabels = taxonomy.hypernymsFor("Insert")
             val newTrigger = em.trigger.copy(labels = newLabels)
@@ -273,9 +370,11 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
           case _ => ???
         }
 
-        out.append(convertMention)
+        out.append(insertMention)
       }
     }
+
+    out
   }
 
 //  // every action muct have a specific format:

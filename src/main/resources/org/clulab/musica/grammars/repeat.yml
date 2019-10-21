@@ -4,6 +4,17 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+  # works for both active and passive
+  - name: repeat-0-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Repeat the quarter note that is in the first measure three times"
+    pattern:
+      trigger = [word=/(?i)^(${repeat_triggers})/]
+      sourceEntity:EntityMusic = >/dobj|nsubjpass/
+      sourceLocation:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
+      frequency:Frequency? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/nmod*|advmod/
+
 #  # frequency doesn't work here, but does in passive rule--why?
 #  - name: repeat-1-syntax
 #    label: ${label}

@@ -4,6 +4,21 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+  # works for both active and passive
+  # todo: fix
+  # currently works with 'that is' in both sides of coordination, first side only
+  # does not work with 'that is' in second half of coordination only
+  - name: switch-0-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Switch the quarter note that is in the first measure and the half note that is in the second measure"
+    pattern:
+      trigger = [word=/(?i)^(${switch_triggers})/]
+      sourceEntity:EntityMusic = >/dobj|nsubjpass/
+      sourceLocation:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
+      destEntity:EntityMusic? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/conj_and|nmod_with/
+      destLocation:Location? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/conj_and|nmod_with/ (<nsubj|>nmod_in)
+
   - name: switch-1
     label: ${label}
     priority: ${rulepriority}

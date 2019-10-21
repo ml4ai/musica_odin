@@ -4,6 +4,17 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+  # works for both active and passive
+  - name: move-0-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Move the quarter note that is in the first measure to the end of the second measure"
+    pattern:
+      trigger = [word=/(?i)^(${move_triggers})/]
+      sourceEntity:EntityMusic = >/dobj|nsubjpass/
+      sourceLocation:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
+      destLocation:Location? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/nmod_to|nmod_into|nmod_at/
+
 #  - name: move-1
 #    label: ${label}
 #    priority: ${rulepriority}

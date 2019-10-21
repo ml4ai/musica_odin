@@ -4,6 +4,18 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+  # works for both active and passive
+  - name: invert-0-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Invert the quarter note that is in the first measure around A4"
+    pattern:
+      trigger = [word=/(?i)^(${invert_triggers})/]
+      musicalEntity:EntityMusic = >/dobj|nsubjpass/
+      location:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
+      axis:Note? = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)? >nmod_around
+      axis:Pitch? = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)? >nmod_around
+
   - name: invert-1
     label: ${label}
     priority: ${rulepriority}

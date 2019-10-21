@@ -4,16 +4,38 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
-  - name: changeduration-1
+  # works for both active and passive
+  - name: changeduration-0-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Lengthen the quarter note that is in the first measure to a half note"
+    pattern:
+      trigger = [word=/(?i)^(${change_duration_triggers})/]
+      sourceEntity:EntityMusic = >/dobj|nsubjpass/
+      sourceLocation:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
+      destEntity:EntityMusic? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/nmod_to|nmod_into/
+
+  - name: changeduration-1-potential-arclabels
     label: ${label}
     example: "Lengthen the note in measure 2 from a half note to a whole note"
     priority: ${rulepriority}
     type: token
     pattern: |
       (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything)
-      @location:Location? (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? ((to|into)
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? @location:Location?
+      (@musicalEntity:Note|@musicalEntity:Rest|@musicalEntity:PitchSequence|@everything:Everything)
+      @location:Location? (from (@sourceEntity:Note|@sourceEntity:Rest|@sourceEntity:PitchSequence))?
+      ((to|into) (@destEntity:Rest|@destEntity:PitchSequence))? @location:Location?
+
+#  - name: changeduration-1
+#    label: ${label}
+#    example: "Lengthen the note in measure 2 from a half note to a whole note"
+#    priority: ${rulepriority}
+#    type: token
+#    pattern: |
+#      (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
+#      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything)
+#      @location:Location? (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? ((to|into)
+#      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? @location:Location?
 
   - name: changeduration-2
     label: ${label}

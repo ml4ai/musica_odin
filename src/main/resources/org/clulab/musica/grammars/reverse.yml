@@ -4,6 +4,16 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+  # works for both active and passive
+  - name: reverse-0-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Reverse all the notes that are in the first measure"
+    pattern:
+      trigger = [word=/(?i)^(${reverse_triggers})/]
+      musicalEntity:EntityMusic = >/dobj|nsubjpass/
+      location:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
+
   - name: reverse-1
     label: ${label}
     priority: ${rulepriority}

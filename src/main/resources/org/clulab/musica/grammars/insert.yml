@@ -4,62 +4,62 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
-    - name: insert-1
-      label: ${label}
-      priority: ${rulepriority}
-      example: "Insert an A quarter note after the D in measure 3"
-      type: token
-      pattern: |
-        (?<trigger>[word=/(?i)^(${insert_triggers})/]) (@musicalEntity:EntityMusic|@musicalEntity:Measure)
-        @location:Location?
+  - name: insert-1
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Insert an A quarter note after the D in measure 3"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${insert_triggers})/]) (@musicalEntity:EntityMusic|@musicalEntity:Measure)
+      @location:Location?
 
-    - name: insert-2-passive
-      label: ${label}
-      priority: ${rulepriority}
-      example: "An A quarter note is inserted after the D in measure 3"
-      type: token
-      pattern: |
-        (@musicalEntity:EntityMusic|@musicalEntity:Measure) (and (@musicalEntity:EntityMusic|@musicalEntity:Measure))?
-        [word=/^(${modals})/]? to? [word=/(?i)^(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
-        @location:Location?
+  - name: insert-2-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "An A quarter note is inserted after the D in measure 3"
+    type: token
+    pattern: |
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure) (and (@musicalEntity:EntityMusic|@musicalEntity:Measure))?
+      [word=/^(${modals})/]? to? [word=/(?i)^(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
+      @location:Location?
 
-    - name: insert-3
-      label: ${label}
-      priority: ${rulepriority}
-      example: "Insert a quarter note and a quarter rest after the last eighth note"
-      type: token
-      pattern: |
-        (?<trigger>[word=/(?i)^(${insert_triggers})/]) (@musicalEntity:EntityMusic|@musicalEntity:Measure)
-        (and (@musicalEntity:EntityMusic|@musicalEntity:Measure))? @location:Location?
+  - name: insert-3
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Insert a quarter note and a quarter rest after the last eighth note"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${insert_triggers})/]) (@musicalEntity:EntityMusic|@musicalEntity:Measure)
+      (and (@musicalEntity:EntityMusic|@musicalEntity:Measure))? @location:Location?
 
-    - name: insert-4
-      label: ${label}
-      priority: ${rulepriority}
-      example: "At the start of the second measure, add a quarter note"
-      type: token
-      pattern: |
-        (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${insert_triggers})/])
-        (@musicalEntity:EntityMusic|@musicalEntity:Measure)
+  - name: insert-4
+    label: ${label}
+    priority: ${rulepriority}
+    example: "At the start of the second measure, add a quarter note"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${insert_triggers})/])
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure)
 
-    - name: insert-5-passive
-      label: ${label}
-      priority: ${rulepriority}
-      example: "At the start of the second measure, a quarter note should be added"
-      type: token
-      pattern: |
-        (@location:Location [tag=/,/]?)? (@musicalEntity:EntityMusic|@musicalEntity:Measure)
-        (and (@musicalEntity:EntityMusic|@musicalEntity:Measure))?
-        [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
+  - name: insert-5-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "At the start of the second measure, a quarter note should be added"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)? (@musicalEntity:EntityMusic|@musicalEntity:Measure)
+      (and (@musicalEntity:EntityMusic|@musicalEntity:Measure))?
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
 
-    - name: insert-6-passive-between
-      label: ${label}
-      priority: ${rulepriority}
-      example:
-      type: token
-      pattern: |
-        (@musicalEntity:EntityMusic|@musicalEntity:Measure) (and (@musicalEntity:EntityMusic|@musicalEntity:Measure))?
-        [word=/^(${modals})/]? to? [word=/(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
-        @location:Location? (and @location:Location)?
+  - name: insert-6-passive-between
+    label: ${label}
+    priority: ${rulepriority}
+    example:
+    type: token
+    pattern: |
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure) (and (@musicalEntity:EntityMusic|@musicalEntity:Measure))?
+      [word=/^(${modals})/]? to? [word=/(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
+      @location:Location? (and @location:Location)?
 
 #    - name: insert-1
 #      label: Insert

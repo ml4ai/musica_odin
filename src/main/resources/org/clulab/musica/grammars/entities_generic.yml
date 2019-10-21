@@ -62,7 +62,7 @@ rules:
     priority: 1
     type: token
     pattern: |
-      [word=/(?i)^(once|twice|thrice)/] [word=/^time/]
+      [word=/(?i)^(once|twice|thrice)/]
 
   # avoid having 3/4 time be marked as frequency
   - name: frequency-2

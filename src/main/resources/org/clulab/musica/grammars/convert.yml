@@ -4,6 +4,19 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+  # works for both active and passive
+  - name: convert-note-0-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Change the quarter note that is in the first measure to a quarter rest"
+    pattern:
+      trigger = [word=/(?i)^(${change_duration_triggers})/]
+      sourceEntity:Note = >/dobj|nsubjpass/
+      sourceLocation:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
+      destEntity:Rest? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/nmod_to|nmod_into/
+      destEntity:Chord? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/nmod_to|nmod_into/
+      destEntity:PitchSequence? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/nmod_to|nmod_into/
+
   # testing--deal with 3 notes
   # todo: can we use an action to say if there is a source entity, use that + the info
   # todo:   in musical entity, otherwise use the musical entity AS the source entity?

@@ -4,6 +4,17 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+  # works for both active and passive
+  - name: replace-0-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Replace the quarter note that is in the first measure with a half rest"
+    pattern:
+      trigger = [word=/(?i)^(${replace_triggers})/]
+      sourceEntity:EntityMusic = >/dobj|nsubjpass/
+      sourceLocation:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
+      destEntity:EntityMusic? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/nmod_with|nmod_agent/
+
   - name: replace-1
     label: ${label}
     priority: ${rulepriority}

@@ -4,6 +4,16 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+  # works for both active and passive
+  - name: delete-0-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Delete the quarter note that is in the first measure"
+    pattern:
+      trigger = [word=/(?i)^(${delete_triggers})/]
+      sourceEntity:EntityMusic = >/dobj|nsubjpass/
+      location:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
+
   - name: delete-1
     label: ${label}
     priority: ${rulepriority}

@@ -4,95 +4,106 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
-   - name: transpose-5
-     label: ${label}
-     priority: ${rulepriority}
-     example: "The first quarter note in measure 1 is transposed down 2 steps"
-     type: token
-     pattern: |
-       @musicalEntity:Note @location:Location? [word=/^(${modals})/] to? [word=/^(${aux_be})/] ([] and)?
-       (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@direction:Direction)?  @step:Step?
+  # works for both active and passive
+  - name: transpose-0-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Transpose the quarter note that is in the first measure up one step"
+    pattern:
+      trigger = [word=/(?i)^(${transpose_triggers})/]
+      musicalEntity:EntityMusic = >/dobj|nsubjpass/
+      location:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
+      direction:Direction? = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)? >/nmod_up|nmod_down/ >case
+      step:Step? = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)? >/nmod_up|nmod_down|dep/
+
+  - name: transpose-5
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The first quarter note in measure 1 is transposed down 2 steps"
+    type: token
+    pattern: |
+      @musicalEntity:Note @location:Location? [word=/^(${modals})/] to? [word=/^(${aux_be})/] ([] and)?
+      (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@direction:Direction)?  @step:Step?
 
   #  Note (should) (be) (VERB and) TRANS (Direction) (Step) (Onset) (from Note) (to Note) (location)
-   - name: transpose-6
-     label: ${label}
-     priority: ${rulepriority}
-     example: "the eighth note should move up two steps from an A to the C above"
-     type: token
-     pattern: |
-       (@location:Location [tag=/,/]?)? @musicalEntity:Note [word=/^(${modals})/] to? [word=/^(${aux_be})/]
-       ([] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/]) @direction:Direction? @step:Step?
-       @location:Location? (from @musicalEntity:Note)? (to @musicalEntity:Note @location:Location?)?
+  - name: transpose-6
+    label: ${label}
+    priority: ${rulepriority}
+    example: "the eighth note should move up two steps from an A to the C above"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)? @musicalEntity:Note [word=/^(${modals})/] to? [word=/^(${aux_be})/]
+      ([] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/]) @direction:Direction? @step:Step?
+      @location:Location? (from @musicalEntity:Note)? (to @musicalEntity:Note @location:Location?)?
 
-   - name: transpose-7
-     label: ${label}
-     priority: ${rulepriority}
-     example: "take the first whole note and move it down one step"
-     type: token
-     pattern: |
-       (@location:Location [tag=/,/]?)? @musicalEntity:Note @location:Location? (and)?
-       (?<trigger>[word=/(?i)^(${transpose_triggers})/]) it @direction:Direction? @step:Step?
-       (from @musicalEntity:Note)? (to @musicalEntity:Note @location:Location?)?
+  - name: transpose-7
+    label: ${label}
+    priority: ${rulepriority}
+    example: "take the first whole note and move it down one step"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)? @musicalEntity:Note @location:Location? (and)?
+      (?<trigger>[word=/(?i)^(${transpose_triggers})/]) it @direction:Direction? @step:Step?
+      (from @musicalEntity:Note)? (to @musicalEntity:Note @location:Location?)?
 
-   - name: transpose-8-passive
-     label: ${label}
-     priority: ${rulepriority}
-     example: "The first quarter note in measure 1 is transposed down 2 steps"
-     type: token
-     pattern: |
-       (@location:Location [tag=/,/]?)? @musicalEntity:Note @location:Location? [word=/^(${modals})/] to?
-       [word=/^(${aux_be})/] ([] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
-       (@direction:Direction)?  @step:Step? (to @musicalEntity:Note)?
+  - name: transpose-8-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The first quarter note in measure 1 is transposed down 2 steps"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)? @musicalEntity:Note @location:Location? [word=/^(${modals})/] to?
+      [word=/^(${aux_be})/] ([] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
+      (@direction:Direction)?  @step:Step? (to @musicalEntity:Note)?
 
-#  Note (should) (be) (VERB and) TRANS (Direction) (Step) (Onset) (from Note) (to Note) (location)
-   - name: transpose-9-passive
-     label: ${label}
-     priority: ${rulepriority}
-     example: "the eighth note should move up two steps from an A to the C above"
-     type: token
-     pattern: |
-       (@location:Location [tag=/,/]?)? @musicalEntity:Note [word=/^(${modals})/] to? [word=/^(${aux_be})/]
-       ([] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/]) @direction:Direction? @step:Step?
-       @location:Location? (from @musicalEntity:Note)? (to @musicalEntity:Note @location:Location?)?
-       @direction:Direction?
+  #  Note (should) (be) (VERB and) TRANS (Direction) (Step) (Onset) (from Note) (to Note) (location)
+  - name: transpose-9-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "the eighth note should move up two steps from an A to the C above"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)? @musicalEntity:Note [word=/^(${modals})/] to? [word=/^(${aux_be})/]
+      ([] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/]) @direction:Direction? @step:Step?
+      @location:Location? (from @musicalEntity:Note)? (to @musicalEntity:Note @location:Location?)?
+      @direction:Direction?
 
-   - name: transpose-10-everything
-     label: ${label}
-     priority: ${rulepriority}
-     example: "Transpose all the notes up 5 half steps in measure 1."
-     type: token
-     pattern: |
-       (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
-       @everything:Everything @direction:Direction? @step:Step @location:Location?
+  - name: transpose-10-everything
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Transpose all the notes up 5 half steps in measure 1."
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
+      @everything:Everything @direction:Direction? @step:Step @location:Location?
 
-   - name: transpose-11-everything-passive
-     label: ${label}
-     example: "Everything in measure 2 should be transposed up 1 half step"
-     type: token
-     pattern: |
-       (@location:Location [tag=/,/]?)? @everything:Everything @location:Location? [word=/^(${modals})/] to?
-       [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${transpose_triggers})/]) @direction:Direction? @step:Step?
+  - name: transpose-11-everything-passive
+    label: ${label}
+    example: "Everything in measure 2 should be transposed up 1 half step"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)? @everything:Everything @location:Location? [word=/^(${modals})/] to?
+      [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${transpose_triggers})/]) @direction:Direction? @step:Step?
 
-   # todo: EITHER choose transpose-12 or transpose-1 through -7 below
-   - name: transpose-12-active-fuller
-     label: ${label}
-     example: "transpose the quarter note in measure 1 from an A to a C"
-     type: token
-     pattern: |
-       (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
-       (@musicalEntity:Note|@musicalEntity:Chord) @location:Location? @direction:Direction?
-       @step:Step? @location:Location? (from (@musicalEntity:Note|@musicalEntity:Pitch|@musicalEntity:Chord))?
-       (to (@musicalEntity:Note|@musicalEntity:Pitch|@musicalEntity:Chord))? (@direction:Direction
-       (@step:Step)?)? @location:Location?
+  - name: transpose-12-active-fuller
+    label: ${label}
+    example: "transpose the quarter note in measure 1 from an A to a C"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
+      (@musicalEntity:Note|@musicalEntity:Chord) @location:Location? @direction:Direction?
+      @step:Step? @location:Location? (from (@musicalEntity:Note|@musicalEntity:Pitch|@musicalEntity:Chord))?
+      (to (@musicalEntity:Note|@musicalEntity:Pitch|@musicalEntity:Chord))? (@direction:Direction
+      (@step:Step)?)? @location:Location?
 
-#   # for when onset added to start as appositive
-#   - name: Transpose-1-syntax
-#     label: ${label}
-#     priority: ${rulepriority}
-#     pattern: |
-#       trigger = [word=/(?i)^(${transpose_triggers})/]
-#       location: Location? = >nmod_in
-#       note: Note = >dobj
-#       chord: Chord = >dobj
-#       direction: Direction? = >/nmod_(up|down)/ >case
-#       step: Step? = >/nmod_(up|down)/
+  #   # for when onset added to start as appositive
+  #   - name: Transpose-1-syntax
+  #     label: ${label}
+  #     priority: ${rulepriority}
+  #     pattern: |
+  #       trigger = [word=/(?i)^(${transpose_triggers})/]
+  #       location: Location? = >nmod_in
+  #       note: Note = >dobj
+  #       chord: Chord = >dobj
+  #       direction: Direction? = >/nmod_(up|down)/ >case
+  #       step: Step? = >/nmod_(up|down)/

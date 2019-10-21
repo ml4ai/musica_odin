@@ -14,6 +14,8 @@ rules:
       sourceLocation: Location? = >/nmod_in|nmod_from/
       destLocation: Location? = >/nmod_to|nmod_into/
 
+  # not providing good coverage, so created a similar syntax rule--leaving this here
+  # in case it's easy to fix later on
   - name: copy-0b-syntax-that-is-in
     label: ${label}
     priority: ${rulepriority}
@@ -23,6 +25,25 @@ rules:
       musicalEntity:EntityMusic = >dobj
       sourceLocation:Location = >dobj <nsubj (>/nmod_in|nmod_at/)?
       destLocation:Location? = >dobj <nsubj (>/nmod_in|nmod_at/)? >/nmod_to|nmod_into/
+
+  - name: copy-0c-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Copy the quarter note that is in the first measure to the end of the score"
+    type: token
+    pattern: |
+      (?<trigger>[word=/(?i)^(${copy_triggers})/]) @musicalEntity:EntityMusic (which|that)
+      ([word=/(?i)^(${aux_be})/]|[word=/^appear/]) @sourceLocation:Location @destLocation:Location?
+
+  - name: copy-0d-passive-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Copy the quarter note that is in the first measure to the end of the score"
+    type: token
+    pattern: |
+      @musicalEntity:EntityMusic (which|that) ([word=/(?i)^(${aux_be})/]|[word=/^appear/])
+      @sourceLocation:Location [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
+      (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location?
 
   - name: copy-1
     label: ${label}

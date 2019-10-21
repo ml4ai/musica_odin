@@ -77,3 +77,23 @@ rules:
     pattern: |
       @specifier:Specifier of (@musicalEntity:Note|@musicalEntity:Chord|@musicalEntity:Rest) @location:Location?
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${delete_triggers})/])
+
+  - name: delete-6-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In measure 1, take the first quarter note and delete it"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/])? [tag=/^VB/]
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @location:Location? and (?<trigger>[word=/(?i)^${delete_triggers}/]) @location:Location?
+
+  - name: delete-7-passive-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The first quarter note should be taken and deleted from measure 1"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] @location:Location?
+      and (?<trigger>[word=/(?i)^${delete_triggers}/]) @location:Location?

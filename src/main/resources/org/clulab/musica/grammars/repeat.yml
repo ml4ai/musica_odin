@@ -66,3 +66,24 @@ rules:
       (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure) @sourceLocation:Location?
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/^(${repeat_triggers})/])
       @frequency:Frequency? @destLocation:Location?
+
+  - name: repeat-5-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Take the C quarter note in the first measure and repeat it twice at the end of the second measure"
+    type: token
+    pattern: |
+      (@sourcelocation:Location [tag=/,/])? [tag=/^VB/]
+      (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure) @sourceLocation:Location?
+      and (?<trigger>[word=/(?i)^${repeat_triggers}/]) []? @frequency:Frequency @destLocation:Location?
+
+  - name: repeat-6-passive-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The C quarter note in measure 1 should be taken and repeated three times at the end of the second measure"
+    type: token
+    pattern: |
+      (@sourceLocation:Location [tag=/,/])? (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure)
+      @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]
+      @sourceLocation:Location? and (?<trigger>[word=/(?i)^${repeat_triggers}/]) @frequency:Frequency
+      @destLocation:Location?

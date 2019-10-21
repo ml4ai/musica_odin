@@ -64,3 +64,22 @@ rules:
       (@everything:Everything|@musicalEntity:EntityMusic) @sourceLocation:Location?
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/(?i)^(${move_triggers})/])
       @sourceLocation:Location? (@destLocation:Location|@timestep:TimeStep)
+
+  - name: move-6-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Take the C quarter note in the first measure and move it to the end of the second measure"
+    type: token
+    pattern: |
+      (@sourcelocation:Location [tag=/,/])? [tag=/^VB/] (@everything:Everything|@musicalEntity:EntityMusic)
+      @sourceLocation:Location? and (?<trigger>[word=/(?i)^(${move_triggers})/]) []? @destLocation:Location?
+
+  - name: move-7-passive-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The C quarter note should be taken from the first measure and moved to the end of the second measure"
+    type: token
+    pattern: |
+      (@sourceLocation:Location [tag=/,/])? (@everything:Everything|@musicalEntity:EntityMusic)
+      @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]
+      @sourceLocation:Location? and (?<trigger>[word=/(?i)^(${move_triggers})/]) @destLocation:Location?

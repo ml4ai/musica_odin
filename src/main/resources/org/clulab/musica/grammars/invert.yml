@@ -56,3 +56,24 @@ rules:
       (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure|@musicalEntity:Chord)
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/^(${invert_triggers})/])
       (around (@axis:Note|@axis:Pitch))?
+
+  - name: invert-5-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In measure 1, take the first quarter note and invert it around A4"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/])? [tag=/^VB/]
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @location:Location? and (?<trigger>[word=/(?i)^${invert_triggers}/]) []?
+      @axis:Axis?
+
+  - name: invert-6-passive-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The first quarter note should be taken and inverted around A4 in measure 1"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] @location:Location?
+      and (?<trigger>[word=/(?i)^${invert_triggers}/]) @axis:Axis? @location:Location?

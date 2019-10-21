@@ -71,7 +71,7 @@ rules:
     example: "In the first measure, copy the first three notes"
     type: token
     pattern: |
-      @location:Location [tag=/,/]? (?<trigger>[word=/(?i)^(${copy_triggers})/])
+      @sourceLocation:Location [tag=/,/]? (?<trigger>[word=/(?i)^(${copy_triggers})/])
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
 
   - name: copy-4-passive-underspecified
@@ -80,5 +80,27 @@ rules:
     example: "In the first measure, the first three notes should be copied"
     type: token
     pattern: |
-      @location:Location [tag=/,/]? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @sourceLocation:Location [tag=/,/]? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${copy_triggers})/])
+
+
+  - name: copy-5-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In measure 1, take the first quarter note and copy it to the end of the second measure"
+    type: token
+    pattern: |
+      (@sourceLocation:Location [tag=/,/])? [tag=/^VB/]
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @sourceLocation:Location? and (?<trigger>[word=/(?i)^${copy_triggers}/]) []
+      @destLocation:Location?
+
+  - name: copy-6-passive-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The first quarter note in measure 1 should be taken and copied to the end of the second measure"
+    type: token
+    pattern: |
+      (@sourceLocation:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] @sourceLocation:Location?
+      and (?<trigger>[word=/(?i)^${copy_triggers}/]) @location:Location?

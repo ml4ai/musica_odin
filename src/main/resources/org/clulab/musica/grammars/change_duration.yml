@@ -114,3 +114,26 @@ rules:
       (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) @location:Location?
       (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
       ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
+
+  - name: changeduration-9-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In measure 1, take the first quarter note and change it to a half note"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/])? [tag=/^VB/] (@note:Note|@rest:Rest|@pitchsequence:PitchSequence)
+      @location:Location? and (?<trigger>[word=/(?i)^${change_duration_triggers}/]) []
+      (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
+      ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
+
+  - name: changeduration-10-passive-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In measure 1, the first quarter note should be taken and changed to a half note"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/])? (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything)
+      @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] and
+      (?<trigger>[word=/(?i)^${change_duration_triggers}/]) @location:Location?
+      (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
+      ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? @location:Location?

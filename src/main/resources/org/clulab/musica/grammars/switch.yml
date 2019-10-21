@@ -58,3 +58,39 @@ rules:
       (@location:Location [tag=/,/])? (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
       @location:Location? [word=/^(${modals})/] to? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${switch_triggers})/]) @location:Location?
+
+  - name: switch-5-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Take the first two chords in the first measure and switch them."
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/])? [tag=/^VB/] (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+      @location:Location? and (?<trigger>[word=/(?i)^(${switch_triggers})/]) []? @location:Location?
+
+  - name: switch-6-interveningverb-longform
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Take the first note in the first measure and switch it with the second note in the second measure"
+      (@sourceLocation:Location [tag=/,/])? [tag=/^VB/] @sourceEntity:EntityMusic @sourceLocation:Location? and
+      (?<trigger>[word=/(?i)^(${switch_triggers})/]) []? with @destEntity:EntityMusic @destLocation:Location?
+
+  - name: switch-7-passive-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In the first measure, the first and third notes should be taken and switched"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/])? (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+      @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]
+      @location:Location? and (?<trigger>[word=/(?i)^(${switch_triggers})/]) @location:Location?
+
+  - name: switch-8-passive-interveningverb-longform
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The first note in the first measure should be taken and switched with the second note in the second measure"
+    type: token
+    pattern: |
+      (@sourceLocation:Location [tag=/,/])? @sourceEntity:EntityMusic @sourceLocation:Location?
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] and
+      (?<trigger>[word=/(?i)^(${switch_triggers})/]) with @destEntity:EntityMusic @destLocation:Location?

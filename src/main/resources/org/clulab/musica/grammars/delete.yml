@@ -10,7 +10,7 @@ rules:
     example: "Delete everything in the second bar"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${delete_triggers})/])
+      (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${delete_triggers})/])
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @location:Location?
 
@@ -33,6 +33,7 @@ rules:
     example: "The first quarter note should be deleted"
     type: token
     pattern: |
+      (@location:Location [tag=/,/])?
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${delete_triggers})/])

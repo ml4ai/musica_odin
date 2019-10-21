@@ -4,6 +4,26 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+  - name: copy-0-syntax
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Copy the D in the first measure to the end of measure 5"
+    pattern: |
+      trigger = [word=/(?i)^(${copy_triggers})/]
+      musicalEntity: EntityMusic = >dobj
+      sourceLocation: Location? = >/nmod_in|nmod_from/
+      destLocation: Location? = >/nmod_to|nmod_into/
+
+  - name: copy-0b-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Copy the quarter note that is in the first measure to the end of the score"
+    pattern:
+      trigger = [word=/(?i)^(${copy_triggers})/]
+      musicalEntity:EntityMusic = >dobj
+      sourceLocation:Location = >dobj <nsubj (>/nmod_in|nmod_at/)?
+      destLocation:Location? = >dobj <nsubj (>/nmod_in|nmod_at/)? >/nmod_to|nmod_into/
+
   - name: copy-1
     label: ${label}
     priority: ${rulepriority}
@@ -14,27 +34,6 @@ rules:
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @sourceLocation:Location? @destLocation:Location?
 
-  # todo: why are there three locations? how do we know which is source and which is dest?
-  - name: copy-2-rel-location
-    label: ${label}
-    priority: ${rulepriority}
-    example: "copy everything in the first two measures"
-    type: token
-    pattern: |
-      (?<trigger>[word=/(?i)^(${copy_triggers})/])
-      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
-      @location:Location? @location:Location? @location:Location?
-
-  - name: copy-3-to-abs-location
-    label: ${label}
-    priority: ${rulepriority}
-    example: "Copy everything to the end of the score"
-    type: token
-    pattern: |
-      (?<trigger>[word=/(?i)^(${copy_triggers})/])
-      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
-      @location:Location?
-
   - name: copy-2-passive
     label: ${label}
     priority: ${rulepriority}
@@ -44,3 +43,21 @@ rules:
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location?
+
+  - name: copy-3-underspecified
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In the first measure, copy the first three notes"
+    type: token
+    pattern: |
+      @location:Location [tag=/,/]? (?<trigger>[word=/(?i)^(${copy_triggers})/])
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+
+  - name: copy-4-passive-underspecified
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In the first measure, the first three notes should be copied"
+    type: token
+    pattern: |
+      @location:Location [tag=/,/]? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${copy_triggers})/])

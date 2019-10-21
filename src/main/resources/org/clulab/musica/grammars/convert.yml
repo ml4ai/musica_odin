@@ -4,6 +4,18 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+  # testing--deal with 3 notes
+  # todo: can we use an action to say if there is a source entity, use that + the info
+  # todo:   in musical entity, otherwise use the musical entity AS the source entity?
+  - name: convert-note-x-test
+    label: ${label}
+    priority: ${rulepriority}
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${convert_triggers})/])
+      @musicalEntity:Note @location:Location? (from @sourceEntity:Note)? (to|into)
+      (@destEntity:Rest|@destEntity:Chord|@destEntity:PitchSequence)
+
   #CONVERT NOTE TO X
   - name: convert-note-1
     label: ${label}
@@ -12,7 +24,7 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${convert_triggers})/]) @sourceEntity:Note @location:Location? (into|to)
-      (@destEntity:Rest|@destEntity:Chord|@destEntity:PitchSequence) 
+      (@destEntity:Rest|@destEntity:Chord|@destEntity:PitchSequence)
 
   - name: convert-note-1b-syntax
     label: ${label}

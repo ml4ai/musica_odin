@@ -17,15 +17,6 @@ rules:
       frequency:Frequency? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/nmod*|advmod/
 #      destLocation:Location? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/nmod*|advmod/ >nmod_at
 
-#  # frequency doesn't work here, but does in passive rule--why?
-#  - name: repeat-1-syntax
-#    label: ${label}
-#    priority: ${rulepriority}
-#    example: "Repeat everything in the first measure"
-#    pattern: |
-#      trigger = [word=/^(${repeat_triggers})/]
-#      musicalEntity:EntityMusic =
-
   - name: repeat-1
     label: ${label}
     priority: ${rulepriority}
@@ -75,7 +66,7 @@ rules:
     pattern: |
       (@sourcelocation:Location [tag=/,/])? [tag=/^VB/]
       (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure) @sourceLocation:Location?
-      and (?<trigger>[word=/(?i)^${repeat_triggers}/]) []? @frequency:Frequency @destLocation:Location?
+      and (?<trigger>[word=/(?i)^(${repeat_triggers})/]) []? @frequency:Frequency @destLocation:Location?
 
   - name: repeat-6-passive-interveningverb
     label: ${label}
@@ -85,5 +76,5 @@ rules:
     pattern: |
       (@sourceLocation:Location [tag=/,/])? (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure)
       @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]
-      @sourceLocation:Location? and (?<trigger>[word=/(?i)^${repeat_triggers}/]) @frequency:Frequency
+      @sourceLocation:Location? and (?<trigger>[word=/(?i)^(${repeat_triggers})/]) @frequency:Frequency
       @destLocation:Location?

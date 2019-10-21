@@ -53,12 +53,3 @@ rules:
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]
       @location:Location? and ([] order?) [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${reverse_triggers})/]) @location:Location?
-
-#  - name: reverse-2
-#    label: ${label}
-#    priority: ${rulepriority}
-#    example: "reverse the order of the notes in the first two measures"
-#    type: token
-#    pattern: |
-#      (@location:Location [tag=/,/]?) (?<trigger>[word=/(?i)^(${reverse_triggers})/]) (the order of)?
-#      (@musicalEntity:Note|@musicalEntity:Chord|@everything:Everything)

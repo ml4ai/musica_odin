@@ -52,21 +52,13 @@ rules:
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
       @location:Location?
 
-  - name: insert-6-passive-between
+  # todo: how to represent this? FIX ARC LABELS
+  - name: insert-6-parts-of-a-chord
     label: ${label}
     priority: ${rulepriority}
-    example:
+    example: "At the end of the first measure, add a C below the E to make a chord"
     type: token
     pattern: |
-      (@musicalEntity:EntityMusic|@musicalEntity:Measure) (and (@musicalEntity:EntityMusic|@musicalEntity:Measure))?
-      [word=/^(${modals})/]? to? [word=/(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
-      @location:Location? (and @location:Location)?
-
-#    - name: insert-1
-#      label: Insert
-#      priority: 3
-#      pattern: |  # what is amod or compound?
-#        trigger = [word=/(?i)^note/]
-#        duration: Duration? = >/(amod|compound)/
-#        pitch: Pitch? = >/(amod|compound)/
-#        specifier: Specifier? = >det
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${insert_triggers})/]) @chordPart:Note
+      (above|below|to) @chordPart:Note @location:Location? to [tag=/^VB/] @musicalEntity:Chord
+      @location:Location?

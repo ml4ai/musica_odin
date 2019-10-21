@@ -83,7 +83,6 @@ rules:
       @sourceLocation:Location [tag=/,/]? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${copy_triggers})/])
 
-
   - name: copy-5-interveningverb
     label: ${label}
     priority: ${rulepriority}
@@ -92,7 +91,7 @@ rules:
     pattern: |
       (@sourceLocation:Location [tag=/,/])? [tag=/^VB/]
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
-      @sourceLocation:Location? and (?<trigger>[word=/(?i)^${copy_triggers}/]) []
+      @sourceLocation:Location? and (?<trigger>[word=/(?i)^(${copy_triggers})/]) []
       @destLocation:Location?
 
   - name: copy-6-passive-interveningverb
@@ -103,4 +102,4 @@ rules:
     pattern: |
       (@sourceLocation:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] @sourceLocation:Location?
-      and (?<trigger>[word=/(?i)^${copy_triggers}/]) @location:Location?
+      and (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location?

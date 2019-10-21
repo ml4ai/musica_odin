@@ -65,8 +65,8 @@ rules:
     pattern: |
       (@location:Location [tag=/,/])? [tag=/^VB/]
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
-      @location:Location? and (?<trigger>[word=/(?i)^${invert_triggers}/]) []?
-      @axis:Axis?
+      @location:Location? and (?<trigger>[word=/(?i)^(${invert_triggers})/]) []?
+      (@axis:Note|@axis:Pitch)?
 
   - name: invert-6-passive-interveningverb
     label: ${label}
@@ -76,4 +76,4 @@ rules:
     pattern: |
       (@location:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] @location:Location?
-      and (?<trigger>[word=/(?i)^${invert_triggers}/]) @axis:Axis? @location:Location?
+      and (?<trigger>[word=/(?i)^(${invert_triggers})/]) (@axis:Note|@axis:Pitch)? @location:Location?

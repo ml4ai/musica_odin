@@ -57,7 +57,6 @@ rules:
       (?<trigger>[word=/(?i)^(${transpose_triggers})/]) []? @direction:Direction? @step:Step?
       (from @musicalEntity:Note)? (to @musicalEntity:Note @location:Location?)?
 
-  #  Note (should) (be) (VERB and) TRANS (Direction) (Step) (Onset) (from Note) (to Note) (location)
   - name: transpose-5-passive-interveningverb
     label: ${label}
     priority: ${rulepriority}

@@ -12,7 +12,7 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${convert_triggers})/]) @sourceEntity:Note @location:Location? (into|to)
-      (@destEntity:Rest|@destEntity:Chord|@destEntity:PitchSequence)
+      (@destEntity:Rest|@destEntity:Chord|@destEntity:PitchSequence) 
 
   - name: convert-note-1b-syntax
     label: ${label}
@@ -37,16 +37,6 @@ rules:
       destEntity: Rest? = >/nmod_into|nmod_to/
       destEntity: Chord? = >/nmod_into|nmod_to/
       destEntity: PitchSequence? = >/nmod_into|nmod_to/
-
-#  - name: convert-note-1
-#    label: ${label}
-#    priority: ${rulepriority}
-#    example: "Convert the quarter note in measure 1 into a quarter rest"
-#    type: token
-#    pattern: |
-#      (@location:Location [tag=/,/]?)?
-#      (?<trigger>[word=/(?i)^(${convert_triggers})/]) @note:Note location:Location? (into|to)
-#      (@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) @location:Location?
 
   - name: convert-note-2-conjunction
     label: ${label}
@@ -96,9 +86,7 @@ rules:
       [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${convert_triggers})/])
       (to|into) (@note:Note|@chord:Chord|@pitchsequence:PitchSequence) @location:Location?
 
-  # CONVERT CHORD TO REST
-  # todo: Determine if changing from one chord type to another is a 'convert' event
-  # currently written as though it is
+  # CONVERT CHORD TO X (can convert one chord to another type of chord)
   - name: convert-chord-1
     label: ${label}
     priority: ${rulepriority}

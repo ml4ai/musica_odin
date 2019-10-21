@@ -20,7 +20,7 @@ rules:
     example: "Delete everything in the second bar"
     type: token
     pattern: |
-      (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${delete_triggers})/])
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${delete_triggers})/])
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @location:Location?
 
@@ -46,7 +46,7 @@ rules:
       (@location:Location [tag=/,/])?
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
-      (?<trigger>[word=/(?i)^(${delete_triggers})/])
+      (?<trigger>[word=/(?i)^(${delete_triggers})/]) @location:Location?
 
 
   - name: delete-3-parts-of-chord

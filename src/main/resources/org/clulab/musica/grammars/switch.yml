@@ -25,7 +25,7 @@ rules:
     example: "Switch the D and the C in measure 1"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${switch_triggers})/]) @sourceEntity:EntityMusic
+      (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${switch_triggers})/]) @sourceEntity:EntityMusic
       and @destEntity:EntityMusic @location:Location?
 
   # todo: how do we represent this in terms of source and destination entities?
@@ -35,8 +35,8 @@ rules:
     example: "Swap the first and third notes in measure 2"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${switch_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
-      @location:Location?
+      (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${switch_triggers})/])
+      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) @location:Location?
 
   - name: switch-3-passive
     label: ${label}
@@ -44,7 +44,7 @@ rules:
     example: "The first C and the first D in measure 2 should be switched"
     type: token
     pattern: |
-      @sourceEntity:EntityMusic and @destEntity:EntityMusic @location:Location?
+      (@location:Location [tag=/,/])? @sourceEntity:EntityMusic and @destEntity:EntityMusic @location:Location?
       [word=/^(${modals})/] to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${switch_triggers})/])
       @location:Location?
 
@@ -55,6 +55,6 @@ rules:
     example: "The first two chords should be switched in measure 1"
     type: token
     pattern: |
-      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) @location:Location?
-      [word=/^(${modals})/] to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${switch_triggers})/])
-      @location:Location?
+      (@location:Location [tag=/,/])? (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+      @location:Location? [word=/^(${modals})/] to? [word=/^(${aux_be})/]
+      (?<trigger>[word=/(?i)^(${switch_triggers})/]) @location:Location?

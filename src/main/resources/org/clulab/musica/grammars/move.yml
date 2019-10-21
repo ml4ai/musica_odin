@@ -25,6 +25,7 @@ rules:
 #      (?<trigger>[word=/(?i)^(${move_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
 #      ((in|from) @onset:Onset)? ((to|into) (@locationrel:LocationRel)? []? @onset:Onset)?
 
+# todo: uncomment this once you've added updates from addActions to this branch
 #  - name: move-1
 #    label: ${label}
 #    priority: ${rulepriority}
@@ -53,3 +54,13 @@ rules:
     pattern: |
       (?<trigger>[word=/(?i)^(${move_triggers})/]) (@everything:Everything|@musicalEntity:EntityMusic)
       @timestep:TimeStep
+
+  - name: move-5-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The C quarter note should be moved from the first measure to the end of the second measure"
+    type: token
+    pattern: |
+      (@everything:Everything|@musicalEntity:EntityMusic) @sourceLocation:Location?
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/(?i)^(${move_triggers})/])
+      @sourceLocation:Location? (@destLocation:Location|@timestep:TimeStep)

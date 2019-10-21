@@ -27,7 +27,7 @@ rules:
     pattern: |
       (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${convert_triggers})/])
       @musicalEntity:Note @location:Location? (from @sourceEntity:Note)? (to|into)
-      (@destEntity:Rest|@destEntity:Chord|@destEntity:PitchSequence)
+      (@destEntity:Rest|@destEntity:Chord|@destEntity:PitchSequence) @location:Location?
 
   #CONVERT NOTE TO X
   - name: convert-note-1
@@ -89,8 +89,9 @@ rules:
     example: "Convert the quarter note in measure 1 into a quarter rest"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${convert_triggers})/]) @sourceEntity:Rest
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${convert_triggers})/]) @sourceEntity:Rest
       @location:Location? (into|to) (@destEntity:Note|@destEntity:Chord|@destEntity:PitchSequence)
+      @location:Location?
 
   - name: convert-rest-2-conjunction
     label: ${label}
@@ -107,7 +108,7 @@ rules:
     example: "the G in measure 1 should be converted into a quarter rest"
     type: token
     pattern: |
-      @location:Location? @sourceEntity:Rest @location:Location? [word=/^(${modals})/]? to?
+      (@location:Location [tag=/,/]?)? @sourceEntity:Rest @location:Location? [word=/^(${modals})/]? to?
       [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${convert_triggers})/])
       (to|into) (@note:Note|@chord:Chord|@pitchsequence:PitchSequence) @location:Location?
 
@@ -118,8 +119,9 @@ rules:
     example: "Convert the quarter note in measure 1 into a quarter rest"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${convert_triggers})/]) @sourceEntity:Chord @location:Location?
-      (into|to) (@destEntity:Note|@destEntity:Rest|@destEntity:Chord|@destEntity:PitchSequence)
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${convert_triggers})/]) @sourceEntity:Chord
+      @location:Location? (into|to) (@destEntity:Note|@destEntity:Rest|@destEntity:Chord|@destEntity:PitchSequence)
+      @location:Location?
 
   - name: convert-chord-2-conjunction
     label: ${label}
@@ -136,6 +138,6 @@ rules:
     example: "the G in measure 1 should be converted into a quarter rest"
     type: token
     pattern: |
-      @location:Location? @sourceEntity:Chord @location:Location? [word=/^(${modals})/]? to?
+      (@location:Location [tag=/,/]?)? @sourceEntity:Chord @location:Location? [word=/^(${modals})/]? to?
       [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${convert_triggers})/]) (to|into)
       (@destEntity:Note|@destEntity:Rest|@destEntity:Chord|@destEntity:PitchSequence) @location:Location?

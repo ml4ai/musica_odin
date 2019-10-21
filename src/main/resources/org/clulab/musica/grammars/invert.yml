@@ -24,7 +24,7 @@ rules:
     pattern: |
       (?<trigger>[word=/(?i)^(${invert_triggers})/])
       (@everything:Everything|@musicalEntity:Note|@musicalEntity:Chord|@musicalEntity:Measure)
-      @location:Location? (around (@axis:Note|@axis:Pitch))?
+      @location:Location? (around (@axis:Note|@axis:Pitch))? @location:Location?
 
   - name: invert-2-location-at-start
     label: ${label}
@@ -44,6 +44,7 @@ rules:
       (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure|@musicalEntity:Chord)
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
       (?<trigger>[word=/^(${invert_triggers})/]) (around (@axis:Note|@axis:Pitch))?
+      @location:Location?
 
   - name: invert-4-passive-location-at-start
     label: ${label}

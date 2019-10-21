@@ -50,6 +50,7 @@ rules:
       (@location:Location [tag=/,/]?)? (@musicalEntity:EntityMusic|@musicalEntity:Measure)
       (and (@musicalEntity:EntityMusic|@musicalEntity:Measure))?
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
+      @location:Location?
 
   - name: insert-6-passive-between
     label: ${label}

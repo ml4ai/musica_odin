@@ -8,6 +8,7 @@ rules:
     label: ${label}
     priority: ${rulepriority}
     example: "Copy the D in the first measure to the end of measure 5"
+    action: copy2Insert
     pattern: |
       trigger = [word=/(?i)^(${copy_triggers})/]
       musicalEntity: EntityMusic = >dobj
@@ -20,6 +21,7 @@ rules:
     label: ${label}
     priority: ${rulepriority}
     example: "Copy the quarter note that is in the first measure to the end of the score"
+    action: copy2Insert
     pattern:
       trigger = [word=/(?i)^(${copy_triggers})/]
       musicalEntity:EntityMusic = >dobj
@@ -31,6 +33,7 @@ rules:
     priority: ${rulepriority}
     example: "Copy the quarter note that is in the first measure to the end of the score"
     type: token
+    action: copy2Insert
     pattern: |
       (?<trigger>[word=/(?i)^(${copy_triggers})/]) @musicalEntity:EntityMusic (which|that)
       ([word=/(?i)^(${aux_be})/]|[word=/^appear/]) @sourceLocation:Location @destLocation:Location?
@@ -40,6 +43,7 @@ rules:
     priority: ${rulepriority}
     example: "Copy the quarter note that is in the first measure to the end of the score"
     type: token
+    action: copy2Insert
     pattern: |
       @musicalEntity:EntityMusic (which|that) ([word=/(?i)^(${aux_be})/]|[word=/^appear/])
       @sourceLocation:Location [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
@@ -50,6 +54,7 @@ rules:
     priority: ${rulepriority}
     example: "Copy the D in the first measure to the end of measure 5"
     type: token
+    action: copy2Insert
     pattern: |
       (?<trigger>[word=/(?i)^(${copy_triggers})/])
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
@@ -60,6 +65,7 @@ rules:
     priority: ${rulepriority}
     example: "The D in the first measure should be copied to the end of measure 5"
     type: token
+    action: copy2Insert
     pattern: |
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
@@ -70,6 +76,7 @@ rules:
     priority: ${rulepriority}
     example: "In the first measure, copy the first three notes"
     type: token
+    action: copy2Insert
     pattern: |
       @sourceLocation:Location [tag=/,/]? (?<trigger>[word=/(?i)^(${copy_triggers})/])
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
@@ -79,6 +86,7 @@ rules:
     priority: ${rulepriority}
     example: "In the first measure, the first three notes should be copied"
     type: token
+    action: copy2Insert
     pattern: |
       @sourceLocation:Location [tag=/,/]? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${copy_triggers})/])
@@ -88,6 +96,7 @@ rules:
     priority: ${rulepriority}
     example: "In measure 1, take the first quarter note and copy it to the end of the second measure"
     type: token
+    action: copy2Insert
     pattern: |
       (@sourceLocation:Location [tag=/,/])? [tag=/^VB/]
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
@@ -99,6 +108,7 @@ rules:
     priority: ${rulepriority}
     example: "The first quarter note in measure 1 should be taken and copied to the end of the second measure"
     type: token
+    action: copy2Insert
     pattern: |
       (@sourceLocation:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] @sourceLocation:Location?

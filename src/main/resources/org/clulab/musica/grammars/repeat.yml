@@ -10,6 +10,7 @@ rules:
     label: ${label}
     priority: ${rulepriority}
     example: "Repeat the quarter note that is in the first measure three times"
+    action: repeat2Insert
     pattern:
       trigger = [word=/(?i)^(${repeat_triggers})/]
       musicalEntity:EntityMusic = >/dobj|nsubjpass/
@@ -22,6 +23,7 @@ rules:
     priority: ${rulepriority}
     example: "Repeat everything in the first measure"
     type: token
+    action: repeat2Insert
     pattern: |
       (@destLocation:Location [tag=/,/]?)? (?<trigger>[word=/^(${repeat_triggers})/])
       (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure)
@@ -32,6 +34,7 @@ rules:
     priority: ${rulepriority}
     example: "repeat the run of eighth notes after the whole note in the second measure"
     type: token
+    action: repeat2Insert
     pattern: |
       (?<trigger>[word=/^(${repeat_triggers})/])
       (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure)
@@ -43,6 +46,7 @@ rules:
     priority: ${rulepriority}
     example: "Repeat everything in the first measure twice"
     type: token
+    action: repeat2Insert
     pattern: |
       (?<trigger>[word=/^(${repeat_triggers})/])
       (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure)
@@ -53,6 +57,7 @@ rules:
     priority: ${rulepriority}
     example: "Everything in the first measure should be repeated"
     type: token
+    action: repeat2Insert
     pattern: |
       (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure) @sourceLocation:Location?
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/^(${repeat_triggers})/])
@@ -63,6 +68,7 @@ rules:
     priority: ${rulepriority}
     example: "Take the C quarter note in the first measure and repeat it twice at the end of the second measure"
     type: token
+    action: repeat2Insert
     pattern: |
       (@sourcelocation:Location [tag=/,/])? [tag=/^VB/]
       (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure) @sourceLocation:Location?
@@ -73,6 +79,7 @@ rules:
     priority: ${rulepriority}
     example: "The C quarter note in measure 1 should be taken and repeated three times at the end of the second measure"
     type: token
+    action: repeat2Insert
     pattern: |
       (@sourceLocation:Location [tag=/,/])? (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure)
       @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]

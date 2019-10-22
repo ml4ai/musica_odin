@@ -9,6 +9,7 @@ rules:
     label: ${label}
     priority: ${rulepriority}
     example: "Replace the quarter note that is in the first measure with a half rest"
+    action: repeat2Convert
     pattern:
       trigger = [word=/(?i)^(${replace_triggers})/]
       sourceEntity:EntityMusic = >/dobj|nsubjpass/
@@ -20,6 +21,7 @@ rules:
     priority: ${rulepriority}
     example: "replace the A in measure 1 with a B"
     type: token
+    action: repeat2Convert
     pattern: |
       (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${replace_triggers})/])
       (@sourceEntity:EntityMusic|@everything:Everything) @location:Location? (with|by)
@@ -30,6 +32,7 @@ rules:
     priority: ${rulepriority}
     example: "The A in measure 1 should be replaced with a B"
     type: token
+    action: repeat2Convert
     pattern: |
       (@location:Location [tag=/,/]?)? (@sourceEntity:EntityMusic|@everything:Everything) @location:Location?
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/(?i)^(${replace_triggers})/]) (with|by)
@@ -40,6 +43,7 @@ rules:
     priority: ${rulepriority}
     example: "Take the C quarter note in the first measure and replace it with a quarter rest"
     type: token
+    action: repeat2Convert
     pattern: |
       (@location:Location [tag=/,/])? [tag=/^VB/] (@everything:Everything|@sourceEntity:EntityMusic)
       @location:Location? and (?<trigger>[word=/(?i)^(${replace_triggers})/]) []? (with|by) @destEntity:EntityMusic
@@ -50,6 +54,7 @@ rules:
     priority: ${rulepriority}
     example: "The C quarter note should be taken from the first measure and replaced with a quarter rest"
     type: token
+    action: repeat2Convert
     pattern: |
       (@location:Location [tag=/,/])? (@everything:Everything|@sourceEntity:EntityMusic)
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]

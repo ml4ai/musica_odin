@@ -9,6 +9,7 @@ rules:
     label: ${label}
     priority: ${rulepriority}
     example: "Move the quarter note that is in the first measure to the end of the second measure"
+    action: move2Convert
     pattern:
       trigger = [word=/(?i)^(${move_triggers})/]
       sourceEntity:EntityMusic = >/dobj|nsubjpass/
@@ -42,6 +43,7 @@ rules:
     priority: ${rulepriority}
     example: "Put the first C on top of the G"
     type: token
+    action: move2Convert
     pattern: |
       (?<trigger>[word=/(?i)^(${move_triggers})/]) (@musicalEntity:EntityMusic)
       @sourceLocation:Location? @destLocation:Location?
@@ -51,6 +53,7 @@ rules:
     priority: ${rulepriority}
     example: "Move the C quarter note two measures to the right"
     type: token
+    action: move2Convert
     pattern: |
       (?<trigger>[word=/(?i)^(${move_triggers})/]) (@everything:Everything|@musicalEntity:EntityMusic)
       @timestep:TimeStep
@@ -60,6 +63,7 @@ rules:
     priority: ${rulepriority}
     example: "The C quarter note should be moved from the first measure to the end of the second measure"
     type: token
+    action: move2Convert
     pattern: |
       (@everything:Everything|@musicalEntity:EntityMusic) @sourceLocation:Location?
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/(?i)^(${move_triggers})/])
@@ -70,6 +74,7 @@ rules:
     priority: ${rulepriority}
     example: "Take the C quarter note in the first measure and move it to the end of the second measure"
     type: token
+    action: move2Convert
     pattern: |
       (@sourcelocation:Location [tag=/,/])? [tag=/^VB/] (@everything:Everything|@musicalEntity:EntityMusic)
       @sourceLocation:Location? and (?<trigger>[word=/(?i)^(${move_triggers})/]) []? @destLocation:Location?
@@ -79,6 +84,7 @@ rules:
     priority: ${rulepriority}
     example: "The C quarter note should be taken from the first measure and moved to the end of the second measure"
     type: token
+    action: move2Convert
     pattern: |
       (@sourceLocation:Location [tag=/,/])? (@everything:Everything|@musicalEntity:EntityMusic)
       @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]

@@ -10,6 +10,7 @@ rules:
     label: ${label}
     priority: ${rulepriority}
     example: "Lengthen the quarter note that is in the first measure to a half note"
+    action: changeduration2Convert
     pattern:
       trigger = [word=/(?i)^(${change_duration_triggers})/]
       sourceEntity:EntityMusic = >/dobj|nsubjpass/
@@ -18,61 +19,51 @@ rules:
 
  # todo: can find more than one SOURCE entity --> we will have an action to combine the multiple into one
  # can either copy over missing information or not (e.g. to destEntity); could also do that in python
-  - name: changeduration-1-potential-arclabels
+  - name: changeduration-1
     label: ${label}
     example: "Lengthen the note in measure 2 from a half note to a whole note"
     priority: ${rulepriority}
     type: token
+    action: changeduration2Convert
     pattern: |
       (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
-      (@musicalEntity:Note|@musicalEntity:Rest|@musicalEntity:PitchSequence|@everything:Everything)
-      @location:Location? (from (@sourceEntity:Note|@sourceEntity:Rest|@sourceEntity:PitchSequence))?
-      ((to|into) (@destEntity:Rest|@destEntity:PitchSequence))? @location:Location?
-
-#  - name: changeduration-1
-#    label: ${label}
-#    example: "Lengthen the note in measure 2 from a half note to a whole note"
-#    priority: ${rulepriority}
-#    type: token
-#    pattern: |
-#      (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
-#      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything)
-#      @location:Location? (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? ((to|into)
-#      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? @location:Location?
+      (@sourceEntity:EntityMusic|@everything:Everything) @location:Location?
+      (from (@sourceEntity:EntityMusic))? ((to|into) (@destEntity:Rest|@destEntity:PitchSequence))?
+      @location:Location?
 
   - name: changeduration-2
     label: ${label}
     example: "Lengthen the note in measure 2 from a half note to a whole note"
     priority: ${rulepriority}
     type: token
+    action: changeduration2Convert
     pattern: |
       (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything) @location:Location?
-      from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) ((to|into)
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? @location:Location?
+      (@sourceEntity:EntityMusic|@everything:Everything) @location:Location?
+      from (@sourceEntity:EntityMusic) ((to|into) (@destEntity:EntityMusic))? @location:Location?
 
   - name: changeduration-3-passive
     label: ${label}
     example: "The half note is shortened in beat 1 of measure 1 to a quarter note"
     priority: ${rulepriority}
     type: token
+    action: changeduration2Convert
     pattern: |
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything) @location:Location?
-      [word=/^(${modals})/]?
-      to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${change_duration_triggers})/]) @location:Location?
-      (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
-      ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? @location:Location?
+      (@sourceEntity:EntityMusic|@everything:Everything) @location:Location? [word=/^(${modals})/]?
+      to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
+      @location:Location? (from @sourceEntity:EntityMusic)? ((to|into) @destEntity:EntityMusic)?
+      @location:Location?
 
   - name: changeduration-4-multiple-appositives
     label: ${label}
     example: "in measure 1, after the first quarter note, shorten the half note to a quarter note"
     priority: ${rulepriority}
     type: token
+    action: changeduration2Convert
     pattern: |
-      @location:Location [tag=/,/] @location:Location
-      [tag=/,/] (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence)
-      (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
+      @location:Location [tag=/,/]? @location:Location [tag=/,/]?
+      (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
+      (@sourceEntity:EntityMusic|@everything:Everything) (from @sourceEntity:EntityMusic)?
       ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
 
   - name: changeduration-5-with-appositive
@@ -80,63 +71,65 @@ rules:
     example: "In beat 1 of measure 1, shorten the half rest to a quarter rest"
     priority: ${rulepriority}
     type: token
+    action: changeduration2Convert
     pattern: |
-      @location:Location [tag=/,/] (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence)
-      (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
-      ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
+      @location:Location [tag=/,/]? (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
+      (@sourceEntity:EntityMusic|@everything:Everything) (from @sourceEntity:EntityMusic)?
+      ((to|into) @destEntity:EntityMusic)?
 
   - name: changeduration-6-passive-with-appositive
     label: ${label}
     priority: ${rulepriority}
     example: "In the 3rd beat of the second measure, the quarter note should be lengthened to a half note"
     type: token
+    action: changeduration2Convert
     pattern: |
-      @location:Location [tag=/,/] (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) [word=/^(${modals})/]?
+      @location:Location [tag=/,/] (@sourceEntity:EntityMusic|@everything:Everything) [word=/^(${modals})/]?
       to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
-      (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
-      ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
+      (from @sourceEntity:EntityMusic)?
+      ((to|into) @destEntity:EntityMusic)?
 
   - name: changeduration-7-note-in-run
     label: ${label}
     priority: ${rulepriority}
     example: "lengthen the first quarter note in the run to a whole note."
     type: token
+    action: changeduration2Convert
     pattern: |
-      (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${change_duration_triggers})/]) (@note:Note|@chord:Chord)
-      in @pitchsequence:PitchSequence @location:Location? (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
-      ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
+      (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
+      (@sourceEntity:Note|@sourceEntity:Chord) in @pitchsequence:PitchSequence @location:Location?
+      (from @sourceEntity:EntityMusic)? ((to|into) @destEntity:EntityMusic)?
 
   - name: changeduration-8-relative-location
     label: ${label}
     priority: ${rulepriority}
     example: "lengthen the B quarter note after the C eighth note to a half note."
     type: token
+    action: changeduration2Convert
     pattern: |
       (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
-      (@note:Note|@rest:Rest|@pitchsequence:PitchSequence) @location:Location?
-      (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
-      ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
+      (@sourceEntity:EntityMusic|@everything:Everything) @location:Location?
+      (from @sourceEntity:EntityMusic)? ((to|into) @destEntity:EntityMusic)?
 
   - name: changeduration-9-interveningverb
     label: ${label}
     priority: ${rulepriority}
     example: "In measure 1, take the first quarter note and change it to a half note"
     type: token
+    action: changeduration2Convert
     pattern: |
-      (@location:Location [tag=/,/])? [tag=/^VB/] (@note:Note|@rest:Rest|@pitchsequence:PitchSequence)
+      (@location:Location [tag=/,/])? [tag=/^VB/] (@sourceEntity:EntityMusic|@everything:Everything)
       @location:Location? and (?<trigger>[word=/(?i)^(${change_duration_triggers})/]) []
-      (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
-      ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
+      (from @sourceEntity:EntityMusic)? ((to|into) @destEntity:EntityMusic)?
 
   - name: changeduration-10-passive-interveningverb
     label: ${label}
     priority: ${rulepriority}
     example: "In measure 1, the first quarter note should be taken and changed to a half note"
     type: token
+    action: changeduration2Convert
     pattern: |
-      (@location:Location [tag=/,/])? (@note:Note|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything)
+      (@location:Location [tag=/,/])? (@sourceEntity:EntityMusic|@everything:Everything)
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] and
       (?<trigger>[word=/(?i)^(${change_duration_triggers})/]) @location:Location?
-      (from (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
-      ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))? @location:Location?
+      (from @sourceEntity:EntityMusic)? ((to|into) @destEntity:EntityMusic)? @location:Location?

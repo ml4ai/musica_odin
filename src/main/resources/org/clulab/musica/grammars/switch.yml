@@ -28,7 +28,6 @@ rules:
       (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${switch_triggers})/]) @sourceEntity:EntityMusic
       and @destEntity:EntityMusic @location:Location?
 
-  # todo: how do we represent this in terms of source and destination entities?
   - name: switch-2
     label: ${label}
     priority: ${rulepriority}
@@ -36,7 +35,7 @@ rules:
     type: token
     pattern: |
       (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${switch_triggers})/])
-      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence) @location:Location?
+      @sourceEntity:EntityMusic @location:Location?
 
   - name: switch-3-passive
     label: ${label}
@@ -44,11 +43,10 @@ rules:
     example: "The first C and the first D in measure 2 should be switched"
     type: token
     pattern: |
-      (@location:Location [tag=/,/])? @sourceEntity:EntityMusic and @destEntity:EntityMusic @location:Location?
-      [word=/^(${modals})/] to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${switch_triggers})/])
-      @location:Location?
+      (@location:Location [tag=/,/])? @sourceEntity:EntityMusic and @destEntity:EntityMusic
+      @location:Location? [word=/^(${modals})/] to? [word=/^(${aux_be})/]
+      (?<trigger>[word=/(?i)^(${switch_triggers})/]) @location:Location?
 
-  # todo: how do we represent this in terms of source and destination entities?
   # could avoid having the AND as part of the specifier --> do this now
   # may need an action for this; don't worry about the rule right now
   # we should fix keep longest
@@ -58,7 +56,7 @@ rules:
     example: "The first two chords should be switched in measure 1"
     type: token
     pattern: |
-      (@location:Location [tag=/,/])? (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+      (@location:Location [tag=/,/])? @sourceEntity:EntityMusic
       @location:Location? [word=/^(${modals})/] to? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${switch_triggers})/]) @location:Location?
 
@@ -68,15 +66,17 @@ rules:
     example: "Take the first two chords in the first measure and switch them."
     type: token
     pattern: |
-      (@location:Location [tag=/,/])? [tag=/^VB/] (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
-      @location:Location? and (?<trigger>[word=/(?i)^(${switch_triggers})/]) []? @location:Location?
+      (@location:Location [tag=/,/])? [tag=/^VB/] @sourceEntity:EntityMusic
+      @location:Location? and (?<trigger>[word=/(?i)^(${switch_triggers})/])
+      []? @location:Location?
 
   - name: switch-6-interveningverb-longform
     label: ${label}
     priority: ${rulepriority}
     example: "Take the first note in the first measure and switch it with the second note in the second measure"
-      (@sourceLocation:Location [tag=/,/])? [tag=/^VB/] @sourceEntity:EntityMusic @sourceLocation:Location? and
-      (?<trigger>[word=/(?i)^(${switch_triggers})/]) []? with @destEntity:EntityMusic @destLocation:Location?
+      (@sourceLocation:Location [tag=/,/])? [tag=/^VB/] @sourceEntity:EntityMusic
+      @sourceLocation:Location? and (?<trigger>[word=/(?i)^(${switch_triggers})/])
+      []? with @destEntity:EntityMusic @destLocation:Location?
 
   - name: switch-7-passive-interveningverb
     label: ${label}
@@ -84,9 +84,9 @@ rules:
     example: "In the first measure, the first and third notes should be taken and switched"
     type: token
     pattern: |
-      (@location:Location [tag=/,/])? (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
-      @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]
-      @location:Location? and (?<trigger>[word=/(?i)^(${switch_triggers})/]) @location:Location?
+      (@location:Location [tag=/,/])? @sourceEntity:EntityMusic @location:Location?
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] @location:Location?
+      and (?<trigger>[word=/(?i)^(${switch_triggers})/]) @location:Location?
 
   - name: switch-8-passive-interveningverb-longform
     label: ${label}

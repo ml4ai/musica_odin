@@ -52,13 +52,13 @@ rules:
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${insert_triggers})/])
       @location:Location?
 
-  # todo: how to represent this? FIX ARC LABELS
+  # todo: how to handle this?
   - name: insert-6-parts-of-a-chord
     label: ${label}
     priority: ${rulepriority}
     example: "At the end of the first measure, add a C below the E to make a chord"
     type: token
     pattern: |
-      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${insert_triggers})/]) @chordPart:Note
-      (above|below|to) @chordPart:Note @location:Location? to [tag=/^VB/] @musicalEntity:Chord
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${insert_triggers})/]) @musicalEntity:Note
+      (above|below|to) @musicalEntity:Note @location:Location? to [tag=/^VB/] @musicalEntity:Chord
       @location:Location?

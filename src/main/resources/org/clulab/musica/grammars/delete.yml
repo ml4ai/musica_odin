@@ -35,16 +35,17 @@ rules:
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${delete_triggers})/]) @location:Location?
 
-  # todo: how to represent this?
+  # todo: how to handle this?
   - name: delete-3-parts-of-chord
     label: ${label}
     priority: ${rulepriority}
     example: "Delete the upper note from the chord"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${delete_triggers})/]) @note:Note (in|from) @chord:Chord @location:Location?
+      (?<trigger>[word=/(?i)^(${delete_triggers})/]) @musicalEntity:Note (in|from) @musicalEntity:Chord
+      @location:Location?
       |
-      @note:Note (in|from) @chord:Chord [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
+      @musicalEntity:Note (in|from) @musicalEntity:Chord [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${delete_triggers})/]) @location:Location?
 
   # difficult now, but eventually useful to include

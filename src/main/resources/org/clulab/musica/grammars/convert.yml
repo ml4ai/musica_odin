@@ -103,6 +103,9 @@ rules:
       (to|into) (@destEntity:Rest|@destEntity:Chord|@destEntity:PitchSequence) @location:Location?
 
   # CONVERT REST TO X
+  # todo: we can either NOT CARE if it's covert or X
+  # todo: OR we can pass this to an action--if they are different labels, keep it; otherwise, change the type
+  # todo: e.g. ensure type conversion
 
   # works for both active and passive
   - name: convert-rest-0-syntax-that-is-in

@@ -16,6 +16,8 @@ rules:
       sourceLocation:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
       destEntity:EntityMusic? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/nmod_to|nmod_into/
 
+ # todo: can find more than one SOURCE entity --> we will have an action to combine the multiple into one
+ # can either copy over missing information or not (e.g. to destEntity); could also do that in python
   - name: changeduration-1-potential-arclabels
     label: ${label}
     example: "Lengthen the note in measure 2 from a half note to a whole note"

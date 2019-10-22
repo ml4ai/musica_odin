@@ -49,6 +49,9 @@ rules:
       @location:Location?
 
   # todo: how do we represent this in terms of source and destination entities?
+  # could avoid having the AND as part of the specifier --> do this now
+  # may need an action for this; don't worry about the rule right now
+  # we should fix keep longest
   - name: switch-4-passive
     label: ${label}
     priority: ${rulepriority}

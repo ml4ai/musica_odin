@@ -44,7 +44,14 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
       case em: EventMention => em.copy(arguments = newArgs)
       case _ => ???
     }
+
+
   }
+
+  //  todo: try writing so that if you get current pitch, direction, and number of steps, it will give you what you need
+  //  you can code in the function as below; any time you need something else, do it like that
+
+    def magicFunction(pitch: String, dir: String, amount: Double): String = ???
 
 //  def transpose2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
 //

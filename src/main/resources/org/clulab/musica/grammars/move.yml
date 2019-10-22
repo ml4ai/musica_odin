@@ -15,17 +15,27 @@ rules:
       sourceLocation:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
       destLocation:Location? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/nmod_to|nmod_into|nmod_at/
 
-# todo: uncomment this once you've added updates from addActions to this branch
 #  - name: move-1
 #    label: ${label}
 #    priority: ${rulepriority}
 #    example: "Move the D in the first measure to the end of measure 5"
+#    type: token
 #    action: move2Convert
 #    pattern: |
-#      trigger = [word=/(?i)^(${move_triggers})/]
-#      musicalEntity:EntityMusic = >dobj
-#      sourceLocation:Location? = >nmod_in
-#      destLocation:Location? = >nmod_to
+#      (?<trigger>[word=/(?i)^(${move_triggers})/]) (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
+#      ((in|from) @onset:Onset)? ((to|into) (@locationrel:LocationRel)? []? @onset:Onset)?
+
+  - name: move-1
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Move the D in the first measure to the end of measure 5"
+    action: move2Convert
+    pattern: |
+      trigger = [word=/(?i)^(${move_triggers})/]
+      musicalEntity:EntityMusic = >dobj
+      sourceLocation:Location? = >nmod_in
+      destLocation:Location? = >nmod_to
+
 
   - name: move-2
     label: ${label}

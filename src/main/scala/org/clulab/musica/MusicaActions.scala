@@ -48,35 +48,40 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
   }
 
-  //  todo: try writing so that if you get current pitch, direction, and number of steps, it will give you what you need
-  //  you can code in the function as below; any time you need something else, do it like that
+  def transpose2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
 
-    def magicFunction(pitch: String, dir: String, amount: Double): String = ???
+    //  todo: try writing so that if you get current pitch, direction, and number of steps, it will give you what you need
+    //  you can code in the function as below; any time you need something else, do it like that
+    //    def pitch2Note(pitch: String, dir: String, amount: Double): String = ???
 
-//  def transpose2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+    /*
+    take a Transpose event and change it to a Convert event
+    Transpose events should contain (MusEnt, Location, Direction, Step)
+    Convert events should contain (MusEnt, StartingLoc, MusEnt, EndingLoc)
+    */
+
+    // get only the info on pitch from the mention
+    def extractPitch(m: Seq[Mention]): String = ???
+
+    // todo: the note has to be converted back to Seq[Mention] in order to work, right?
+    def pitch2Note(pitch: String, dir: String, amount: Double): Seq[Mention] = ???
+
+//    def pitch2int(s: String): Int = {
+//      // this is unnecessarily abstracted, but doing this for now to see more easily
 //
-//    /*
-//    take a Transpose event and change it to a Convert event
-//    Transpose events should contain (MusEnt, Location, Direction, Step)
-//    Convert events should contain (MusEnt, StartingLoc, MusEnt, EndingLoc)
-//    */
+//      // mini-LUT built for semitones difference in treble clef; starts at middle C, goes up to G
+//      // octave numbering starts at C
+//      // true for key of C -- if we are in other keys this may not be the same
+//      // e.g. in key of G, if 'F' is written, it could be F#
+//      // does not include sharps or flats
+//      val chart = Map("C4" -> 0, "D4" -> 2,"E4" -> 4,"F4" -> 5, "G4" -> 7, "A4" -> 9, "B4" -> 11,
+//        "C5" -> 12, "D5" -> 14, "E5" -> 16, "F5" -> 17, "G5" -> 19)
 //
-////    def pitch2int(s: String): Int = {
-////      // this is unnecessarily abstracted, but doing this for now to see more easily
-////
-////      // mini-LUT built for semitones difference in treble clef; starts at middle C, goes up to G
-////      // octave numbering starts at C
-////      // true for key of C -- if we are in other keys this may not be the same
-////      // e.g. in key of G, if 'F' is written, it could be F#
-////      // does not include sharps or flats
-////      val chart = Map("C4" -> 0, "D4" -> 2,"E4" -> 4,"F4" -> 5, "G4" -> 7, "A4" -> 9, "B4" -> 11,
-////        "C5" -> 12, "D5" -> 14, "E5" -> 16, "F5" -> 17, "G5" -> 19)
-////
-////      // return the value
-////      chart(s)
-////
-////    }
+//      // return the value
+//      chart(s)
 //
+//    }
+
 //    def dirStepEnt2Ent(m: Mention): (Option[String], Option[String], Option[String], Option[String]) = {
 //      // take direction and step plus starting MusEnt and calculate ending MusEnt
 //      // needs LUT?
@@ -101,26 +106,54 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 //      (musEnt, location, endEnt, location)
 //
 //    }
-//
-//    //iterate through the mentions in the sequence
-//    for (m <- mentions) {
-//
-//      // if mention is of type Transpose
-//      if (m.label == "Transpose") {
-//
-//        // call dirStepEnt2Ent
-//        val (musEnt, startLocation, endEnt, endLocation) = dirStepEnt2Ent(m)
-//        // todo: put this into the format for a Convert event
-//        val convertAttachment = Convert(musEnt, startLocation, endEnt, endLocation)
-//
-//        // return updated Convert Event with StartingLoc and EndingLoc the same
-//        // tried yield syntax as in the below example, but it didn't work properly
-//        m.withAttachment(convertAttachment)
-//      }
-//    }
-//
-//
-//  }
+
+    val out = new ArrayBuffer[Mention]
+
+    //iterate through the mentions in the sequence
+    for (m <- mentions) {
+
+      // if mention is of type Transpose
+      if (m.label == "Transpose") {
+
+        val musEnt = m.arguments(MUS_ENT)
+        val location = m.arguments.getOrElse(LOC, Seq())
+        val direction = m.arguments.getOrElse("direction", Seq())
+        val step = m.arguments.getOrElse("step", Seq())
+
+        val pitch = extractPitch(musEnt)
+
+        // todo: mention.head.text might not be the right (or best) way to do this...
+        val destEnt = pitch2Note(pitch, direction.head.text, step.head.text.toDouble)
+
+        // map to a new set of args
+        val newArgs = Map(SRC_ENT -> musEnt, SRC_LOC -> location, DEST_ENT -> destEnt, DEST_LOC -> location)
+        val compositionalFoundBy = m.foundBy + "++transpose2Convert"
+
+        // change mention to a CONVERT mention
+        val convertMention = m match {
+          case em: EventMention => {
+            val newLabels = taxonomy.hypernymsFor("Convert")
+            val newTrigger = em.trigger.copy(labels = newLabels)
+            em.copy(
+              labels = newLabels,
+              trigger = newTrigger,
+              arguments = newArgs,
+              foundBy = compositionalFoundBy)
+          }
+          case rm: RelationMention =>
+            rm.copy(
+              labels = taxonomy.hypernymsFor("Convert"),
+              arguments = newArgs,
+              foundBy = compositionalFoundBy)
+          case _ => ???
+        }
+
+        out.append(convertMention)
+      }
+    }
+
+    out
+  }
 
   // todo: look at this one first! this should be an easy one to start with
   def move2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
@@ -205,8 +238,8 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
         // get arg values
         val srcEnt = m.arguments(SRC_ENT)
-        val location = m.arguments(LOC)
-        val destEnt = m.arguments(DEST_ENT)
+        val location = m.arguments.getOrElse(LOC, Seq())
+        val destEnt = m.arguments.getOrElse(DEST_ENT, Seq())
 
         // map to a new set of args
         val newArgs = Map(SRC_ENT -> srcEnt, SRC_LOC -> location, DEST_ENT -> destEnt, DEST_LOC -> location)
@@ -254,8 +287,8 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
         // get arg values
         val srcEnt = m.arguments(SRC_ENT)
-        val location = m.arguments(LOC)
-        val destEnt = m.arguments(DEST_ENT)
+        val location = m.arguments.getOrElse(LOC, Seq())
+        val destEnt = m.arguments.getOrElse(DEST_ENT, Seq())
 
         // map to a new set of args
         val newArgs = Map(SRC_ENT -> srcEnt, SRC_LOC -> location, DEST_ENT -> destEnt, DEST_LOC -> location)
@@ -291,7 +324,7 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
     /*
     take a Copy event and change it to an Insert event
-    Copy events should contain (MusEnt, SourceLoc, DestLoc) // todo: add Freq to copy event
+    Copy events should contain (MusEnt, SourceLoc, DestLoc, Frequency)
     Insert events should contain (MusEnt, Location, Frequency)
      */
 
@@ -303,8 +336,8 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
         // get arg values
         val musEnt = m.arguments(MUS_ENT)
-        val location = m.arguments(DEST_LOC)
-        val freq = m.arguments(FREQ) // todo: this isn't in the mention!
+        val location = m.arguments.getOrElse(DEST_LOC, Seq())
+        val freq = m.arguments.getOrElse(FREQ, Seq())
 
         // map to a new set of args
         val newArgs = Map(MUS_ENT -> musEnt, LOC -> location, FREQ -> freq)
@@ -351,8 +384,8 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
         // get arg values
         val musEnt = m.arguments(MUS_ENT)
-        val location = m.arguments(DEST_LOC)
-        val freq = m.arguments(FREQ)
+        val location = m.arguments.getOrElse(DEST_LOC, Seq())
+        val freq = m.arguments.getOrElse(FREQ, Seq())
 
         // map to a new set of args
         val newArgs = Map(MUS_ENT -> musEnt, LOC -> location, FREQ -> freq)

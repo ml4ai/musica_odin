@@ -18,10 +18,6 @@ object AtomicObjects {
     def toMentionString: String = toString
   }
 
-//  case class Chord(c: String) extends MusicaObj {
-//    def toMentionString: String = toString
-//  }
-
   case class ChordType(c: String) extends MusicaObj {
     def toMentionString: String = toString
   }
@@ -38,11 +34,11 @@ object AtomicObjects {
     def toMentionString: String = toString
   }
 
-  case class LocationAbs(l: String) extends MusicaObj {
+  case class Frequency(f: String) extends MusicaObj {
     def toMentionString: String = toString
   }
 
-  case class LocationRel(l: String) extends MusicaObj {
+  case class LocationTerm(l: String) extends MusicaObj {
     def toMentionString: String = toString
   }
 

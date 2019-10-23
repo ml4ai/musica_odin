@@ -282,56 +282,12 @@ rules:
         (@specifier:Specifier)? (@cardinality:Cardinality+)? @duration:Proportion?
         (?<trigger> [word=/(?i)^note/]) @pitch:Pitch
 
-#    - name: note-6-underspecified
-#      label: Note
-#      example: "the quarter B"
-#      priority: 3
+#    - name: location-interval
+#      label: LocationInterval
+#      priority: 5
 #      type: token
 #      pattern: |
-
-
-#    - name: onset-1
-#      label: Onset
-#      priority: 4
-#      type: token
-#      pattern: |  # what does []? indicate?
-#        ((@measure:Measure []?)? @beat:Beat |
-#        @measure:Measure ([]? @beat:Beat)? |
-#        (@beat:Beat []?)? @measure:Measure |
-#        @beat:Beat ([]? @measure:Measure)?)
-#
-#    - name: onset-2
-#      label: Onset
-#      priority: 4
-#      type: token
-#      pattern: |
-#        @measure:Measure []? @beat:Beat |
-#        @beat:Beat []? @measure:Measure
-#
-#    - name: offset-1
-#      label: Offset
-#      priority: 4
-#      type: token
-#      pattern: |  # what does []? indicate?
-#        ((@measure:Measure []?)? @beat:Beat |
-#        @measure:Measure ([]? @beat:Beat)? |
-#        (@beat:Beat []?)? @measure:Measure |
-#        @beat:Beat ([]? @measure:Measure)?)
-#
-#    - name: offset-2
-#      label: Offset
-#      priority: 4
-#      type: token
-#      pattern: |
-#        @measure:Measure []? @beat:Beat |
-#        @beat:Beat []? @measure:Measure
-
-    - name: location-interval
-      label: LocationInterval
-      priority: 5
-      type: token
-      pattern: |
-        (?<trigger> [word=/(?i)^between/]) @onset:Onset and @offset:Offset
+#        (?<trigger> [word=/(?i)^between/]) @onset:Onset and @offset:Offset
 
     # jc added
     - name: rest-1

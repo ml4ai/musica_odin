@@ -4,43 +4,115 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+  # todo: add 'frequency' to this after updating actions
+  - name: copy-0-syntax
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Copy the D in the first measure to the end of measure 5"
+    action: copy2Insert
+    pattern: |
+      trigger = [word=/(?i)^(${copy_triggers})/]
+      musicalEntity: EntityMusic = >dobj
+      sourceLocation: Location? = >/nmod_in|nmod_from/
+      destLocation: Location? = >/nmod_to|nmod_into/
+
+  # not providing good coverage, so created a similar syntax rule--leaving this here
+  # in case it's easy to fix later on
+  - name: copy-0b-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Copy the quarter note that is in the first measure to the end of the score"
+    action: copy2Insert
+    pattern:
+      trigger = [word=/(?i)^(${copy_triggers})/]
+      musicalEntity:EntityMusic = >dobj
+      sourceLocation:Location = >dobj <nsubj (>/nmod_in|nmod_at/)?
+      destLocation:Location? = >dobj <nsubj (>/nmod_in|nmod_at/)? >/nmod_to|nmod_into/
+
+  - name: copy-0c-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Copy the quarter note that is in the first measure to the end of the score"
+    type: token
+    action: copy2Insert
+    pattern: |
+      (?<trigger>[word=/(?i)^(${copy_triggers})/]) @musicalEntity:EntityMusic (which|that)
+      ([word=/(?i)^(${aux_be})/]|[word=/^appear/]) @sourceLocation:Location @destLocation:Location?
+      @frequency:Frequency?
+
+  - name: copy-0d-passive-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Copy the quarter note that is in the first measure to the end of the score"
+    type: token
+    action: copy2Insert
+    pattern: |
+      @musicalEntity:EntityMusic (which|that) ([word=/(?i)^(${aux_be})/]|[word=/^appear/])
+      @sourceLocation:Location [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
+      (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location? @frequency:Frequency?
+
   - name: copy-1
     label: ${label}
     priority: ${rulepriority}
     example: "Copy the D in the first measure to the end of measure 5"
     type: token
+    action: copy2Insert
     pattern: |
       (?<trigger>[word=/(?i)^(${copy_triggers})/])
-      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure|@everything:Everything)
-      ((in|from) @onset:Onset)? ((to|into) (@locationrel:LocationRel)? []? @onset:Onset)?
-
-  - name: copy-2-rel-location
-    label: ${label}
-    priority: ${rulepriority}
-    example: "copy everything in the first two measures"
-    type: token
-    pattern: |
-      (?<trigger>[word=/(?i)^(${copy_triggers})/])
-      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure|@everything:Everything)
-      @locationrel:LocationRel (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence)
-      ((in|from) @onset:Onset)? ((to|into) @locationabs:LocationAbs)?
-
-  - name: copy-3-to-abs-location
-    label: ${label}
-    priority: ${rulepriority}
-    example: "Copy everything to the end of the score"
-    type: token
-    pattern: |
-      (?<trigger>[word=/(?i)^(${copy_triggers})/])
-      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@measure:Measure|@everything:Everything)
-      ((to|into) @locationabs:LocationAbs)?
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @sourceLocation:Location? @destLocation:Location? @frequency:Frequency?
 
   - name: copy-2-passive
     label: ${label}
     priority: ${rulepriority}
     example: "The D in the first measure should be copied to the end of measure 5"
     type: token
+    action: copy2Insert
     pattern: |
-      (@note:Note|@chord:Chord|@rest:Rest|@pitchsequence:PitchSequence|@everything:Everything)
-      ((in|from) @onset:Onset)? []{0,2} [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${copy_triggers})/])
-      ((to|into) (@locationrel:LocationRel)? []? @onset:Onset)?
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
+      (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location? @frequency:Frequency?
+
+  - name: copy-3-underspecified
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In the first measure, copy the first three notes"
+    type: token
+    action: copy2Insert
+    pattern: |
+      @sourceLocation:Location [tag=/,/]? (?<trigger>[word=/(?i)^(${copy_triggers})/])
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything) @frequency:Frequency?
+
+  - name: copy-4-passive-underspecified
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In the first measure, the first three notes should be copied"
+    type: token
+    action: copy2Insert
+    pattern: |
+      @sourceLocation:Location [tag=/,/]? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${copy_triggers})/])
+      @frequency:Frequency?
+
+  - name: copy-5-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In measure 1, take the first quarter note and copy it to the end of the second measure"
+    type: token
+    action: copy2Insert
+    pattern: |
+      (@sourceLocation:Location [tag=/,/])? [tag=/^VB/]
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @sourceLocation:Location? and (?<trigger>[word=/(?i)^(${copy_triggers})/]) []
+      @destLocation:Location? @frequency:Frequency?
+
+  - name: copy-6-passive-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The first quarter note in measure 1 should be taken and copied to the end of the second measure"
+    type: token
+    action: copy2Insert
+    pattern: |
+      (@sourceLocation:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] @sourceLocation:Location?
+      and (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location? @frequency:Frequency?

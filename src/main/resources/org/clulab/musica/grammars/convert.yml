@@ -4,26 +4,60 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
-  #CONVERT NOTE TO X
-  - name: convert-note-1
+# RE typing (previously convert-note, convert-chord, and convert-rest)
+  # todo: we can either NOT CARE if it's covert or X
+  # todo: OR we can pass this to an action--if they are different labels, keep it; otherwise, change the type
+  # todo: e.g. ensure type conversion
+
+  # works for both active and passive
+  - name: convert-0a-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Change the quarter note that is in the first measure to a quarter rest"
+    pattern:
+      trigger = [word=/(?i)^(${change_duration_triggers})/]
+      sourceEntity:EntityMusic = >/dobj|nsubjpass/
+      sourceLocation:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
+      destEntity:EntityMusic? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/nmod_to|nmod_into/
+
+  - name: convert-0b-syntax
     label: ${label}
     priority: ${rulepriority}
     example: "Convert the quarter note in measure 1 into a quarter rest"
+    pattern: |
+      trigger = [word=/(?i)^(${convert_triggers})/]
+      sourceEntity: Note = >dobj
+      location: Location = >/nmod_in|nmod_at/
+      destEntity: EntityMusic? = >/nmod_into|nmod_to/
+
+  - name: convert-0c-syntax-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Convert the quarter note in measure 1 into a quarter rest"
+    pattern: |
+      trigger = [word=/(?i)^(${convert_triggers})/]
+      sourceEntity: Note = >nsubjpass
+      location: Location = (>nsubjpass)? >/nmod_in|nmod_at/
+      destEntity: EntityMusic? = >/nmod_into|nmod_to/
+
+  - name: convert-1
+    label: ${label}
+    priority: ${rulepriority}
     type: token
     pattern: |
-      ([]? @onset:Onset [tag=/,/]?)?
-      (?<trigger>[word=/(?i)^(${convert_triggers})/]) @note:Note (@locationrel:LocationRel []?
-      (@note:Note|@rest:Rest|@chord:Chord))? ([]? @onset:Onset)? (into|to)
-      (@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) ([]? @onset:Onset)?
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${convert_triggers})/])
+      @musicalEntity:EntityMusic @location:Location? (from @sourceEntity:EntityMusic)? (to|into)
+      @destEntity:EntityMusic @location:Location?
 
-  - name: convert-note-2-conjunction
+  # todo: will need to be handled later by all event types
+  - name: convert-2-conjunction
     label: ${label}
     priority: ${rulepriority}
     example: "convert the G in measure 1 to an augmented second and the F into a rest"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${convert_triggers})/]) []{2,10} and @note:Note (to|into)
-      (@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) []? @onset:Onset?
+      (?<trigger>[word=/(?i)^(${convert_triggers})/]) []{2,10} and @sourceEntity:EntityMusic
+      (to|into) @destEntity:EntityMusic @location:Location?
 
   - name: convert-note-3-passive
     label: ${label}
@@ -31,69 +65,27 @@ rules:
     example: "the G in measure 1 should be converted into a quarter rest"
     type: token
     pattern: |
-      ([]? @onset:Onset)? [tag=/,/]? @note:Note ([]? @onset:Onset)? should? [word=/^(${aux_be})/]
-      (?<trigger>[word=/(?i)^(${convert_triggers})/])
-      (to|into) (@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) ([]? @onset:Onset)?
+      (@location:Location [tag=/,/]?)? @sourceEntity:EntityMusic @location:Location?
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${convert_triggers})/])
+      (to|into) @destEntity:EntityMusic @location:Location?
 
-  # CONVERT REST TO X
-  - name: convert-rest-1
+  - name: convert-note-4-interveningverb
     label: ${label}
     priority: ${rulepriority}
-    example: "Convert the quarter note in measure 1 into a quarter rest"
+    example: "In measure 1, take the G and convert it into a quarter rest."
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${convert_triggers})/]) @rest:Rest
-      (@locationrel:LocationRel []? (@note:Note|@rest:Rest|@chord:Chord))?
-      ([]? @onset:Onset)? (into|to) (@note:Note|@chord:Chord|@pitchsequence:PitchSequence)
+      (@location:Location [tag=/,/]?)? [tag=/^VB/] @sourceEntity:EntityMusic
+      @location:Location? and (?<trigger>[word=/(?i)^(${convert_triggers})/]) []? (to|into)
+      @destEntity:EntityMusic @location:Location?
 
-  - name: convert-rest-2-conjunction
+  - name: convert-note-5-passive-interveningverb
     label: ${label}
     priority: ${rulepriority}
-    example: "convert the G in measure 1 to an augmented second and the F into a rest"
+    example: "The G in measure 1 should be taken and converted into a quarter rest"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${convert_triggers})/]) []{2,10} and
-      (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) (to|into)
-      (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) []? @onset:Onset?
-
-  - name: convert-rest-3-passive
-    label: ${label}
-    priority: ${rulepriority}
-    example: "the G in measure 1 should be converted into a quarter rest"
-    type: token
-    pattern: |
-      ([]? @onset:Onset)? @rest:Rest
-      ([]? @onset:Onset)? should? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${convert_triggers})/])
-      (to|into) (@note:Note|@chord:Chord|@pitchsequence:PitchSequence) ([]? @onset:Onset)?
-
-  # CONVERT CHORD TO REST
-  # todo: Determine if changing from one chord type to another is a 'convert' event
-  # currently written as though it is
-  - name: convert-chord-1
-    label: ${label}
-    priority: ${rulepriority}
-    example: "Convert the quarter note in measure 1 into a quarter rest"
-    type: token
-    pattern: |
-      (?<trigger>[word=/(?i)^(${convert_triggers})/]) @chord:Chord
-      (@locationrel:LocationRel []? (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence))?
-      ([]? @onset:Onset)? (into|to) (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence)
-
-  - name: convert-chord-2-conjunction
-    label: ${label}
-    priority: ${rulepriority}
-    example: "convert the G in measure 1 to an augmented second and the F into a rest"
-    type: token
-    pattern: |
-      (?<trigger>[word=/(?i)^(${convert_triggers})/]) []{2,10} and @chord:Chord (to|into)
-      (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) []? @onset:Onset?
-
-  - name: convert-chord-3-passive
-    label: ${label}
-    priority: ${rulepriority}
-    example: "the G in measure 1 should be converted into a quarter rest"
-    type: token
-    pattern: |
-      ([]? @onset:Onset)? @chord:Chord ([]? @onset:Onset)? should? [word=/^(${aux_be})/]
-      (?<trigger>[word=/(?i)^(${convert_triggers})/]) (to|into)
-      (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence) ([]? @onset:Onset)?
+      (@location:Location [tag=/,/]?)? @sourceEntity:EntityMusic @location:Location?
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] and
+      (?<trigger>[word=/(?i)^(${convert_triggers})/]) []? (to|into)
+      @destEntity:EntityMusic @location:Location?

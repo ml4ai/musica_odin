@@ -15,6 +15,7 @@ rules:
       musicalEntity: EntityMusic = >dobj
       sourceLocation: Location? = >/nmod_in|nmod_from/
       destLocation: Location? = >/nmod_to|nmod_into/
+      frequency:Frequency? = >advmod|((>/nmod*/+)? /nmod*/)
 
   # not providing good coverage, so created a similar syntax rule--leaving this here
   # in case it's easy to fix later on
@@ -28,6 +29,7 @@ rules:
       musicalEntity:EntityMusic = >dobj
       sourceLocation:Location = >dobj <nsubj (>/nmod_in|nmod_at/)?
       destLocation:Location? = >dobj <nsubj (>/nmod_in|nmod_at/)? >/nmod_to|nmod_into/
+      frequency:Frequency? = >/advmod|nmod:tmod/
 
   - name: copy-0c-that-is-in
     label: ${label}

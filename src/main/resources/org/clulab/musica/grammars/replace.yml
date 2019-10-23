@@ -3,3 +3,60 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 
 rules:
+
+  # works for both active and passive
+  - name: replace-0-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Replace the quarter note that is in the first measure with a half rest"
+    action: repeat2Convert
+    pattern:
+      trigger = [word=/(?i)^(${replace_triggers})/]
+      sourceEntity:EntityMusic = >/dobj|nsubjpass/
+      sourceLocation:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
+      destEntity:EntityMusic? = (>dobj <nsubj (>/nmod_in|nmod_at/)?)? >/nmod_with|nmod_agent/
+
+  - name: replace-1
+    label: ${label}
+    priority: ${rulepriority}
+    example: "replace the A in measure 1 with a B"
+    type: token
+    action: repeat2Convert
+    pattern: |
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${replace_triggers})/])
+      (@sourceEntity:EntityMusic|@everything:Everything) @location:Location? (with|by)
+      @destEntity:EntityMusic @location:Location?
+
+  - name: replace-2-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The A in measure 1 should be replaced with a B"
+    type: token
+    action: repeat2Convert
+    pattern: |
+      (@location:Location [tag=/,/]?)? (@sourceEntity:EntityMusic|@everything:Everything) @location:Location?
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/(?i)^(${replace_triggers})/]) (with|by)
+      @destEntity:EntityMusic @location:Location?
+
+  - name: replace-3-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Take the C quarter note in the first measure and replace it with a quarter rest"
+    type: token
+    action: repeat2Convert
+    pattern: |
+      (@location:Location [tag=/,/])? [tag=/^VB/] (@everything:Everything|@sourceEntity:EntityMusic)
+      @location:Location? and (?<trigger>[word=/(?i)^(${replace_triggers})/]) []? (with|by) @destEntity:EntityMusic
+      @location:Location?
+
+  - name: replace-4-passive-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The C quarter note should be taken from the first measure and replaced with a quarter rest"
+    type: token
+    action: repeat2Convert
+    pattern: |
+      (@location:Location [tag=/,/])? (@everything:Everything|@sourceEntity:EntityMusic)
+      @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]
+      @location:Location? and (?<trigger>[word=/(?i)^(${replace_triggers})/]) (with|by) @destEntity:EntityMusic
+      @location:Location?

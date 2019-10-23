@@ -3,3 +3,53 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 
 rules:
+
+  # works for both active and passive
+  - name: reverse-0-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Reverse all the notes that are in the first measure"
+    pattern:
+      trigger = [word=/(?i)^(${reverse_triggers})/]
+      musicalEntity:EntityMusic = >/dobj|nsubjpass/
+      location:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
+
+  - name: reverse-1
+    label: ${label}
+    priority: ${rulepriority}
+    example: "reverse the order of the notes in the first two measures"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${reverse_triggers})/]) (the order of)?
+      (@musicalEntity:Note|@musicalEntity:Chord|@everything:Everything) @location:Location?
+
+  - name: reverse-2-passive
+    label: ${label}
+    priority: ${rulepriority}
+    example: "the order of the notes in the first two measures should be reversed"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/]?)?  (the order of)?
+      (@musicalEntity:Note|@musicalEntity:Chord|@everything:Everything) @location:Location?
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/(?i)^(${reverse_triggers})/])
+      @location:Location?
+
+  - name: reverse-3-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Take the notes in the first measure and reverse their order."
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/])? [tag=/^VB/] (@musicalEntity:Note|@musicalEntity:Chord|@everything:Everything)
+      @location:Location? and (?<trigger>[word=/(?i)^(${reverse_triggers})/]) ([] order?)? @location:Location?
+
+  - name: reverse-4-passive-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In the first measure, the notes should be taken and their order should be reversed"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/])? (@musicalEntity:Note|@musicalEntity:Chord|@everything:Everything)
+      @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]
+      @location:Location? and ([] order?) [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
+      (?<trigger>[word=/(?i)^(${reverse_triggers})/]) @location:Location?

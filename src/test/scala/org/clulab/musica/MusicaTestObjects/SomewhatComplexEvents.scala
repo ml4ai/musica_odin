@@ -5,6 +5,8 @@ import org.clulab.musica.MusicaTestObjects.IntermediateEvents._
 
 object SomewhatComplexEvents {
 
+  // todo: this entire file might not be required
+
   case class SourceEntity(musicalEntity: Option[MusicalEntity] = None) extends MusicaObj
   {
     def toMentionString: String = toString

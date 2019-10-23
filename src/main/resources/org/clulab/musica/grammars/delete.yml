@@ -4,29 +4,25 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+  # works for both active and passive
+  - name: delete-0-syntax-that-is-in
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Delete the quarter note that is in the first measure"
+    pattern:
+      trigger = [word=/(?i)^(${delete_triggers})/]
+      sourceEntity:EntityMusic = >/dobj|nsubjpass/
+      location:Location = >/dobj|nsubjpass/ <nsubj (>/nmod_in|nmod_at/)?
+
   - name: delete-1
     label: ${label}
     priority: ${rulepriority}
     example: "Delete everything in the second bar"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${delete_triggers})/])
-      (@everything:Everything|@note:Note|@rest:Rest|@chord:Chord|@pitch:Pitch|@measure:Measure)
-      (@locationrel:LocationRel (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence)?|
-      @locationabs:LocationAbs)? ([]? @onset:Onset)?
-
-#  - name: Delete-rule-passive-syntax
-#    label: ${label}
-#    priority: ${rulepriority}
-#    example: "The first quarter note in measure 1 is deleted"
-#    pattern: |
-#      trigger = [word=/(?i)^${delete_triggers}/]
-#      everything: Everything? = >nsubjpass
-#      note: Note? = >nsubjpass
-#      chord: Chord? = >nsubjpass
-#      measure: Measure? = >nsubjpass
-#      rest: Rest? = >nsubjpass
-#      onset: Onset = >nsubjpass >/nmod_*/
+      (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${delete_triggers})/])
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @location:Location?
 
   - name: delete-2-passive
     label: ${label}
@@ -34,35 +30,60 @@ rules:
     example: "The first quarter note should be deleted"
     type: token
     pattern: |
-      (@everything:Everything|@note:Note|@rest:Rest|@chord:Chord|@pitch:Pitch|@measure:Measure)
-      ((@locationrel:LocationRel (@note:Note|@rest:Rest|@chord:Chord|@pitchsequence:PitchSequence)?)|
-      @locationabs:LocationAbs)? ([]? @onset:Onset)? should? (${aux_be})
-      (?<trigger>[word=/(?i)^(${delete_triggers})/])
+      (@location:Location [tag=/,/])?
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
+      (?<trigger>[word=/(?i)^(${delete_triggers})/]) @location:Location?
 
-
+  # todo: how to handle this?
   - name: delete-3-parts-of-chord
     label: ${label}
     priority: ${rulepriority}
     example: "Delete the upper note from the chord"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${delete_triggers})/]) @note:Note (in|from) @chord:Chord
+      (?<trigger>[word=/(?i)^(${delete_triggers})/]) @musicalEntity:Note (in|from) @musicalEntity:Chord
+      @location:Location?
       |
-      @note:Note (in|from) @chord:Chord (should)? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${delete_triggers})/])
+      @musicalEntity:Note (in|from) @musicalEntity:Chord [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
+      (?<trigger>[word=/(?i)^(${delete_triggers})/]) @location:Location?
 
+  # difficult now, but eventually useful to include
   - name: delete-4-note-from-set
     label: ${label}
     priority: ${rulepriority}
     example: "Delete the first of those two eighth notes"
     type: token
     pattern: |
-      (?<trigger>[word=/(?i)^(${delete_triggers})/]) @specifier:Specifier of (@note:Note|@chord:Chord|@rest:Rest)
+      (?<trigger>[word=/(?i)^(${delete_triggers})/]) @specifier:Specifier of
+      (@musicalEntity:Note|@musicalEntity:Chord|@musicalEntity:Rest) @location:Location?
 
+  # this may be too difficult for us to push through the pipeline right now, but should be useful later
   - name: delete-5-note-from-set-passive
     label: ${label}
     priority: ${rulepriority}
     example: "The first of those two eighth notes should be deleted"
     type: token
     pattern: |
-      @specifier:Specifier of (@note:Note|@chord:Chord|@rest:Rest) should? [word=/^(${aux_be})/]
-      (?<trigger>[word=/(?i)^(${delete_triggers})/])
+      @specifier:Specifier of (@musicalEntity:Note|@musicalEntity:Chord|@musicalEntity:Rest) @location:Location?
+      [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${delete_triggers})/])
+
+  - name: delete-6-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "In measure 1, take the first quarter note and delete it"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/])? [tag=/^VB/]
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @location:Location? and (?<trigger>[word=/(?i)^(${delete_triggers})/]) @location:Location?
+
+  - name: delete-7-passive-interveningverb
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The first quarter note should be taken and deleted from measure 1"
+    type: token
+    pattern: |
+      (@location:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] @location:Location?
+      and (?<trigger>[word=/(?i)^(${delete_triggers})/]) @location:Location?

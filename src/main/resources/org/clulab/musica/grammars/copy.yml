@@ -4,6 +4,7 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
+  # todo: add 'frequency' to this after updating actions
   - name: copy-0-syntax
     label: ${label}
     priority: ${rulepriority}
@@ -37,6 +38,7 @@ rules:
     pattern: |
       (?<trigger>[word=/(?i)^(${copy_triggers})/]) @musicalEntity:EntityMusic (which|that)
       ([word=/(?i)^(${aux_be})/]|[word=/^appear/]) @sourceLocation:Location @destLocation:Location?
+      @frequency:Frequency?
 
   - name: copy-0d-passive-that-is-in
     label: ${label}
@@ -47,7 +49,7 @@ rules:
     pattern: |
       @musicalEntity:EntityMusic (which|that) ([word=/(?i)^(${aux_be})/]|[word=/^appear/])
       @sourceLocation:Location [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
-      (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location?
+      (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location? @frequency:Frequency?
 
   - name: copy-1
     label: ${label}
@@ -58,7 +60,7 @@ rules:
     pattern: |
       (?<trigger>[word=/(?i)^(${copy_triggers})/])
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
-      @sourceLocation:Location? @destLocation:Location?
+      @sourceLocation:Location? @destLocation:Location? @frequency:Frequency?
 
   - name: copy-2-passive
     label: ${label}
@@ -69,7 +71,7 @@ rules:
     pattern: |
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
-      (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location?
+      (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location? @frequency:Frequency?
 
   - name: copy-3-underspecified
     label: ${label}
@@ -79,7 +81,7 @@ rules:
     action: copy2Insert
     pattern: |
       @sourceLocation:Location [tag=/,/]? (?<trigger>[word=/(?i)^(${copy_triggers})/])
-      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything) @frequency:Frequency?
 
   - name: copy-4-passive-underspecified
     label: ${label}
@@ -90,6 +92,7 @@ rules:
     pattern: |
       @sourceLocation:Location [tag=/,/]? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${copy_triggers})/])
+      @frequency:Frequency?
 
   - name: copy-5-interveningverb
     label: ${label}
@@ -101,7 +104,7 @@ rules:
       (@sourceLocation:Location [tag=/,/])? [tag=/^VB/]
       (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @sourceLocation:Location? and (?<trigger>[word=/(?i)^(${copy_triggers})/]) []
-      @destLocation:Location?
+      @destLocation:Location? @frequency:Frequency?
 
   - name: copy-6-passive-interveningverb
     label: ${label}
@@ -112,4 +115,4 @@ rules:
     pattern: |
       (@sourceLocation:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
       @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] @sourceLocation:Location?
-      and (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location?
+      and (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location? @frequency:Frequency?

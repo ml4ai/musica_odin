@@ -74,6 +74,8 @@ rules:
     label: ${label}
     priority: ${rulepriority}
     example: "Take the first note in the first measure and switch it with the second note in the second measure"
+    type: token
+    pattern: |
       (@sourceLocation:Location [tag=/,/])? [tag=/^VB/] @sourceEntity:EntityMusic
       @sourceLocation:Location? and (?<trigger>[word=/(?i)^(${switch_triggers})/])
       []? with @destEntity:EntityMusic @destLocation:Location?

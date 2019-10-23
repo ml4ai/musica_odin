@@ -64,14 +64,8 @@ object TestUtils {
       // These should all be notes...
       ms.foreach(m => m.label should be (label))
 
-//      // allow for 2 notes to be found
-      if (label == "Note") {
-        ms should (have length 2 or have length 1)
-      }
-      else {
 //         There shouldn't be any extra notes that we didn't want...
       ms should have length 1
-      }
 
       // Make sure each of the desired Notes is in the list of notes
       val mentionsAsStrings = ms.map(mentionToString)
@@ -84,120 +78,48 @@ object TestUtils {
     // ----------------------------------------------------
 
 
-    def testTransposeEvent(m: Mention, desired: Transpose) = {
-      // Example: Transpose the C4 quarter note on beat 1 of measure 1 up 5 half steps
-
-      // Test the Note
-      if (desired.note.nonEmpty) {
-        val noteArgs = m.arguments.getOrElse("note", Seq())
-        shouldHaveDesired("Note", noteArgs, desired.note.get)
-      }
-
-//      if (desired.original_note.nonEmpty) {
-//        val noteArgs = m.arguments.getOrElse("note", Seq())
-//        shouldHaveDesired("Note", noteArgs, desired.original_note.get)
-//      }
-//
-//      if (desired.final_note.nonEmpty) {
-//        val noteArgs = m.arguments.getOrElse("final_note", Seq())
-//        shouldHaveDesired("Note", noteArgs, desired.final_note.get)
-//      }
-
-//      if (desired.generic_note.nonEmpty) {
-//        val noteArgs = m.arguments.getOrElse("note2", Seq())
-//        shouldHaveDesired("Note2", noteArgs, desired.generic_note.get)
-//      }
-
-      // Test the Onset
-      if (desired.onset.nonEmpty) {
-        val onsetArgs = m.arguments.getOrElse("onset", Seq())
-        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
-      }
-
-      // Test the direction
-      if (desired.direction.nonEmpty) {
-        val directionArgs = m.arguments.getOrElse("direction", Seq())
-        shouldHaveDesired("Direction", directionArgs, desired.direction.get)
-      }
-
-      // Test the Step
-      if (desired.step.nonEmpty) {
-        val stepArgs = m.arguments.getOrElse("step", Seq())
-        shouldHaveDesired("Step", stepArgs, desired.step.get)
-      }
-
-      if (desired.chord.nonEmpty) {
-        val chordArgs = m.arguments.getOrElse("chord", Seq())
-        shouldHaveDesired("Chord", chordArgs, desired.chord.get)
-      }
-
-    }
-
-
-    def testChangeDurationEvent(m: Mention, desired: ChangeDuration) = {
-      // Example: Transpose the C4 quarter note on beat 1 of measure 1 up 5 half steps
-
-      // Test the Note
-      if (desired.note.nonEmpty) {
-        val noteArgs = m.arguments.getOrElse("note", Seq())
-        shouldHaveDesired("Note", noteArgs, desired.note.get)
-      }
-
-      // Test the Onset
-      if (desired.onset.nonEmpty) {
-        val onsetArgs = m.arguments.getOrElse("onset", Seq())
-        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
-      }
-
-      if (desired.rest.nonEmpty) {
-        val restArgs = m.arguments.getOrElse("rest", Seq())
-        shouldHaveDesired("Rest", restArgs, desired.rest.get)
-      }
-
-      // Test the optional second Note
-//      if (desired.note2.nonEmpty) {
-//        val noteArgs = m.arguments.getOrElse("note2", Seq())
-//        shouldHaveDesired("Note", noteArgs, desired.note.get)
-//      }
-    }
-
-
     def testConvertEvent(m: Mention, desired: Convert) = {
       // Example: Convert the quarter note to a quarter rest
 
-      // Test the Note
-      if (desired.note.nonEmpty) {
-        val noteArgs = m.arguments.getOrElse("note", Seq())
-        shouldHaveDesired("Note", noteArgs, desired.note.get)
+      // Test the source entity
+      if (desired.sourceEntity.nonEmpty) {
+        val sourceEntArgs = m.arguments.getOrElse("sourceEntity", Seq())
+        shouldHaveDesired("sourceEntity", sourceEntArgs, desired.sourceEntity.get)
       }
 
-      // Test the Onset
-      if (desired.onset.nonEmpty) {
-        val onsetArgs = m.arguments.getOrElse("onset", Seq())
-        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      // Test the destination entity
+      if (desired.destEntity.nonEmpty) {
+        val destEntArgs = m.arguments.getOrElse("destEntity", Seq())
+        shouldHaveDesired("destEntity", destEntArgs, desired.destEntity.get)
       }
 
-      // Test the Rest
-      if (desired.rest.nonEmpty) {
-        val restArgs = m.arguments.getOrElse("rest", Seq())
-        shouldHaveDesired("Rest", restArgs, desired.rest.get)
+      // Test the source location
+      if (desired.sourceLocation.nonEmpty) {
+        val sourceLocArgs = m.arguments.getOrElse("sourceLocation", Seq())
+        shouldHaveDesired("sourceLocation", sourceLocArgs, desired.sourceLocation.get)
       }
+
+      if (desired.destLocation.nonEmpty) {
+        val destLocArgs = m.arguments.getOrElse("destLocation", Seq())
+        shouldHaveDesired("destLocation", destLocArgs, desired.destLocation.get)
+      }
+
     }
 
 
     def testDeleteEvent(m: Mention, desired: Delete) = {
       // Example: Delete the G in measure 1
 
-      // Test the Note
-      if (desired.note.nonEmpty) {
-        val noteArgs = m.arguments.getOrElse("note", Seq())
-        shouldHaveDesired("Note", noteArgs, desired.note.get)
+      // Test the musical entity
+      if (desired.musicalEntity.nonEmpty) {
+        val musicalEntArgs = m.arguments.getOrElse("musicalEntity", Seq())
+        shouldHaveDesired("musicalEntity", musicalEntArgs, desired.musicalEntity.get)
       }
 
-      // Test the Onset
-      if (desired.onset.nonEmpty) {
-        val onsetArgs = m.arguments.getOrElse("onset", Seq())
-        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      // Test the location
+      if (desired.location.nonEmpty) {
+        val locArgs = m.arguments.getOrElse("location", Seq())
+        shouldHaveDesired("location", locArgs, desired.location.get)
       }
 
     }
@@ -205,119 +127,83 @@ object TestUtils {
     def testInsertEvent(m: Mention, desired: Insert) = {
       // Example: Insert a D quarter note after the quarter rest in measure 2
 
-      // Test the Note
-      if (desired.note.nonEmpty) {
-        val noteArgs = m.arguments.getOrElse("note", Seq())
-        shouldHaveDesired("Note", noteArgs, desired.note.get)
+      // Test the musical entity
+      if (desired.musicalEntity.nonEmpty) {
+        val musicalEntArgs = m.arguments.getOrElse("musicalEntity", Seq())
+        shouldHaveDesired("musicalEntity", musicalEntArgs, desired.musicalEntity.get)
       }
 
-      // Test the Onset
-      if (desired.onset.nonEmpty) {
-        val onsetArgs = m.arguments.getOrElse("onset", Seq())
-        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      // Test the location
+      if (desired.location.nonEmpty) {
+        val locArgs = m.arguments.getOrElse("location", Seq())
+        shouldHaveDesired("location", locArgs, desired.location.get)
       }
-
-      // Test the Location
-//      if (desired.loc_rel.nonEmpty) {
-//        val locRelArgs = m.arguments.getOrElse("loc_rel", Seq())
-//        shouldHaveDesired("Locationrel", locRelArgs, desired.loc_rel.get)
-//      }
-//
-//      if (desired.loc_abs.nonEmpty) {
-//        val locAbsArgs = m.arguments.getOrElse("loc_abs", Seq())
-//        shouldHaveDesired("Locationabs", locAbsArgs, desired.loc_abs.get)
-//      }
-
-//      if (desired.chord.nonEmpty) {
-//        val chordArgs = m.arguments.getOrElse("chord", Seq())
-//        shouldHaveDesired("Chord", chordArgs, desired.chord.get)
-//      }
-
-      if (desired.rest.nonEmpty) {
-        val restArgs = m.arguments.getOrElse("rest", Seq())
-        shouldHaveDesired("Rest", restArgs, desired.rest.get)
-      }
-
-      if (desired.measure.nonEmpty) {
-        val measureArgs = m.arguments.getOrElse("measure", Seq())
-        shouldHaveDesired("Measure", measureArgs, desired.measure.get)
-      }
-//
-//      // Test the Preceding/following note
-//      if (desired.note_prec.nonEmpty) {
-//        val notePrecArgs = m.arguments.getOrElse("note_prec", Seq())
-//        shouldHaveDesired("Note", notePrecArgs, desired.note_prec.get)
-//      }
 
     }
 
     def testInvertEvent(m: Mention, desired: Invert) = {
       // Example: Invert the second measure around middle C
 
-      // Test the Note
-      if (desired.note.nonEmpty) {
-        val noteArgs = m.arguments.getOrElse("note", Seq())
-        shouldHaveDesired("Note", noteArgs, desired.note.get)
+
+      // Test the musical entity
+      if (desired.musicalEntity.nonEmpty) {
+        val musicalEntArgs = m.arguments.getOrElse("musicalEntity", Seq())
+        shouldHaveDesired("musicalEntity", musicalEntArgs, desired.musicalEntity.get)
       }
 
-      // Test the Onset
-      if (desired.onset.nonEmpty) {
-        val onsetArgs = m.arguments.getOrElse("onset", Seq())
-        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      // Test the location
+      if (desired.location.nonEmpty) {
+        val locArgs = m.arguments.getOrElse("location", Seq())
+        shouldHaveDesired("location", locArgs, desired.location.get)
       }
 
-      // Test the inversion axis (pitch)?
-      if (desired.pitch.nonEmpty) {
-        val pitchArgs = m.arguments.getOrElse("pitch", Seq())
-        shouldHaveDesired("Pitch", pitchArgs, desired.pitch.get)
-      }
-    }
-
-    def testRepeatEvent(m: Mention, desired: Repeat) = {
-      // Example: Repeat everything in the first measure
-
-      // Test the Note
-      if (desired.note.nonEmpty) {
-        val noteArgs = m.arguments.getOrElse("note", Seq())
-        shouldHaveDesired("Note", noteArgs, desired.note.get)
-      }
-
-      // Test the Onset
-      if (desired.onset.nonEmpty) {
-        val onsetArgs = m.arguments.getOrElse("onset", Seq())
-        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
-      }
-    }
-
-    def testReplaceEvent(m: Mention, desired: Replace) = {
-      // Example: Replace all the Gs with Fs
-
-      // Test the Note
-      if (desired.note.nonEmpty) {
-        val noteArgs = m.arguments.getOrElse("note", Seq())
-        shouldHaveDesired("Note", noteArgs, desired.note.get)
-      }
-
-      // Test the Onset
-      if (desired.onset.nonEmpty) {
-        val onsetArgs = m.arguments.getOrElse("onset", Seq())
-        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      // Test the axis
+      if (desired.axis.nonEmpty) {
+        val axisArgs = m.arguments.getOrElse("axis", Seq())
+        shouldHaveDesired("axis", axisArgs, desired.axis.get)
       }
     }
 
     def testReverseEvent(m: Mention, desired: Reverse) = {
       // Example: Reverse the notes in measure 2
 
-      // Test the Note
-      if (desired.note.nonEmpty) {
-        val noteArgs = m.arguments.getOrElse("note", Seq())
-        shouldHaveDesired("Note", noteArgs, desired.note.get)
+      // Test the musical entity
+      if (desired.musicalEntity.nonEmpty) {
+        val musicalEntArgs = m.arguments.getOrElse("musicalEntity", Seq())
+        shouldHaveDesired("musicalEntity", musicalEntArgs, desired.musicalEntity.get)
       }
 
-      // Test the Onset
-      if (desired.onset.nonEmpty) {
-        val onsetArgs = m.arguments.getOrElse("onset", Seq())
-        shouldHaveDesired("Onset", onsetArgs, desired.onset.get)
+      // Test the location
+      if (desired.location.nonEmpty) {
+        val locArgs = m.arguments.getOrElse("location", Seq())
+        shouldHaveDesired("location", locArgs, desired.location.get)
+      }
+    }
+
+    def testSwitchEvent(m: Mention, desired: Switch) = {
+      // Example: Reverse the notes in measure 2
+
+      // Test the source entity
+      if (desired.sourceEntity.nonEmpty) {
+        val sourceEntArgs = m.arguments.getOrElse("sourceEntity", Seq())
+        shouldHaveDesired("sourceEntity", sourceEntArgs, desired.sourceEntity.get)
+      }
+
+      // Test the destination entity
+      if (desired.destEntity.nonEmpty) {
+        val destEntArgs = m.arguments.getOrElse("destEntity", Seq())
+        shouldHaveDesired("destEntity", destEntArgs, desired.destEntity.get)
+      }
+
+      // Test the source location
+      if (desired.sourceLocation.nonEmpty) {
+        val sourceLocArgs = m.arguments.getOrElse("sourceLocation", Seq())
+        shouldHaveDesired("sourceLocation", sourceLocArgs, desired.sourceLocation.get)
+      }
+
+      if (desired.destLocation.nonEmpty) {
+        val destLocArgs = m.arguments.getOrElse("destLocation", Seq())
+        shouldHaveDesired("destLocation", destLocArgs, desired.destLocation.get)
       }
     }
 

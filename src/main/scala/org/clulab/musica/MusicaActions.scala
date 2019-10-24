@@ -60,52 +60,29 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
     Convert events should contain (MusEnt, StartingLoc, MusEnt, EndingLoc)
     */
 
-    // get only the info on pitch from the mention
-    def extractPitch(m: Seq[Mention]): String = ???
-
     // todo: the note has to be converted back to Seq[Mention] in order to work, right?
-    def pitch2Note(pitch: String, dir: String, amount: Double): Seq[Mention] = ???
+    def pitch2Note(pitch: String, dir: String, amount: Double): String = {
+      // this should eventually include sharps and flats
+      val basicPitches: Map[String, Int] = Map("C" -> 0, "D" -> 2,"E" -> 4,"F" -> 5,
+        "G" -> 7, "A" -> 9, "B" -> 11)
+      val SEMITONEDIFF2PITCH: Map[Int, String] = Map(0 -> "C4", 2 -> "D4",4 -> "E4", 5 -> "F4",
+        7 -> "G4", 9 -> "A4", 11 -> "B4", 12 -> "C5", 14 -> "D5", 16 -> "E5", 17 -> "F5", 19 -> "G5",
+        -1 -> "B3", -3 -> "A3", -5 -> "G3", -7 -> "F3", -8 -> "E3", -10 -> "D3", -12 -> "C3")
 
-//    def pitch2int(s: String): Int = {
-//      // this is unnecessarily abstracted, but doing this for now to see more easily
-//
-//      // mini-LUT built for semitones difference in treble clef; starts at middle C, goes up to G
-//      // octave numbering starts at C
-//      // true for key of C -- if we are in other keys this may not be the same
-//      // e.g. in key of G, if 'F' is written, it could be F#
-//      // does not include sharps or flats
-//      val chart = Map("C4" -> 0, "D4" -> 2,"E4" -> 4,"F4" -> 5, "G4" -> 7, "A4" -> 9, "B4" -> 11,
-//        "C5" -> 12, "D5" -> 14, "E5" -> 16, "F5" -> 17, "G5" -> 19)
-//
-//      // return the value
-//      chart(s)
-//
-//    }
+      val pitchNo = basicPitches(pitch)
 
-//    def dirStepEnt2Ent(m: Mention): (Option[String], Option[String], Option[String], Option[String]) = {
-//      // take direction and step plus starting MusEnt and calculate ending MusEnt
-//      // needs LUT?
-//
-//      // todo: how to extract the arguments properly
-//      val step = m.arguments("step")
-//      val direction = m.arguments("direction")
-//      val musEnt = m.arguments("note")
-//      val location = m.arguments("location")
-//
-//      // use LUT to find the ending note
-//      // will need to have OCTAVE information in addition to pitch?
-//      var endEntInt = 0
-//      if (direction == "up") {
-//        endEntInt = MusicaActions.PITCH2SEMITONEDIFF(musEnt) + step
-//      } else {
-//        endEntInt = MusicaActions.PITCH2SEMITONEDIFF(musEnt) - step
-//      }
-//
-//      val endEnt = MusicaActions.SEMITONEDIFF2PITCH(endEntInt)
-//      // return
-//      (musEnt, location, endEnt, location)
-//
-//    }
+      var newPitchNo = pitchNo
+
+      if (dir == "up") {
+        newPitchNo += amount
+      } else {
+        newPitchNo -= amount
+      }
+
+      val newPitch = SEMITONEDIFF2PITCH(newPitchNo)
+
+      newPitch
+    }
 
     val out = new ArrayBuffer[Mention]
 
@@ -120,10 +97,14 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
         val direction = m.arguments.getOrElse("direction", Seq())
         val step = m.arguments.getOrElse("step", Seq())
 
-        val pitch = extractPitch(musEnt)
+        // todo: this seems iffy
+        val pitch = musEnt.head.arguments("note").head.arguments("pitch").toString()
 
         // todo: mention.head.text might not be the right (or best) way to do this...
-        val destEnt = pitch2Note(pitch, direction.head.text, step.head.text.toDouble)
+        val destEntPitch = pitch2Note(pitch, direction.head.text, step.head.text.toDouble)
+
+        // todo: need to include the pitch in the Seq[Mention] containing MUS_ENT somehow
+        val destEnt = ???
 
         // map to a new set of args
         val newArgs = Map(SRC_ENT -> musEnt, SRC_LOC -> location, DEST_ENT -> destEnt, DEST_LOC -> location)

@@ -37,7 +37,6 @@ rules:
       sourceLocation:Location? = >nmod_in
       destLocation:Location? = >nmod_to
 
-
   - name: move-2
     label: ${label}
     priority: ${rulepriority}

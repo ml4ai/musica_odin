@@ -297,7 +297,7 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
         // change mention to a CONVERT mention
         val convertMention = m match {
           case em: EventMention => {
-            val newLabels = taxonomy.hypernymsFor("Replace")
+            val newLabels = taxonomy.hypernymsFor("Convert")
             val newTrigger = em.trigger.copy(labels = newLabels)
             em.copy(
               labels = newLabels,
@@ -320,11 +320,11 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
     out
   }
 
-  def copy2Insert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+  def change2Insert(mentions: Seq[Mention], itemtype: String, state: State = new State()): Seq[Mention] = {
 
     /*
-    take a Copy event and change it to an Insert event
-    Copy events should contain (MusEnt, SourceLoc, DestLoc, Frequency)
+    take a Copy or Repeat event and change it to an Insert event
+    Copy/Repeat events should contain (MusEnt, SourceLoc, DestLoc, Frequency)
     Insert events should contain (MusEnt, Location, Frequency)
      */
 
@@ -332,7 +332,7 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
     for (m <- mentions) {
 
-      if (m.label == "Copy") {
+      if (m.label == itemtype) {
 
         // get arg values
         val musEnt = m.arguments(MUS_ENT)
@@ -341,7 +341,7 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
         // map to a new set of args
         val newArgs = Map(MUS_ENT -> musEnt, LOC -> location, FREQ -> freq)
-        val compositionalFoundBy = m.foundBy + "++copy2Insert"
+        val compositionalFoundBy = m.foundBy + s"++${itemtype.toLowerCase()}2Insert"
 
         // change mention to an INSERT mention
         val insertMention = m match {
@@ -369,50 +369,14 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
     out
   }
 
+  def copy2Insert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+    val out = change2Insert(mentions, "Copy", state)
+
+    out
+  }
+
   def repeat2Insert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
-
-    /*
-    take a Repeat event and change it to an Insert event
-    Repeat events should contain (MusEnt, SourceLoc, DestLoc, Frequency)
-    Insert events should contain (MusEnt, Location, Frequency)
-     */
-    val out = new ArrayBuffer[Mention]
-
-    for (m <- mentions) {
-
-      if (m.label == "Repeat") {
-
-        // get arg values
-        val musEnt = m.arguments(MUS_ENT)
-        val location = m.arguments.getOrElse(DEST_LOC, Seq())
-        val freq = m.arguments.getOrElse(FREQ, Seq())
-
-        // map to a new set of args
-        val newArgs = Map(MUS_ENT -> musEnt, LOC -> location, FREQ -> freq)
-        val compositionalFoundBy = m.foundBy + "++repeat2Insert"
-
-        // change mention to an INSERT mention
-        val insertMention = m match {
-          case em: EventMention => {
-            val newLabels = taxonomy.hypernymsFor("Insert")
-            val newTrigger = em.trigger.copy(labels = newLabels)
-            em.copy(
-              labels = newLabels,
-              trigger = newTrigger,
-              arguments = newArgs,
-              foundBy = compositionalFoundBy)
-          }
-          case rm: RelationMention =>
-            rm.copy(
-              labels = taxonomy.hypernymsFor("Insert"),
-              arguments = newArgs,
-              foundBy = compositionalFoundBy)
-          case _ => ???
-        }
-
-        out.append(insertMention)
-      }
-    }
+    val out = change2Insert(mentions, "Repeat", state)
 
     out
   }

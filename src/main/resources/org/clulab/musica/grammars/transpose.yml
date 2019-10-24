@@ -21,7 +21,7 @@ rules:
     priority: ${rulepriority}
     example: "The first quarter note in measure 1 is transposed down 2 steps"
     type: token
-    action: transpose2Convert
+#    action: transpose2Convert
     pattern: |
       @musicalEntity:Note @location:Location? [word=/^(${modals})/] to? [word=/^(${aux_be})/] ([] and)?
       (?<trigger>[word=/(?i)^(${transpose_triggers})/]) (@direction:Direction)?  @step:Step?
@@ -31,7 +31,7 @@ rules:
     priority: ${rulepriority}
     example: "The first quarter note in measure 1 is transposed down 2 steps"
     type: token
-    action: transpose2Convert
+#    action: transpose2Convert
     pattern: |
       (@location:Location [tag=/,/]?)? @musicalEntity:Note @location:Location? [word=/^(${modals})/] to?
       [word=/^(${aux_be})/] ([] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
@@ -43,7 +43,7 @@ rules:
     priority: ${rulepriority}
     example: "the eighth note should move up two steps from an A to the C above"
     type: token
-    action: transpose2Convert
+#    action: transpose2Convert
     pattern: |
       (@location:Location [tag=/,/]?)? @musicalEntity:Note [word=/^(${modals})/] to? [word=/^(${aux_be})/]
       ([] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/]) @direction:Direction? @step:Step?
@@ -55,7 +55,7 @@ rules:
     priority: ${rulepriority}
     example: "take the first whole note and move it down one step"
     type: token
-    action: transpose2Convert
+#    action: transpose2Convert
     pattern: |
       (@location:Location [tag=/,/]?)? [tag=/^VB/] @musicalEntity:Note @location:Location? (and)?
       (?<trigger>[word=/(?i)^(${transpose_triggers})/]) []? @direction:Direction? @step:Step?
@@ -66,7 +66,7 @@ rules:
     priority: ${rulepriority}
     example: "the eighth note should move up two steps from an A to the C above"
     type: token
-    action: transpose2Convert
+#    action: transpose2Convert
     pattern: |
       (@location:Location [tag=/,/]?)? @musicalEntity:Note [word=/^(${modals})/] to? [word=/^(${aux_be})/]
       ([tag=/^VB/] and)? (?<trigger>[word=/(?i)^(${transpose_triggers})/]) @direction:Direction? @step:Step?
@@ -77,7 +77,7 @@ rules:
     priority: ${rulepriority}
     example: "Transpose all the notes up 5 half steps in measure 1."
     type: token
-    action: transpose2Convert
+#    action: transpose2Convert
     pattern: |
       (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
       @everything:Everything @direction:Direction? @step:Step @location:Location?
@@ -86,7 +86,7 @@ rules:
     label: ${label}
     example: "Everything in measure 2 should be transposed up 1 half step"
     type: token
-    action: transpose2Convert
+#    action: transpose2Convert
     pattern: |
       (@location:Location [tag=/,/]?)? @everything:Everything @location:Location? [word=/^(${modals})/] to?
       [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${transpose_triggers})/]) @direction:Direction? @step:Step?
@@ -95,7 +95,7 @@ rules:
     label: ${label}
     example: "transpose the quarter note in measure 1 from an A to a C"
     type: token
-    action: transpose2Convert
+#    action: transpose2Convert
     pattern: |
       (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
       (@musicalEntity:Note|@musicalEntity:Chord) @location:Location? @direction:Direction?

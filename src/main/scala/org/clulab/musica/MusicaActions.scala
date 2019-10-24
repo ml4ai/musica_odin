@@ -63,20 +63,20 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
     // todo: the note has to be converted back to Seq[Mention] in order to work, right?
     def pitch2Note(pitch: String, dir: String, amount: Double): String = {
       // this should eventually include sharps and flats
-      val basicPitches: Map[String, Int] = Map("C" -> 0, "D" -> 2,"E" -> 4,"F" -> 5,
-        "G" -> 7, "A" -> 9, "B" -> 11)
-      val SEMITONEDIFF2PITCH: Map[Int, String] = Map(0 -> "C4", 2 -> "D4",4 -> "E4", 5 -> "F4",
-        7 -> "G4", 9 -> "A4", 11 -> "B4", 12 -> "C5", 14 -> "D5", 16 -> "E5", 17 -> "F5", 19 -> "G5",
-        -1 -> "B3", -3 -> "A3", -5 -> "G3", -7 -> "F3", -8 -> "E3", -10 -> "D3", -12 -> "C3")
+      val basicPitches: Map[String, Double] = Map("C" -> 0.0, "D" -> 2.0,"E" -> 4.0,"F" -> 5.0,
+        "G" -> 7.0, "A" -> 9.0, "B" -> 11.0)
+      val SEMITONEDIFF2PITCH: Map[Double, String] = Map(0.0 -> "C4", 2.0 -> "D4", 4.0 -> "E4", 5.0 -> "F4",
+        7.0 -> "G4", 9.0 -> "A4", 11.0 -> "B4", 12.0 -> "C5", 14.0 -> "D5", 16.0 -> "E5", 17.0 -> "F5", 19.0 -> "G5",
+        -1.0 -> "B3", -3.0 -> "A3", -5.0 -> "G3", -7.0 -> "F3", -8.0 -> "E3", -10.0 -> "D3", -12.0 -> "C3")
 
       val pitchNo = basicPitches(pitch)
 
       var newPitchNo = pitchNo
 
       if (dir == "up") {
-        newPitchNo += amount
+        newPitchNo += (amount * 2)
       } else {
-        newPitchNo -= amount
+        newPitchNo -= (amount * 2)
       }
 
       val newPitch = SEMITONEDIFF2PITCH(newPitchNo)
@@ -98,13 +98,17 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
         val step = m.arguments.getOrElse("step", Seq())
 
         // todo: this seems iffy
-        val pitch = musEnt.head.arguments("note").head.arguments("pitch").toString()
+        val pitch = musEnt.head.arguments("note").head.arguments("pitch").head.text
 
         // todo: mention.head.text might not be the right (or best) way to do this...
         val destEntPitch = pitch2Note(pitch, direction.head.text, step.head.text.toDouble)
 
         // todo: need to include the pitch in the Seq[Mention] containing MUS_ENT somehow
         val destEnt = ???
+//        var destEntity = m.arguments(MUS_ENT)
+//        destEntity.head.arguments("note").head.arguments("pitch").head.text = destEntPitch
+//
+//        val destEnt = destEntity
 
         // map to a new set of args
         val newArgs = Map(SRC_ENT -> musEnt, SRC_LOC -> location, DEST_ENT -> destEnt, DEST_LOC -> location)

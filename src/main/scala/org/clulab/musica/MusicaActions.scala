@@ -48,6 +48,24 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
   }
 
+
+
+  def transposeLogic(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+    val out = new ArrayBuffer[Mention]
+    for (m <- mentions) {
+      if (m.arguments.keySet.contains("direction")) {
+        out.append(m)
+      }
+      else {
+        if (m matches "TransposeUp") {
+          val newArgs = m.arguments.updated("direction")
+          // make a copy of the orig, but with new args
+        }
+      }
+    }
+
+  }
+
   def transpose2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
 
     //  todo: try writing so that if you get current pitch, direction, and number of steps, it will give you what you need
@@ -60,13 +78,21 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
     Convert events should contain (MusEnt, StartingLoc, MusEnt, EndingLoc)
     */
 
+    def getPitchMention(m: Mention): Mention = {
+      val pitch = m.arguments("note").head.arguments("pitch").head
+      pitch
+    }
+
+
     // todo: the note has to be converted back to Seq[Mention] in order to work, right?
-    def pitch2Note(pitch: String, dir: String, amount: Double): String = {
+    def pitch2Note(pitchMention: Mention, dir: String, amount: Double): String = {
+      val pitch = pitchMention.text
       // this should eventually include sharps and flats
       val basicPitches: Map[String, Double] = Map("C" -> 0.0, "D" -> 2.0,"E" -> 4.0,"F" -> 5.0,
         "G" -> 7.0, "A" -> 9.0, "B" -> 11.0)
       val SEMITONEDIFF2PITCH: Map[Double, String] = Map(0.0 -> "C4", 2.0 -> "D4", 4.0 -> "E4", 5.0 -> "F4",
-        7.0 -> "G4", 9.0 -> "A4", 11.0 -> "B4", 12.0 -> "C5", 14.0 -> "D5", 16.0 -> "E5", 17.0 -> "F5", 19.0 -> "G5",
+        7.0 -> "G4", 9.0 -> "A4", 11.0 -> "B4",
+        12.0 -> "C5", 14.0 -> "D5", 16.0 -> "E5", 17.0 -> "F5", 19.0 -> "G5",
         -1.0 -> "B3", -3.0 -> "A3", -5.0 -> "G3", -7.0 -> "F3", -8.0 -> "E3", -10.0 -> "D3", -12.0 -> "C3")
 
       val pitchNo = basicPitches(pitch)
@@ -81,7 +107,7 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
       val newPitch = SEMITONEDIFF2PITCH(newPitchNo)
 
-      newPitch
+      val newPitchMention = pitchMention.asInstanceOf[TextBoundMention].copy()
     }
 
     val out = new ArrayBuffer[Mention]
@@ -98,10 +124,11 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
         val step = m.arguments.getOrElse("step", Seq())
 
         // todo: this seems iffy
-        val pitch = musEnt.head.arguments("note").head.arguments("pitch").head.text
+        // Note: this assumes one musical entity, which has one Pitch
+        val origPitch = getPitchMention(musEnt.head)
 
         // todo: mention.head.text might not be the right (or best) way to do this...
-        val destEntPitch = pitch2Note(pitch, direction.head.text, step.head.text.toDouble)
+        val destEntPitch = pitch2Note(origPitch, direction.head.text, step.head.text.toDouble)
 
         // todo: need to include the pitch in the Seq[Mention] containing MUS_ENT somehow
         val destEnt = ???

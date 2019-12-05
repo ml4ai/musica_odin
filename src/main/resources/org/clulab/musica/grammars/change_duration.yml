@@ -10,7 +10,7 @@ rules:
     label: ${label}
     priority: ${rulepriority}
     example: "Lengthen the quarter note that is in the first measure to a half note"
-    action: changeduration2Convert
+#    action: changeduration2Convert
     pattern:
       trigger = [word=/(?i)^(${change_duration_triggers})/]
       sourceEntity:EntityMusic = >/dobj|nsubjpass/

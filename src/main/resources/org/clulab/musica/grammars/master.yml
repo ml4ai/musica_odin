@@ -21,7 +21,7 @@ rules:
 
   # Extract the events
 
-  # todo: change this from change_duration to separate shorten and lengthen--do the same with testing
+#  # todo: change this from change_duration to separate shorten and lengthen--do the same with testing
   - import: org/clulab/musica/grammars/change_duration.yml
     vars:
       rulepriority: "6"
@@ -67,10 +67,10 @@ rules:
       label: Repeat
       trigger: ${repeat_triggers}
 
-  - import: org/clulab/musica/grammars/replace.yml
-    vars:
-      rulepriority: "6"
-      label: Replace
+#  - import: org/clulab/musica/grammars/replace.yml
+#    vars:
+#      rulepriority: "6"
+#      label: Replace
 
   - import: org/clulab/musica/grammars/reverse.yml
     vars:

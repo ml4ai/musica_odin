@@ -493,3 +493,11 @@ def odin_sentence_to_pyeci_spec(sentence: str,
 
     return tuple(ret)
 
+
+'''
+ret = odin_sentence_to_pyeci_spec("Move the A up three steps",
+                            return_sentence=True,
+                            return_mentions=True,
+                            verbose=True)
+print(ret)
+'''

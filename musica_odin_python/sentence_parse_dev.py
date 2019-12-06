@@ -1,9 +1,9 @@
 from odin_interace import odin_sentence_to_pyeci_spec
-from MusicaAntlr import NewAntlrMusic
+import NewAntlrMusic
 
 
 def antlr_sentence_parse(sentence, verbose=True):
-    ecis, unprocessed, tokens, unknown_words = NewAntlrMusic.parseStringANTLR(s)
+    ecis, unprocessed, tokens, unknown_words = NewAntlrMusic.parseStringANTLR(sentence)
     if verbose:
         print('New Tokens:  ', tokens)
         print('ECIs:        ', ecis)

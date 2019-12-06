@@ -3,6 +3,9 @@ import sys
 import json
 import pprint
 import requests
+import MusECI
+import ExtraTypes
+import PyECI
 
 
 # ------------------------------------------------------------------------
@@ -110,6 +113,13 @@ def process_action_mention(action_mention: dict):
     return {'action': op, 'arguments': args}
 
 
+def action_spec_to_ecito(spec):
+    ecito = None
+    if spec['action'] == 'Transpose':
+        ecito = eci_transpose(spec)
+    return ecito
+
+
 # ------------------------------------------------------------------------
 # PyECI_spec Action handlers
 # These are the top-level entry to map between Odin mentions and PyECI_spec
@@ -188,6 +198,9 @@ def handle_reverse(mention: dict):
                                      'Duration': note['duration']}}}
 
 
+# ------------------------------------------------------------------------
+# Handle Transpose
+
 def handle_transpose(mention: dict):
     onset = get_onset(mention)
     note = get_note(mention)
@@ -214,6 +227,86 @@ def handle_transpose(mention: dict):
                                      'Duration': note['duration']}},
             'Direction': direction,
             'Step': step}
+
+# ------------------------------------------------------------------------
+
+def eci_direction(spec):
+    step = None
+    if spec == 'up':
+        step = PyECI.Relations.Up()
+    elif spec == 'down':
+        step = PyECI.Relations.Down()
+    return step
+
+
+def string_to_int(string):
+    # TODO: make this test whether can be converted and
+    #       generate useful error on failure
+    return int(string)
+
+
+def eci_amount(spec):
+    unit = None
+    if spec['proportion'] == 'whole':
+        unit = ExtraTypes.WholeStep()
+    elif spec['proportion'] == 'half':
+        unit = ExtraTypes.HalfStep()
+
+    value = string_to_int(spec['cardinality'])
+
+    return ExtraTypes.PitchInterval(value=PyECI.Abstractions.Integer(value=value), unit=unit)
+
+
+def eci_music_entity(spec):
+
+    # print('eci_music_entity()')
+
+    specifier = None
+    if 'Specifier' in spec and spec['Specifier'] is not None:
+        specifier_spec = spec['Specifier']
+        determiner = None
+        if 'Determiner' in specifier_spec:
+            determiner_spec = specifier_spec['Determiner']
+            if determiner_spec == 'All':
+                determiner = PyECI.Abstractions.All()
+        cardinality = None
+        if 'Cardinality' in specifier_spec:
+            cardinality = specifier_spec['Cardinality']
+        set_choice = None
+        if 'SetChoice' in specifier_spec:
+            set_choice = specifier_spec['SetChoice']
+        specifier = PyECI.Abstractions.Specifier(determiner=determiner,
+                                                 cardinality=cardinality,
+                                                 setChoice=set_choice)
+
+    music_entity = None
+    if 'Note' in spec:
+
+        # print('eci_music_entity(): Found Note')
+
+        note_spec = spec['Note']
+        duration = note_spec['Duration']
+        onset = note_spec['Onset']
+        pitch = note_spec['Pitch']
+
+        # Note <- MusicEntity <- Entity <- ECI
+        # ECIs have: context, specifier, attributes, words
+        music_entity = ExtraTypes.Note(pitch=pitch, dur=duration, onset=onset)
+
+        # This is done b/c Note constructor does not have arg for specifier
+        # but Note <- MusicEntity <- Entity <- ECI
+        # and ECIs have: context, specifier, attributes, words
+        music_entity.specifier = specifier
+
+    return music_entity
+
+
+def eci_transpose(spec):
+    args = spec['arguments']
+    direction = eci_direction(args['Direction'])
+    target = eci_music_entity(args['MusicEntity'])
+    amount = eci_amount(args['Step'])
+    return ExtraTypes.Transpose(target=target, direction=direction, amount=amount)
 
 
 # ------------------------------------------------------------------------

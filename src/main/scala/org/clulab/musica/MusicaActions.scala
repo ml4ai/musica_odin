@@ -201,12 +201,12 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
     for (m <- mentions) {
 
-      if (m.label == "Change_duration") {
+      if (m.label == "ChangeDuration") {
 
         // get arg values
         val srcEnt = m.arguments(SRC_ENT)
-        val location = m.arguments(LOC)
-        val destEnt = m.arguments(DEST_ENT)
+        val location = m.arguments.getOrElse(LOC, Seq())
+        val destEnt = m.arguments.getOrElse(DEST_ENT, Seq())
 
         // map to a new set of args
         val newArgs = Map(SRC_ENT -> srcEnt, SRC_LOC -> location, DEST_ENT -> destEnt, DEST_LOC -> location)

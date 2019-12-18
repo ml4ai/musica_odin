@@ -14,6 +14,10 @@ object ComplexEvents {
     def toMentionString: String = toString
   }
 
+//  case class Convert(sourceEntity: Option[Note]|Option[Rest]|Option[Chord] = None) extends MusicaObj{
+//    def toMentionString: String = toString
+//  }
+
   case class Delete(musicalEntity: Option[MusicalEntity] = None, location: Option[Location] = None)
                     extends MusicaObj
   {

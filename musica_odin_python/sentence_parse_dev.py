@@ -1,232 +1,56 @@
-from odin_interace import odin_sentence_to_pyeci_spec
-from sentence_corpora import *
-import datetime
+import odin_interface
+import NewAntlrMusic
 import pprint
 import json
-import os
 
 
-# ------------------------------------------------------------------------
-# NOTE: see Scripts section at bottom for example usage
+def antlr_sentence_parse(sentence, verbose=True):
+    ecis, unprocessed, tokens, unknown_words = NewAntlrMusic.parseStringANTLR(sentence)
+    if verbose:
+        print('\n----- MusicaAntlr -----')
+        print('New Tokens:  ', tokens)
+        print('ECIs:        ', ecis)
+        print('Unprocessed: ', unprocessed)
+        print('Unknown:     ', unknown_words)
+        print('-----------------------')
+    return ecis
 
 
-# ------------------------------------------------------------------------
-# Globals
-# ------------------------------------------------------------------------
+def get_and_print_actions(sentence):
+    print('\n----- Musica Odin -----')
+    r = odin_interface.odin_request(sentence)
+    mentions = json.loads(r.text)
+    # pprint.pprint(mentions)
+    action_mentions = odin_interface.filter_actions(mentions)
+    actions = list()
+    for filtered_action in action_mentions:
+        action_spec = odin_interface.process_action_mention(filtered_action)
+        pprint.pprint(action_spec)
 
-# root directory home for odin_parse_state files
-SNAPSHOT_DST_ROOT = 'odin_parse_state_snapshots'
-CSTATE_FILENAME_BASE = 'odin_parse_state'
-FILEEXT = '.json'
+        ecito = odin_interface.action_spec_to_ecito(action_spec)
+        print(f'ecito: {ecito}')
 
+        actions.append((ecito, action_spec))
+    print('-----------------------')
 
-# ------------------------------------------------------------------------
-# Utility: get_timestamp
-# ------------------------------------------------------------------------
+    '''
+    ret = odin_interface.odin_sentence_to_pyeci_spec \
+        (sentence,
+         return_sentence=True,
+         return_mentions=True,
+         verbose=False)
 
-def pretty_time(the_time: datetime.datetime) -> str:
-    """
-    Returns a string in the following format:
-        <year><month><day><24hour><minute><second>-<milliseconds>
-    :param the_time: a datetime.datetime object
-    :return: str
-    """
-    return '{y}{mon:02d}{day:02d}{hr:02d}{min:02d}{sec:02}_{msec:07d}' \
-        .format(y=the_time.year, mon=the_time.month, day=the_time.day,
-                hr=the_time.hour, min=the_time.minute, sec=the_time.second,
-                msec=the_time.microsecond)
+    for action in ret:
+        pprint.pprint(action)
+    '''
 
-
-def pretty_timedelta(delta: datetime.timedelta):
-    return 'days: {days}, seconds: {sec}, microseconds: {msec}' \
-        .format(days=delta.days, sec=delta.seconds, msec=delta.microseconds)
-
-
-def get_timestamp() -> str:
-    """
-    Get pretty_time of current time.
-    :return: str
-    """
-    return pretty_time(datetime.datetime.now())
+    return actions
 
 
-# ------------------------------------------------------------------------
-# Parse Corpus
-# ------------------------------------------------------------------------
+if __name__ == '__main__':
+    SENTENCE = "transpose all the notes up 1 whole step"
+    # SENTENCE = "Move the A up three steps"
 
-def batch_odin_parse(corpus,
-                     return_sentence=False, return_mentions=False,
-                     pprint_without_return=False,
-                     verbose=False, verbose_odin=False):
-    """
-    Top-level helper for use when developing or testing sequence of sentences.
-    Also used for generating snapshot
-    :param corpus: sequence of sentences
-    :param return_sentence: when True: include sentence in return value
-    :param return_mentions: when True: include Odin mentions in return value
-    :param pprint_without_return: when True: just pprint results and don't have fn return at end
-                                  Use this for sentence testing/dev
-    :param verbose: when True: print current sentence being processed
-    :param verbose_odin: when True: run odin_sentence_to_pyeci_spec with verbose True
-    :return:
-    """
-    results = list()
-    for i, sentence in enumerate(corpus):
-        if verbose:
-            print('{0}: {1}'.format(i, sentence))
-        result = odin_sentence_to_pyeci_spec(sentence=sentence,
-                                             return_sentence=return_sentence,
-                                             return_mentions=return_mentions,
-                                             verbose=verbose_odin)
-        results.append(result)
-        if pprint_without_return:
-            pprint.pprint(result)
-
-    if not pprint_without_return:
-        return results
-
-
-# ------------------------------------------------------------------------
-# Corpus Regression Testing of
-#   (1) Odin parse behavior
-#   (2) Odin mention to PyECI_spec mapping
-# ------------------------------------------------------------------------
-
-def create_corpus_odin_parse_state_snapshot(corpus, filename=None, root=SNAPSHOT_DST_ROOT):
-    """
-    Generate a snapshot text file for all sentences included in corpus
-    Each entry is represented as a dict (flat-file format for humnan consumption)
-        { '0_sentence': <sentence>,
-          '1_pyeci_spec': <pyeci_spec>
-          '2_mensions': <odin_mensions> }
-    <pyeci_spec> is a recursive dict representation of the information needed to produce PyECI
-    <odin_mensions> is a dict representation of the original json representation of *all* Odin mention information
-    :param corpus: sequence of sentences
-    :param filename: optional filename; default is CSTATE_FILENAME_BASE_<timestamp>.txt
-    :return: filename
-    """
-    if not os.path.exists(root):
-        print('Snapshot DST_ROOT does not exist, creating:')
-        os.makedirs(root)
-        print('    ... created:', root)
-    if filename is None:
-        filename = CSTATE_FILENAME_BASE + '_' + get_timestamp() + FILEEXT
-    snapshot_dst = os.path.join(root, filename)
-    print('Saving corpus parse state:', snapshot_dst)
-    with open(snapshot_dst, 'w') as fout:
-        parse_results = batch_odin_parse(corpus, return_sentence=True, return_mentions=True, verbose=True)
-        # snapshot_format: dict of <sentence>, <pyeci_spec>, <mentions>
-        snapshot_list = dict()
-        for i, (pyeci_spec, sentence, mentions) in enumerate(parse_results):
-            # shapshot_format keys start with numbers so they are forced to pprint in given order
-            sdict = {'0_sentence': sentence,
-                     '1_pyeci_spec': pyeci_spec,
-                     '2_mentions': mentions}
-            snapshot_list[i] = sdict
-        json.dump(snapshot_list, fout, indent=4, sort_keys=True)
-    print('saved to:', filename)
-    return filename
-
-
-# TODO: save diff report
-def regression_test(snapshot_src_filename, root=SNAPSHOT_DST_ROOT,
-                    summary_p=False, mentions_p=True, save_p=False):
-    """
-    Cheap-n-cheerful regression testing.
-    (1) Takes as input a pointer to an odin_parse_state .JSON file and reads it
-    (2) Iterate through each sentence in file snapshot and
-        (a) gathers *current* Odin parse with PyECI_spec and mentions (if any)
-        (a) for each found action, reports whether PyECI_spec *snapshot* matches *current*
-        (b) reports whether Odin mentions *snapshot* matches *current*
-    All matching performed by dictionary == operator.
-    TODO Implement saving diff file
-    Diff file will report all matches and when there are diffs, what the two versions are.
-    :param snapshot_src_filename: snapshot file name
-    :param root: Root directory of snapshot file
-    :param summary_p: When True: does NOT display diff detail, only whether match
-    :param mentions_p: When True: include Odin mention diff testing
-    :param save_p: TODO
-    :return:
-    """
-    src = os.path.join(root, snapshot_src_filename)
-    with open(src, 'r') as json_file:
-        data = json.load(json_file)
-
-    timestamp = get_timestamp()  # TODO use to indicate current Odin used at runtime
-
-    for key, value in data.items():
-        sentence, pyeci_spec_snapshot, mentions_snapshot \
-            = value['0_sentence'], value['1_pyeci_spec'], value['2_mentions']
-
-        print('\n=====================================')
-        print('({0})'.format(key), '\"{0}\"'.format(sentence))
-
-        (pyeci_spec_current, s, mentions_current)\
-            = odin_sentence_to_pyeci_spec(sentence, return_sentence=True, return_mentions=True)
-
-        print('-------------------------------------')
-        print('num orig vs curr:', len(pyeci_spec_snapshot), len(pyeci_spec_current))
-        if len(pyeci_spec_snapshot) < 1 and len(pyeci_spec_current) > 0:
-            print('NEW pyeci_spec in CURRENT')
-            for pyeci_spec_c in pyeci_spec_current:
-                pprint.pprint(pyeci_spec_c)
-        for i, (pyeci_spec_s, pyeci_spec_c) \
-                in enumerate(zip(pyeci_spec_snapshot, pyeci_spec_current)):
-            if pyeci_spec_s == pyeci_spec_c:
-                print('#{0} pyeci_spec MATCH'.format(i))
-            else:
-                print('#{0} pyeci_spec DOES NOT MATCH'.format(i))
-                if not summary_p:
-                    print('From ORIGINAL pyeci_spec:', snapshot_src_filename)
-                    pprint.pprint(pyeci_spec_s)
-                    print('From CURRENT pyeci_spec:')
-                    pprint.pprint(pyeci_spec_c)
-
-        if mentions_p:
-            print('-------------------------------------')
-            if mentions_snapshot == mentions_current:
-                print('mentions MATCH')
-            else:
-                print('mentions DO NOT MATCH')
-                if not summary_p:
-                    print('From ORIGINAL mentions:', snapshot_src_filename)
-                    pprint.pprint(mentions_snapshot)
-                    print('From CURRENT mentions:')
-                    pprint.pprint(mentions_current)
-
-
-# ------------------------------------------------------------------------
-# Scripts
-# ------------------------------------------------------------------------
-
-# ------------------------------------------------------------------------
-# Examples of running batch_odin_parse in various configurations
-
-# runs on a whole corpus
-# batch_odin_parse(CORPUS_REVERSE, return_sentence=True)
-
-# just run first sentence of corpus with verbose output
-# batch_odin_parse([CORPUS_INVERSION[4]], return_sentence=True, verbose_odin=True)
-
-# send in a specific single sentence
-# batch_odin_parse(["Reverse all the notes in measure 1"], return_sentence=True, verbose_odin=True)
-# batch_odin_parse(["Transpose the C4 quarter note on beat 1 of measure 1 up 5 half steps"],
-#                  return_sentence=True, verbose_odin=True)
-# batch_odin_parse(["Transpose the C up 1 half step"], return_sentence=True, verbose_odin=True)
-
-# ------------------------------------------------------------------------
-# Examples of running create_corpus_odin_parse_state_snapshot
-
-# Create corpus Odin parse state snapshot for just CORPUS_REVERSE
-# create_corpus_odin_parse_state_snapshot(CORPUS_REVERSE)
-
-# Create corpus Odin parse state snapshot for ALL_SENTENCES
-# create_corpus_odin_parse_state_snapshot(ALL_SENTENCES)
-
-
-# ------------------------------------------------------------------------
-# Examples of running ...
-
-# regression_test('odin_parse_state_20181117160413_0401164.json')
-
-regression_test('odin_parse_state_20181118132718_0131189.json', mentions_p=False)
+    print(f'\nSentence: \"{SENTENCE}\"')
+    get_and_print_actions(SENTENCE)
+    antlr_sentence_parse(SENTENCE)

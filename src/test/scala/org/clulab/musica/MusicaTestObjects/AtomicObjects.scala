@@ -1,5 +1,7 @@
 package org.clulab.musica.MusicaTestObjects
 
+import org.clulab.musica.MusicaTestObjects.SimpleEvents.Axis
+
 import scala.collection.mutable.ArrayBuffer
 
 trait MusicaObj {
@@ -18,10 +20,6 @@ object AtomicObjects {
     def toMentionString: String = toString
   }
 
-//  case class Chord(c: String) extends MusicaObj {
-//    def toMentionString: String = toString
-//  }
-
   case class ChordType(c: String) extends MusicaObj {
     def toMentionString: String = toString
   }
@@ -38,11 +36,11 @@ object AtomicObjects {
     def toMentionString: String = toString
   }
 
-  case class LocationAbs(l: String) extends MusicaObj {
+  case class Frequency(f: String) extends MusicaObj {
     def toMentionString: String = toString
   }
 
-  case class LocationRel(l: String) extends MusicaObj {
+  case class LocationTerm(l: String) extends MusicaObj {
     def toMentionString: String = toString
   }
 
@@ -51,7 +49,7 @@ object AtomicObjects {
 //    def toMentionString: String = convertOrd2Int(toString)
   }
 
-  case class Pitch(p: String) extends MusicaObj {
+  case class Pitch(p: String) extends MusicaObj with Axis {
     def toMentionString: String = toString
   }
 

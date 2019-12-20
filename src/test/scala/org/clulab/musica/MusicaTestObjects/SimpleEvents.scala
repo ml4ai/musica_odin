@@ -6,8 +6,11 @@ import scala.collection.mutable.ArrayBuffer
 
 object SimpleEvents {
 
+  trait MusicalEntity extends MusicaObj
+  trait Axis extends MusicalEntity
+
   case class Chord(cardinality: Option[String] = None, chordType: Option[ChordType] = None,
-                   specifier: Option[Specifier] = None) extends MusicaObj {
+                   specifier: Option[Specifier] = None) extends MusicaObj with MusicalEntity {
 //    def this(d: String, s:String) = this(Some(ChordType(d)), Some(Specifier(s)))
 
     def toMentionString: String = {
@@ -20,7 +23,7 @@ object SimpleEvents {
     }
   }
 
-  case class Note(duration: Option[Duration] = None, pitch: Option[Pitch] = None, specifier: Option[Specifier] = None) extends MusicaObj {
+  case class Note(duration: Option[Duration] = None, pitch: Option[Pitch] = None, specifier: Option[Specifier] = None) extends MusicaObj with MusicalEntity with Axis {
     def this(d: String, p: String, s: String) = this(Some(Duration(d)), Some(Pitch(p)), Some(Specifier(s)))
 
     def toMentionString: String = {
@@ -41,7 +44,7 @@ object SimpleEvents {
     }
   }
 
-  case class Rest(specifier: Option[Specifier] = None, duration: Option[Duration] = None) extends MusicaObj {
+  case class Rest(specifier: Option[Specifier] = None, duration: Option[Duration] = None) extends MusicaObj with MusicalEntity {
     def toMentionString: String = {
       val args = new ArrayBuffer[String]
       specifier.foreach(s => args.append(s.toMentionString))

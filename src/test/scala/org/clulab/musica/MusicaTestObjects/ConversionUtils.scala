@@ -5,21 +5,20 @@ import org.clulab.musica.MusicaTestObjects.AtomicObjects._
 import org.clulab.musica.MusicaTestObjects.ComplexEvents._
 import org.clulab.musica.MusicaTestObjects.SimpleEvents._
 import org.clulab.musica.MusicaTestObjects.IntermediateEvents._
-import org.clulab.musica.MusicaTestObjects.SomewhatComplexEvents._
-import org.clulab.odin.Mention
+import org.clulab.odin.{EventMention, Mention}
 
 object ConversionUtils {
 
   def mentionToString(m: Mention): String = {
     m.label match {
 //      case "Cardinality" => Cardinality(m.text).toMentionString
-      case "Axis" => axisMentionToAxis(m).toMentionString
+//      case "Axis" => axisMentionToAxis(m).toMentionString
       case "Beat" => beatMentionToBeat(m).toMentionString
       case "Chord" => chordMentionToChord(m).toMentionString
       case "Convert" => convertMentionToConvert(m).toMentionString
       case "Delete" => deleteMentionToDelete(m).toMentionString
-      case "DestEntity" => destEntityMentionToDestEntity(m).toMentionString
-      case "DestLocation" => destLocationMentionToDestLocation(m).toMentionString
+//      case "DestEntity" => destEntityMentionToDestEntity(m).toMentionString
+//      case "DestLocation" => destLocationMentionToDestLocation(m).toMentionString
       case "Direction" => Direction(m.text).toMentionString // TBM
       case "Everything" => Everything(m.text).toMentionString
       case "Frequency" => frequencyMentionToFrequency(m).toMentionString
@@ -32,20 +31,26 @@ object ConversionUtils {
       case "Pitch" => pitchMentionToPitch(m).toMentionString
       case "Rest" => restMentionToRest(m).toMentionString
       case "Reverse" => reverseMentionToReverse(m).toMentionString
-      case "SourceEntity" => sourceEntityMentionToSourceEntity(m).toMentionString
-      case "SourceLocation" => sourceLocationMentionToSourceLocation(m).toMentionString
+//      case "SourceEntity" => sourceEntityMentionToSourceEntity(m).toMentionString
+//      case "SourceLocation" => sourceLocationMentionToSourceLocation(m).toMentionString
       case "Step" => stepMentionToStep(m).toMentionString
-      case "Switch" => switchMentionToSwitch(m).toMentionString
+//      case "Switch" => switchMentionToSwitch(m).toMentionString
       case _ => ???
     }
   }
 
-  def axisMentionToAxis(m: Mention): Axis = {
-    val pitch = headText("pitch", m).map(Pitch)
-    val note = m.arguments.get("note").map(ns => noteMentionToNote(ns.head))
-
-    Axis(pitch, note)
-  }
+//  def axisMentionToAxis(m: Mention): Axis = {
+//    m.label match {
+//      case "Pitch" => pitchMentionToPitch(m)
+//      case "Note" => noteMentionToNote(m)
+//      case _ => ???
+//    }
+//
+//    val pitch = headText("pitch", m).map(Pitch)
+//    val note = m.arguments.get("note").map(ns => noteMentionToNote(ns.head))
+//
+//    Axis(pitch, note)
+//  }
 
   def beatMentionToBeat(m: Mention): Beat = {
     val cardinality = headText("cardinality", m)
@@ -63,10 +68,10 @@ object ConversionUtils {
   // todo: is this just all the mentions that appear in the ComplexEvents file?
 
   def convertMentionToConvert(c: Mention): Convert = {
-    val sourceEntity = c.arguments.get("sourceEntity").map(se => sourceEntityMentionToSourceEntity(se.head))
-    val sourceLocation = c.arguments.get("sourceLocation").map(sl => sourceLocationMentionToSourceLocation(sl.head))
-    val destEntity = c.arguments.get("destEntity").map(de => destEntityMentionToDestEntity(de.head))
-    val destLocation = c.arguments.get("destLocation").map(dl => destLocationMentionToDestLocation(dl.head))
+    val sourceEntity = c.arguments.get("sourceEntity").map(se => musicalEntityMentionToMusicalEntity(se.head))
+    val sourceLocation = c.arguments.get("sourceLocation").map(sl => locationMentionToLocation(sl.head))
+    val destEntity = c.arguments.get("destEntity").map(de => musicalEntityMentionToMusicalEntity(de.head))
+    val destLocation = c.arguments.get("destLocation").map(dl => locationMentionToLocation(dl.head))
 
     Convert(sourceEntity, sourceLocation, destEntity, destLocation)
   }
@@ -78,17 +83,17 @@ object ConversionUtils {
     Delete(musicalEntity, location)
   }
 
-  def destEntityMentionToDestEntity(m: Mention): DestEntity = {
-    val musEnt = musicalEntityMentionToMusicalEntity(m)
-
-    DestEntity(Option(musEnt))
-  }
-
-  def destLocationMentionToDestLocation(m: Mention): DestLocation = {
-    val location = locationMentionToLocation(m)
-
-    DestLocation(Option(location))
-  }
+//  def destEntityMentionToDestEntity(m: Mention): DestEntity = {
+//    val musEnt = musicalEntityMentionToMusicalEntity(m)
+//
+//    DestEntity(Option(musEnt))
+//  }
+//
+//  def destLocationMentionToDestLocation(m: Mention): DestLocation = {
+//    val location = locationMentionToLocation(m)
+//
+//    DestLocation(Option(location))
+//  }
 
   def directionMentionToDirection(m:Mention): Direction = {
     val direction = headText("direction", m).get
@@ -112,13 +117,17 @@ object ConversionUtils {
   def invertMentionToInvert(i: Mention): Invert = {
     val musicalEntity = i.arguments.get("musicalEntity").map(me => musicalEntityMentionToMusicalEntity(me.head))
     val location = i.arguments.get("location").map(l => locationMentionToLocation(l.head))
-    val axis = i.arguments.get("axis").map(a => axisMentionToAxis(a.head))
+    val axis = i.arguments.get("axis").map(a => musicalEntityMentionToMusicalEntity(a.head)).map(a => a.asInstanceOf[Axis])
 
     Invert(musicalEntity, location, axis)
   }
 
   def locationMentionToLocation(m: Mention): Location = {
-    val locationTerm = headText("locationTerm", m).map(LocationTerm)
+    val locationTerm = m match {
+      case em: EventMention => Some(LocationTerm(em.trigger.text))
+      case _ => None
+    }
+//    val locationTerm = headText("locationTerm", m).map(LocationTerm)
     val measure = headText("measure", m).map(Measure)
 
     val note = m.arguments.get("note").map(ns => noteMentionToNote(ns.head))
@@ -135,11 +144,13 @@ object ConversionUtils {
 
 
   def musicalEntityMentionToMusicalEntity(m: Mention): MusicalEntity = {
-    val note = m.arguments.get("note").map(ns => noteMentionToNote(ns.head))
-    val chord = m.arguments.get("chord").map(ch => chordMentionToChord(ch.head))
-    val rest = m.arguments.get("rest").map(rs => restMentionToRest(rs.head))
-
-    MusicalEntity(note, chord, rest)
+    m.label match {
+      case "Note" => noteMentionToNote(m)
+      case "Chord" => chordMentionToChord(m)
+      case "Rest" => restMentionToRest(m)
+      case "Pitch" => pitchMentionToPitch(m)
+      case _ => ???
+    }
   }
 
   def noteMentionToNote(note: Mention): Note = {
@@ -168,19 +179,19 @@ object ConversionUtils {
     Reverse(musicalEntity, location)
   }
 
-  // todo: do we need different ones for this or can ALL sourceEntities be musical entities?
-  def sourceEntityMentionToSourceEntity(m: Mention): SourceEntity = {
-    val musEnt = musicalEntityMentionToMusicalEntity(m)
-
-    SourceEntity(Option(musEnt))
-  }
-
-  // todo: do we need different ones for this or can ALL sourceLocations be musical entities?
-  def sourceLocationMentionToSourceLocation(m: Mention): SourceLocation = {
-    val location = locationMentionToLocation(m)
-
-    SourceLocation(Option(location))
-  }
+//  // todo: do we need different ones for this or can ALL sourceEntities be musical entities?
+//  def sourceEntityMentionToSourceEntity(m: Mention): SourceEntity = {
+//    val musEnt = musicalEntityMentionToMusicalEntity(m)
+//
+//    SourceEntity(Option(musEnt))
+//  }
+//
+//  // todo: do we need different ones for this or can ALL sourceLocations be musical entities?
+//  def sourceLocationMentionToSourceLocation(m: Mention): SourceLocation = {
+//    val location = locationMentionToLocation(m)
+//
+//    SourceLocation(Option(location))
+//  }
 
   def stepMentionToStep(step: Mention): Step = {
     val cardinality = step.arguments.get("cardinality").map(_.head.text)
@@ -188,14 +199,14 @@ object ConversionUtils {
     Step(cardinality, prop)
   }
 
-  def switchMentionToSwitch(s: Mention): Switch = {
-    val sourceEntity = s.arguments.get("sourceEntity").map(se => sourceEntityMentionToSourceEntity(se.head))
-    val sourceLocation = s.arguments.get("sourceLocation").map(sl => sourceLocationMentionToSourceLocation(sl.head))
-    val destEntity = s.arguments.get("destEntity").map(de => destEntityMentionToDestEntity(de.head))
-    val destLocation = s.arguments.get("destLocation").map(dl => destLocationMentionToDestLocation(dl.head))
-
-    Switch(sourceEntity, sourceLocation, destEntity, destLocation)
-  }
+//  def switchMentionToSwitch(s: Mention): Switch = {
+//    val sourceEntity = s.arguments.get("sourceEntity").map(se => sourceEntityMentionToSourceEntity(se.head))
+//    val sourceLocation = s.arguments.get("sourceLocation").map(sl => sourceLocationMentionToSourceLocation(sl.head))
+//    val destEntity = s.arguments.get("destEntity").map(de => destEntityMentionToDestEntity(de.head))
+//    val destLocation = s.arguments.get("destLocation").map(dl => destLocationMentionToDestLocation(dl.head))
+//
+//    Switch(sourceEntity, sourceLocation, destEntity, destLocation)
+//  }
 
   // Helper Methods
   def headMention(role: String, m: Mention): Option[Mention] = m.arguments.get(role).map(_.head)

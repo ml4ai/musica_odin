@@ -23,7 +23,7 @@ rules:
       priority: 1
       type: token  # surface rule
       pattern: |   # replace with ${notes} var?
-        [word=/^(${notes})[0-9]*s?\.?$/] (sharp|flat)?
+        middle? [word=/^(${notes})[0-9]*s?\.?$/] (sharp|flat)?
 
     - name: pitch-sequences
       label: PitchSequence

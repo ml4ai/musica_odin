@@ -38,7 +38,10 @@
     - Replace
     - Reverse
     - Switch
-    - Transpose
+    - Transpose:
+        - TransposeUp
+        - TransposeDown
+        - TransposeNaturalize
   #  - Generate
   #  - Add
   #  - What

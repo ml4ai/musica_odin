@@ -50,122 +50,122 @@ class MusicaActions(val taxonomy: Taxonomy) extends Actions with LazyLogging {
 
 
 
-  def transposeLogic(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
-    val out = new ArrayBuffer[Mention]
-    for (m <- mentions) {
-      if (m.arguments.keySet.contains("direction")) {
-        out.append(m)
-      }
-      else {
-        if (m matches "TransposeUp") {
-          val newArgs = m.arguments.updated("direction")
-          // make a copy of the orig, but with new args
-        }
-      }
-    }
-
-  }
-
-  def transpose2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
-
-    //  todo: try writing so that if you get current pitch, direction, and number of steps, it will give you what you need
-    //  you can code in the function as below; any time you need something else, do it like that
-    //    def pitch2Note(pitch: String, dir: String, amount: Double): String = ???
-
-    /*
-    take a Transpose event and change it to a Convert event
-    Transpose events should contain (MusEnt, Location, Direction, Step)
-    Convert events should contain (MusEnt, StartingLoc, MusEnt, EndingLoc)
-    */
-
-    def getPitchMention(m: Mention): Mention = {
-      val pitch = m.arguments("note").head.arguments("pitch").head
-      pitch
-    }
-
-
-    // todo: the note has to be converted back to Seq[Mention] in order to work, right?
-    def pitch2Note(pitchMention: Mention, dir: String, amount: Double): String = {
-      val pitch = pitchMention.text
-      // this should eventually include sharps and flats
-      val basicPitches: Map[String, Double] = Map("C" -> 0.0, "D" -> 2.0,"E" -> 4.0,"F" -> 5.0,
-        "G" -> 7.0, "A" -> 9.0, "B" -> 11.0)
-      val SEMITONEDIFF2PITCH: Map[Double, String] = Map(0.0 -> "C4", 2.0 -> "D4", 4.0 -> "E4", 5.0 -> "F4",
-        7.0 -> "G4", 9.0 -> "A4", 11.0 -> "B4",
-        12.0 -> "C5", 14.0 -> "D5", 16.0 -> "E5", 17.0 -> "F5", 19.0 -> "G5",
-        -1.0 -> "B3", -3.0 -> "A3", -5.0 -> "G3", -7.0 -> "F3", -8.0 -> "E3", -10.0 -> "D3", -12.0 -> "C3")
-
-      val pitchNo = basicPitches(pitch)
-
-      var newPitchNo = pitchNo
-
-      if (dir == "up") {
-        newPitchNo += (amount * 2)
-      } else {
-        newPitchNo -= (amount * 2)
-      }
-
-      val newPitch = SEMITONEDIFF2PITCH(newPitchNo)
-
-      val newPitchMention = pitchMention.asInstanceOf[TextBoundMention].copy()
-    }
-
-    val out = new ArrayBuffer[Mention]
-
-    //iterate through the mentions in the sequence
-    for (m <- mentions) {
-
-      // if mention is of type Transpose
-      if (m.label == "Transpose") {
-
-        val musEnt = m.arguments(MUS_ENT)
-        val location = m.arguments.getOrElse(LOC, Seq())
-        val direction = m.arguments.getOrElse("direction", Seq())
-        val step = m.arguments.getOrElse("step", Seq())
-
-        // todo: this seems iffy
-        // Note: this assumes one musical entity, which has one Pitch
-        val origPitch = getPitchMention(musEnt.head)
-
-        // todo: mention.head.text might not be the right (or best) way to do this...
-        val destEntPitch = pitch2Note(origPitch, direction.head.text, step.head.text.toDouble)
-
-        // todo: need to include the pitch in the Seq[Mention] containing MUS_ENT somehow
-        val destEnt = ???
-//        var destEntity = m.arguments(MUS_ENT)
-//        destEntity.head.arguments("note").head.arguments("pitch").head.text = destEntPitch
+//  def transposeLogic(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+//    val out = new ArrayBuffer[Mention]
+//    for (m <- mentions) {
+//      if (m.arguments.keySet.contains("direction")) {
+//        out.append(m)
+//      }
+//      else {
+//        if (m matches "TransposeUp") {
+//          val newArgs = m.arguments.updated("direction", )
+//          // make a copy of the orig, but with new args
+//        }
+//      }
+//    }
 //
-//        val destEnt = destEntity
+//  }
 
-        // map to a new set of args
-        val newArgs = Map(SRC_ENT -> musEnt, SRC_LOC -> location, DEST_ENT -> destEnt, DEST_LOC -> location)
-        val compositionalFoundBy = m.foundBy + "++transpose2Convert"
+//  def transpose2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+//
+//    //  todo: try writing so that if you get current pitch, direction, and number of steps, it will give you what you need
+//    //  you can code in the function as below; any time you need something else, do it like that
+//    //    def pitch2Note(pitch: String, dir: String, amount: Double): String = ???
+//
+//    /*
+//    take a Transpose event and change it to a Convert event
+//    Transpose events should contain (MusEnt, Location, Direction, Step)
+//    Convert events should contain (MusEnt, StartingLoc, MusEnt, EndingLoc)
+//    */
+//
+//    def getPitchMention(m: Mention): Mention = {
+//      val pitch = m.arguments("note").head.arguments("pitch").head
+//      pitch
+//    }
 
-        // change mention to a CONVERT mention
-        val convertMention = m match {
-          case em: EventMention => {
-            val newLabels = taxonomy.hypernymsFor("Convert")
-            val newTrigger = em.trigger.copy(labels = newLabels)
-            em.copy(
-              labels = newLabels,
-              trigger = newTrigger,
-              arguments = newArgs,
-              foundBy = compositionalFoundBy)
-          }
-          case rm: RelationMention =>
-            rm.copy(
-              labels = taxonomy.hypernymsFor("Convert"),
-              arguments = newArgs,
-              foundBy = compositionalFoundBy)
-          case _ => ???
-        }
 
-        out.append(convertMention)
-      }
-    }
-
-    out
-  }
+////    // todo: the note has to be converted back to Seq[Mention] in order to work, right?
+////    def pitch2Note(pitchMention: Mention, dir: String, amount: Double): String = {
+////      val pitch = pitchMention.text
+////      // this should eventually include sharps and flats
+////      val basicPitches: Map[String, Double] = Map("C" -> 0.0, "D" -> 2.0,"E" -> 4.0,"F" -> 5.0,
+////        "G" -> 7.0, "A" -> 9.0, "B" -> 11.0)
+////      val SEMITONEDIFF2PITCH: Map[Double, String] = Map(0.0 -> "C4", 2.0 -> "D4", 4.0 -> "E4", 5.0 -> "F4",
+////        7.0 -> "G4", 9.0 -> "A4", 11.0 -> "B4",
+////        12.0 -> "C5", 14.0 -> "D5", 16.0 -> "E5", 17.0 -> "F5", 19.0 -> "G5",
+////        -1.0 -> "B3", -3.0 -> "A3", -5.0 -> "G3", -7.0 -> "F3", -8.0 -> "E3", -10.0 -> "D3", -12.0 -> "C3")
+////
+////      val pitchNo = basicPitches(pitch)
+////
+////      var newPitchNo = pitchNo
+////
+////      if (dir == "up") {
+////        newPitchNo += (amount * 2)
+////      } else {
+////        newPitchNo -= (amount * 2)
+////      }
+////
+////      val newPitch = SEMITONEDIFF2PITCH(newPitchNo)
+////
+////      val newPitchMention = pitchMention.asInstanceOf[TextBoundMention].copy()
+////    }
+//
+//    val out = new ArrayBuffer[Mention]
+//
+//    //iterate through the mentions in the sequence
+//    for (m <- mentions) {
+//
+//      // if mention is of type Transpose
+//      if (m.label == "Transpose") {
+//
+//        val musEnt = m.arguments(MUS_ENT)
+//        val location = m.arguments.getOrElse(LOC, Seq())
+//        val direction = m.arguments.getOrElse("direction", Seq())
+//        val step = m.arguments.getOrElse("step", Seq())
+//
+//        // todo: this seems iffy
+//        // Note: this assumes one musical entity, which has one Pitch
+//        val origPitch = getPitchMention(musEnt.head)
+//
+//        // todo: mention.head.text might not be the right (or best) way to do this...
+//        val destEntPitch = pitch2Note(origPitch, direction.head.text, step.head.text.toDouble)
+//
+//        // todo: need to include the pitch in the Seq[Mention] containing MUS_ENT somehow
+//        val destEnt = ???
+////        var destEntity = m.arguments(MUS_ENT)
+////        destEntity.head.arguments("note").head.arguments("pitch").head.text = destEntPitch
+////
+////        val destEnt = destEntity
+//
+//        // map to a new set of args
+//        val newArgs = Map(SRC_ENT -> musEnt, SRC_LOC -> location, DEST_ENT -> destEnt, DEST_LOC -> location)
+//        val compositionalFoundBy = m.foundBy + "++transpose2Convert"
+//
+//        // change mention to a CONVERT mention
+//        val convertMention = m match {
+//          case em: EventMention => {
+//            val newLabels = taxonomy.hypernymsFor("Convert")
+//            val newTrigger = em.trigger.copy(labels = newLabels)
+//            em.copy(
+//              labels = newLabels,
+//              trigger = newTrigger,
+//              arguments = newArgs,
+//              foundBy = compositionalFoundBy)
+//          }
+//          case rm: RelationMention =>
+//            rm.copy(
+//              labels = taxonomy.hypernymsFor("Convert"),
+//              arguments = newArgs,
+//              foundBy = compositionalFoundBy)
+//          case _ => ???
+//        }
+//
+//        out.append(convertMention)
+//      }
+//    }
+//
+//    out
+//  }
 
   // todo: look at this one first! this should be an easy one to start with
   def move2Convert(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {

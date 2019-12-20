@@ -62,7 +62,9 @@ object TestUtils {
 
     def shouldHaveDesired(label: String, ms: Seq[Mention], desired: MusicaObj): Unit = {
       // These should all be notes...
-      ms.foreach(m => m.label should be (label))
+      println("ARGS:")
+      ms.foreach(DisplayUtils.displayMention)
+      ms.foreach(m => m.labels should contain (label))
 
 //         There shouldn't be any extra notes that we didn't want...
       ms should have length 1
@@ -81,27 +83,29 @@ object TestUtils {
     def testConvertEvent(m: Mention, desired: Convert) = {
       // Example: Convert the quarter note to a quarter rest
 
+      DisplayUtils.displayMention(m)
+
       // Test the source entity
       if (desired.sourceEntity.nonEmpty) {
         val sourceEntArgs = m.arguments.getOrElse("sourceEntity", Seq())
-        shouldHaveDesired("sourceEntity", sourceEntArgs, desired.sourceEntity.get)
+        shouldHaveDesired("EntityMusic", sourceEntArgs, desired.sourceEntity.get)
       }
 
       // Test the destination entity
       if (desired.destEntity.nonEmpty) {
         val destEntArgs = m.arguments.getOrElse("destEntity", Seq())
-        shouldHaveDesired("destEntity", destEntArgs, desired.destEntity.get)
+        shouldHaveDesired("EntityMusic", destEntArgs, desired.destEntity.get)
       }
 
       // Test the source location
       if (desired.sourceLocation.nonEmpty) {
         val sourceLocArgs = m.arguments.getOrElse("sourceLocation", Seq())
-        shouldHaveDesired("sourceLocation", sourceLocArgs, desired.sourceLocation.get)
+        shouldHaveDesired("Location", sourceLocArgs, desired.sourceLocation.get)
       }
 
       if (desired.destLocation.nonEmpty) {
         val destLocArgs = m.arguments.getOrElse("destLocation", Seq())
-        shouldHaveDesired("destLocation", destLocArgs, desired.destLocation.get)
+        shouldHaveDesired("Location", destLocArgs, desired.destLocation.get)
       }
 
     }
@@ -119,7 +123,7 @@ object TestUtils {
       // Test the location
       if (desired.location.nonEmpty) {
         val locArgs = m.arguments.getOrElse("location", Seq())
-        shouldHaveDesired("location", locArgs, desired.location.get)
+        shouldHaveDesired("Location", locArgs, desired.location.get)
       }
 
     }
@@ -130,7 +134,7 @@ object TestUtils {
       // Test the musical entity
       if (desired.musicalEntity.nonEmpty) {
         val musicalEntArgs = m.arguments.getOrElse("musicalEntity", Seq())
-        shouldHaveDesired("musicalEntity", musicalEntArgs, desired.musicalEntity.get)
+        shouldHaveDesired("EntityMusic", musicalEntArgs, desired.musicalEntity.get)
       }
 
       // Test the location
@@ -148,19 +152,19 @@ object TestUtils {
       // Test the musical entity
       if (desired.musicalEntity.nonEmpty) {
         val musicalEntArgs = m.arguments.getOrElse("musicalEntity", Seq())
-        shouldHaveDesired("musicalEntity", musicalEntArgs, desired.musicalEntity.get)
+        shouldHaveDesired("EntityMusic", musicalEntArgs, desired.musicalEntity.get)
       }
 
       // Test the location
       if (desired.location.nonEmpty) {
         val locArgs = m.arguments.getOrElse("location", Seq())
-        shouldHaveDesired("location", locArgs, desired.location.get)
+        shouldHaveDesired("Location", locArgs, desired.location.get)
       }
 
       // Test the axis
       if (desired.axis.nonEmpty) {
         val axisArgs = m.arguments.getOrElse("axis", Seq())
-        shouldHaveDesired("axis", axisArgs, desired.axis.get)
+        shouldHaveDesired("EntityMusic", axisArgs, desired.axis.get)
       }
     }
 

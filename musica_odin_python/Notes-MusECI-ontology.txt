@@ -1,0 +1,131 @@
+Musica_Odin Questions:
+() How do we represent plural?
+
+----- 2019-12-07
+
+The following is a summary of the "ECI Ontology" TYPE hierarchy
+
+
+Legend:
+() The hierarchy is a tree, represented by indentation.
+() Each capitalized element in the tree is a TYPE. 
+	() In most cases these are ECI types, but in some cases (e.g., <int>, <float>), they're Python primitive types. NOTE: This needs some more scrutiny, as I see some values show up as, e.g., Integer(value=1) rather than what I was expecting as simply an <int>
+() Brackets '[...]' indicate file source for some items. In general, subtypes down a branch of a tree are defined in the same file, until another file is specified. E.g., ECI is PyECI/ECI.py but Abstraction, along with Number, Determiner, Specifier, Ordering are all in PyECI/Abstractions.py.
+() Items starting with '-' represent properties of the parent type (e.g., any ECI has a context property; but Abstraction is a subtype of ECI).
+	() if starts with '>', represents property that is not explicitly defined by slot, but property gets dynamically set (!)
+	() '<...>' represent what I believe is the expected TYPE of a property value.
+	() NOTE: I have not included properties that appear to not be used / implemented
+() Things after a colon ':' are quick notes about meaning (but these are generally more documented in the code).
+() Items start with '*' indicate currently handled by EciGathering.py, so appear to be fully implemented targets
+
+
+ECI  [PyECI/ECI.py]
+	- context
+	- specifier <Specifier>
+	- atributes
+	- words
+	Abstraction  [PyECI/Abstractions.py]
+		Number
+			Integer
+				- value
+			Rational
+		Determiner
+			A : "a"/"an"
+			Any : "any"; could be synonymous with All or A
+			The : "the"
+			All : "all", entirety of collectiom
+			Every : "every", sometimes synonymous with "all" but not always; cyclic combined with Specifier: "every third beat"
+			Each : "each", sometimes synonymous with "all"
+			Nth :
+				- number
+				- ordering
+		Specifier : for combining determiner with a cardinality (e.g., "the third", "all the", "every fifth")
+			- determiner
+			- cardinality
+			- setChoice
+		Ordering 
+			- measure : a measure for the  ordering
+			- direction <Direction>
+		Amount [ExtraTypes.py]
+			- value
+			- unit
+			PitchInterval
+		PitchUnit [ExtraTypes.py]
+			WholeStep
+			HalfStep
+			SaleIndex
+			Step
+			OctaveUnit : NOTE it's unclear we should use this; appears part of Donya's parsing machinery, rather than useful executable ECI
+		Measure [ExtraTypes.py]
+		Beat [ExtraTypes.py]
+	Relation [PyECI/Relations.py]
+		Direction
+			Up
+			Down
+			Left
+			Right
+			(... there are more here...)
+	Event [PyECI/Events.py]
+		Add
+*			Insert [ExtraTypes.py]
+				> target <Note>
+		Switch
+			- item1
+			- item2
+			Swap
+		[All the following are defined in ExtraTypes.py]
+*		Transpose
+			- target <Note>
+			- direction <Direction>
+			- amount <PitchInterval> : where value is <Integer>, and unit is <HalfStep>
+*		Change : See EciGathering.py, involves using PrepInTo and PrepTo
+			- target
+			- destination
+*			Move : See EciGathering.py, involves using PrepInTo and PrepTo
+*		Reverse
+			> target <Note>
+		Retrograde
+*		Invert
+			> target
+		Repeat
+		Copy
+*		Generate : see EciGathering.gatherGenerate() - has default behavior
+			- amount <Amount>
+*		Delete
+			- target <Note>
+		Replace
+	Entity [PyECI/Entity]
+		MusicEntity [ExtraTypes.py]
+*			Note
+				- pitch <Pitch>
+				- dur <Duration>
+				- onset <Onset>
+			Pitch
+				- number <int> : Midi number 0..127
+				- pitchClass <PitchClass>
+				- octave <int> : 0..
+			PitchClass
+				- number <int> : pitch class number 0..11
+				- letter <PitchLetter>
+				- accidental <Accidental>
+			PitchLetter
+				- value <String> : character representing pitch letter: "A".."G"
+			Accidental
+				Sharp
+				Flat
+				Natural
+			Rest
+				- dur <Duration>
+				- onset <Onset>
+			Duration
+				- measures <int>
+				- beats <float>
+			Onset
+				- measures <int>
+				- beats <float>
+
+SingleValue [ExtraTypes.py]
+NoValue [ExtraTypes.py]
+	Dotted
+	Plural
+

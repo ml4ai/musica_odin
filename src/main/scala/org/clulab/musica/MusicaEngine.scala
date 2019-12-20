@@ -97,7 +97,7 @@ object MusicaEngine {
 
   // other extracted categories
   // CHANGEDURATION uses SRC_ENT, LOC, DEST_ENT
-  // COPY uses MUS_ENT, SRC_LOC, DEST_LOC //todo: add FREQ?
+  // COPY uses MUS_ENT, SRC_LOC, DEST_LOC, FREQ //todo: add FREQ to copy rules
   // MOVE uses MUS_ENT, SRC_LOC, DEST_LOC
   // REPEAT uses MUS_ENT, SRC_LOC, DEST_LOC
   // REPLACE uses SRC_ENT, LOC, DEST_ENT

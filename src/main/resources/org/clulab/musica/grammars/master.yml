@@ -85,8 +85,27 @@ rules:
   - import: org/clulab/musica/grammars/transpose.yml
     vars:
       rulepriority: "6"
+      trigger: ${repeat_triggers}
       label: Transpose
 
+  - import: org/clulab/musica/grammars/transpose.yml
+    vars:
+      rulepriority: "6"
+      trigger: ${repeat_triggers}
+      label: TransposeUp
+
+  - import: org/clulab/musica/grammars/transpose.yml
+    vars:
+      rulepriority: "6"
+      trigger: ${repeat_triggers}
+      label: TransposeDown
+
+  - import: org/clulab/musica/grammars/transpose.yml
+    vars:
+      rulepriority: "6"
+      trigger: ${repeat_triggers}
+      label: TransposeNaturalize
+      # todo: exist in tax?
 
 
 

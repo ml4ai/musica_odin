@@ -14,7 +14,7 @@ object IntermediateEvents {
   // what about 'at the end of the score?'
   // 'after the end of the score'? --> is 'after' or 'end' marked as location term?
   case class Location(locationTerm: Option[LocationTerm] = None, note: Option[Note] = None,
-                      measure: Option[Measure] = None, chord: Option[Chord] = None,
+                      measure: Option[Measure] = None, beat: Option[Beat] = None, chord: Option[Chord] = None,
                       rest: Option[Rest]) extends MusicaObj
   {
     def toMentionString: String = toString

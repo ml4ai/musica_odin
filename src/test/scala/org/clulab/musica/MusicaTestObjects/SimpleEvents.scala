@@ -15,7 +15,6 @@ object SimpleEvents {
 
     def toMentionString: String = {
       val args = new ArrayBuffer[String]
-//      cardinality.foreach(c => args.append(c.toMentionString))
       if (cardinality.nonEmpty) args.append(s"Cardinality(${cardinality.get})")
       chordType.foreach(d => args.append(d.toMentionString))
       specifier.foreach(s => args.append(s.toMentionString))
@@ -32,15 +31,6 @@ object SimpleEvents {
       pitch.foreach(p => args.append(p.toMentionString))
       specifier.foreach(s => args.append(s.toMentionString))
       s"Note(${args.sorted.mkString(", ")})"
-    }
-  }
-
-  case class Onset(measure: Option[Measure] = None, beat: Option[Beat] = None) extends MusicaObj {
-    def toMentionString: String = {
-      val args = new ArrayBuffer[String]
-      if (beat.nonEmpty) args.append(beat.get.toMentionString)
-      if (measure.nonEmpty) args.append(measure.get.toMentionString)
-      s"Onset(${args.sorted.mkString(", ")})"
     }
   }
 
@@ -62,4 +52,13 @@ object SimpleEvents {
     }
   }
 
+//  case class Onset(measure: Option[Measure] = None, beat: Option[Beat] = None) extends MusicaObj {
+    //    def toMentionString: String = {
+    //      val args = new ArrayBuffer[String]
+    //      if (beat.nonEmpty) args.append(beat.get.toMentionString)
+    //      if (measure.nonEmpty) args.append(measure.get.toMentionString)
+    //      s"Onset(${args.sorted.mkString(", ")})"
+    //    }
+    //  }
 }
+

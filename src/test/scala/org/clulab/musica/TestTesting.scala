@@ -26,8 +26,6 @@ class TestTesting extends ExtractionTest {
 
     val sourceEntity = Note(Some(Duration("half")), None, Some(Specifier("all the")))
 
-    //val desired = Convert(Some(SourceEntity(Some(MusicalEntity(Some(Note(Some(Duration("half")), None, Some(Specifier("all the")))), None, None)))))
-
     val desired = Convert(
       Some(sourceEntity)
     )
@@ -46,7 +44,7 @@ class TestTesting extends ExtractionTest {
     val found = convertEvents.head
 
     val sourceEntity = Note(None, Some(Pitch("C")), Some(Specifier("the")))
-    val location = Location(Some(LocationTerm("in")), None, Some(Measure("measure 1")), None, None)
+    val location = Location(Some(LocationTerm("in")), None, Some(Measure("measure 1")), None, None, None)
     val destEntity = Note(Some(Duration("quarter")), None, Some(Specifier("a")))
     val desired = Convert(
       Some(sourceEntity),
@@ -68,7 +66,7 @@ class TestTesting extends ExtractionTest {
 
     val sourceEntity = Note(None, Some(Pitch("C")), Some(Specifier("the")))
     val location = Location(Some(LocationTerm("after")), Some(Note(Some(Duration("half")), None, Some(Specifier("the")))),
-      Some(Measure("measure 1")), None, None)
+      Some(Measure("measure 1")), None, None, None)
     val destEntity = Note(Some(Duration("quarter")), None, Some(Specifier("a")))
     val desired = Convert(
       Some(sourceEntity),

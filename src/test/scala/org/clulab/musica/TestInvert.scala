@@ -33,4 +33,28 @@ class TestInvert extends ExtractionTest {
     testInvertEvent(found, desired)
 
   }
+
+  // todo: grammar currently identifies "the first two measures around B4" as a NOTE
+  val t2 = "Invert the notes in the first two measures around B4"
+
+  failingTest should s"extract correctly from $t2" in {
+    val mentions = extractMentions(t2)
+
+    val invertEvents = mentions.filter(_ matches "Invert")
+
+    invertEvents should have length(1)
+    val found = invertEvents.head
+
+    val sourceEntity = Note(None, None, Some(Specifier("the")))
+    val location = Location(Some(LocationTerm("in")), None, Some(Measure("the first two measures")), None, None, None)
+    val axis = Note(None, Some(Pitch("B4")), None)
+
+    val desired = Invert(
+      Some(sourceEntity),
+      Some(location),
+      Some(axis)
+    )
+
+    testInvertEvent(found, desired)
+  }
 }

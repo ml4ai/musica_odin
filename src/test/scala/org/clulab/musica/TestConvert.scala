@@ -138,107 +138,108 @@ class TestConvert extends ExtractionTest {
     testConvertEvent(found, desired)
   }
 
-//  val t52 = "The quarter note is shortened in beat 1 of measure 2"
-//
-//  passingTest should s"extract correctly from $t52" in {
-//    val mentions = extractMentions(t52)
-//    val changeDurationEvents = mentions.filter(_ matches "ChangeDuration")
-//
-//    changeDurationEvents should have length(1)
-//    val found = changeDurationEvents.head
-//
-//    val note = Note(Some(Duration("quarter")), None, Some(Specifier("The")))
-//    val onset = Onset(Some(Measure("2")), Some(Beat("1")))
-//    val desired = ChangeDuration(
-//      note = Some(note),
-//      onset = Some(onset)
-//    )
-//
-//    testChangeDurationEvent(found, desired)
-//  }
-//
+  val t52 = "The quarter note is shortened in beat 1 of measure 2"
+
+  passingTest should s"extract correctly from $t52" in {
+    val mentions = extractMentions(t52)
+    val convertEvents = mentions.filter(_ matches "Convert")
+
+    convertEvents should have length(1)
+    val found = convertEvents.head
+
+    val sourceEntity = Note(Some(Duration("quarter")), None, Some(Specifier("The")))
+    val location = Location(Some(LocationTerm("in")), None, Some(Measure("measure 2")), Some(Beat("beat 1")),
+      None, None)
+
+    val desired = Convert(
+      Some(sourceEntity),
+      Some(location)
+    )
+
+    testConvertEvent(found, desired)
+  }
+
 //  //  Cannot yet handle 2 notes OR 'cardinals' in note
-//  val t53 = "The first quarter note should be shortened to an eighth note"
-//
-//  passingTest should s"extract correctly from $t53" in {
-//    val mentions = extractMentions(t53)
-//    val changeDurationEvents = mentions.filter(_ matches "ChangeDuration")
-//
-//    changeDurationEvents should have length(1)
-//    val found = changeDurationEvents.head
-//
-//    val note = Note(Some(Duration("quarter")), None, Some(Specifier("The first")))
-//    val onset = Onset(None, None)
-//    val final_note = Note(Some(Duration("eighth")), None, Some(Specifier("an")))
-//    val desired = ChangeDuration(
-//      note = Some(note),
-//      final_note = Some(final_note)
-//    )
-//
-//    testChangeDurationEvent(found, desired)
-//  }
-//
-//  //  Cannot yet handle 2 notes OR 'cardinals' in note
-//  val t54 = "Shorten the quarter note in measure 1 to an eighth note"
-//
-//  passingTest should s"extract correctly from $t54" in {
-//    val mentions = extractMentions(t54)
-//    val changeDurationEvents = mentions.filter(_ matches "ChangeDuration")
-//
-//    changeDurationEvents should have length(1)
-//    val found = changeDurationEvents.head
-//
-//    val note = Note(Some(Duration("quarter")), None, Some(Specifier("the")))
-//    val onset = Onset(Some(Measure("1")), None)
-//    val final_note = Note(Some(Duration("eighth")), None, Some(Specifier("an")))
-//    val desired = ChangeDuration(
-//      note = Some(note),
-//      onset = Some(onset),
-//      final_note = Some(final_note)
-//    )
-//
-//    testChangeDurationEvent(found, desired)
-//  }
-//
-//  //  Shortened version of t6 that's known to pass
-//  val t55 = "Shorten the quarter note in measure 1"
-//
-//  passingTest should s"extract correctly from $t55" in {
-//    val mentions = extractMentions(t55)
-//    val changeDurationEvents = mentions.filter(_ matches "ChangeDuration")
-//
-//    changeDurationEvents should have length(1)
-//    val found = changeDurationEvents.head
-//
-//    val note = Note(Some(Duration("quarter")), None, Some(Specifier("the")))
-//    val onset = Onset(Some(Measure("1")), None)
-//    val desired = ChangeDuration(
-//      note = Some(note),
-//      onset = Some(onset)
-//    )
-//
-//    testChangeDurationEvent(found, desired)
-//  }
-//
-//
-//  val t56 = "Shorten all the half notes"
-//
-//  passingTest should s"extract correctly from $t56" in {
-//    val mentions = extractMentions(t56)
-//    val changeDurationEvents = mentions.filter(_ matches "ChangeDuration")
-//
-//    changeDurationEvents should have length(1)
-//    val found = changeDurationEvents.head
-//
-//    val note = Note(Some(Duration("half")), None, Some(Specifier("all the")))
-//    val onset = Onset(None, None)
-//    val desired = ChangeDuration(
-//      note = Some(note)
-//    )
-//
-//    testChangeDurationEvent(found, desired)
-//  }
-//
+  val t53 = "The first quarter note should be shortened to an eighth note"
+
+  passingTest should s"extract correctly from $t53" in {
+    val mentions = extractMentions(t53)
+    val convertEvents = mentions.filter(_ matches "Convert")
+
+    convertEvents should have length(1)
+    val found = convertEvents.head
+
+    val sourceEntity = Note(Some(Duration("quarter")), None, Some(Specifier("The first")))
+    val destEntity = Note(Some(Duration("eighth")), None, Some(Specifier("an")))
+    val desired = Convert(
+      Some(sourceEntity),
+      None,
+      Some(destEntity)
+    )
+
+    testConvertEvent(found, desired)
+  }
+
+  //  Cannot yet handle 2 notes OR 'cardinals' in note
+  val t54 = "Shorten the quarter note in measure 1 to an eighth note"
+
+  passingTest should s"extract correctly from $t54" in {
+    val mentions = extractMentions(t54)
+    val convertEvents = mentions.filter(_ matches "Convert")
+
+    convertEvents should have length(1)
+    val found = convertEvents.head
+
+    val sourceEntity = Note(Some(Duration("quarter")), None, Some(Specifier("the")))
+    val location = Location(Some(LocationTerm("in")), None, Some(Measure("measure 1")), None, None, None)
+    val destEntity = Note(Some(Duration("eighth")), None, Some(Specifier("an")))
+    val desired = Convert(
+      Some(sourceEntity),
+      Some(location),
+      Some(destEntity)
+    )
+
+    testConvertEvent(found, desired)
+  }
+
+  //  Shortened version of t6 that's known to pass
+  val t55 = "Shorten the quarter note in measure 1"
+
+  passingTest should s"extract correctly from $t55" in {
+    val mentions = extractMentions(t55)
+    val convertEvents = mentions.filter(_ matches "Convert")
+
+    convertEvents should have length(1)
+    val found = convertEvents.head
+
+    val sourceEntity = Note(Some(Duration("quarter")), None, Some(Specifier("the")))
+    val location = Location(Some(LocationTerm("in")), None, Some(Measure("measure 1")), None, None, None)
+    val desired = Convert(
+      Some(sourceEntity),
+      Some(location)
+    )
+
+    testConvertEvent(found, desired)
+  }
+
+
+  val t56 = "Shorten all the half notes"
+
+  passingTest should s"extract correctly from $t56" in {
+    val mentions = extractMentions(t56)
+    val convertEvents = mentions.filter(_ matches "Convert")
+
+    convertEvents should have length(1)
+    val found = convertEvents.head
+
+    val sourceEntity = Note(Some(Duration("half")), None, Some(Specifier("all the")))
+    val desired = Convert(
+      Some(sourceEntity)
+    )
+
+    testConvertEvent(found, desired)
+  }
+
 //  // todo: needs to include specifier everything
 //  val t57 = "Everything should be shortened from half notes to quarter notes"
 

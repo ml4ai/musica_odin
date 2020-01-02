@@ -1,6 +1,6 @@
 package org.clulab.musica.MusicaTestObjects
 
-import org.clulab.musica.MusicaTestObjects.SimpleEvents.Axis
+import org.clulab.musica.MusicaTestObjects.SimpleEvents.{Axis,MusicalEntity}
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -32,7 +32,7 @@ object AtomicObjects {
     def toMentionString: String = toString
   }
 
-  case class Everything(e: String) extends MusicaObj {
+  case class Everything(e: String) extends MusicaObj with MusicalEntity {
     def toMentionString: String = toString
   }
 

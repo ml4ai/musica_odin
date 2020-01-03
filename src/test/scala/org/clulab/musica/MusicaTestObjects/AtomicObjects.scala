@@ -44,7 +44,7 @@ object AtomicObjects {
     def toMentionString: String = toString
   }
 
-  case class Measure(m: String) extends MusicaObj {
+  case class Measure(m: String) extends MusicaObj with MusicalEntity {
     def toMentionString: String = toString
 //    def toMentionString: String = convertOrd2Int(toString)
   }

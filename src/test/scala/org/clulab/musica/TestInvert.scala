@@ -57,4 +57,26 @@ class TestInvert extends ExtractionTest {
 
     testInvertEvent(found, desired)
   }
+
+  val t3 = "All the notes should be inverted around A"
+
+  passingTest should s"extract correctly from $t3" in {
+    val mentions = extractMentions(t3)
+
+    val invertEvents = mentions.filter(_ matches "Invert")
+
+    invertEvents should have length(1)
+    val found = invertEvents.head
+
+    val sourceEntity = Note(None, None, Some(Specifier("All the")))
+    val axis = Note(None, Some(Pitch("A")), None)
+
+    val desired = Invert(
+      Some(sourceEntity),
+      None,
+      Some(axis)
+    )
+
+    testInvertEvent(found, desired)
+  }
 }

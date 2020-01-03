@@ -31,4 +31,25 @@ class TestSwitch extends ExtractionTest {
     testSwitchEvent(found, desired)
   }
 
+  val t2 = "Switch the first quarter note and the first quarter rest"
+
+  passingTest should s"extract correctly from $t2" in {
+    val mentions = extractMentions(t2)
+    val switchMentions = mentions.filter(_ matches "Switch")
+
+    switchMentions should have length(1)
+    val found = switchMentions.head
+
+    val sourceEntity = Note(Some(Duration("quarter")), None, Some(Specifier("the first")))
+    val destEntity = Rest(Some(Specifier("the first")), Some(Duration("quarter")))
+    val desired = Switch(
+      Some(sourceEntity),
+      None,
+      Some(destEntity),
+      None
+    )
+
+    testSwitchEvent(found, desired)
+  }
+
 }

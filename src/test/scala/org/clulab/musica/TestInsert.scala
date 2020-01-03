@@ -566,23 +566,25 @@ class TestInsert extends ExtractionTest {
 //  val t38 = "An eighth rest should be added to the start of the space where you just removed a quarter note"
 //
 //  val t39 = "Repeat the G half note in measure 1"
-//
-//  passingTest should s"extract correctly from $t39" in {
-//    val mentions = extractMentions(t39)
-//    val repeatEvents = mentions.filter(_ matches "Repeat")
-//
-//    repeatEvents should have length(1)
-//    val found = repeatEvents.head
-//
-//    val note = Note(Some(Duration("half")), Some(Pitch("G")), Some(Specifier("the")))
-//    val onset = Onset(Some(Measure("1")), None)
-//    val desired = Repeat(
-//      note = Some(note),
-//      onset = Some(onset)
-//    )
-//
-//    testRepeatEvent(found, desired)
-//  }
+  //todo: repeat events seem to have gotten messed up somehow
+  val t39 = "The G half note in measure 1 should be repeated"
+
+  failingTest should s"extract correctly from $t39" in {
+    val mentions = extractMentions(t39)
+    val repeatEvents = mentions.filter(_ matches "Repeat")
+
+    repeatEvents should have length(1)
+    val found = repeatEvents.head
+
+    val musicalEntity = Note(Some(Duration("half")), Some(Pitch("G")), Some(Specifier("the")))
+    val location = Location(Some(LocationTerm("in")), None, Some(Measure("measure 1")), None, None, None)
+    val desired = Insert(
+      Some(musicalEntity),
+      Some(location)
+    )
+
+    testInsertEvent(found, desired)
+  }
 //
 //  val t40 = "In the second bar, the eighth notes repeat traveling up. instead of down."
 //

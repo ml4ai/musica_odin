@@ -21,7 +21,7 @@ rules:
     type: token
     pattern: |
       (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${reverse_triggers})/]) (the order of)?
-      (@musicalEntity:Note|@musicalEntity:Chord|@everything:Everything) @location:Location?
+      (@musicalEntity:Note|@musicalEntity:Chord|@musicalEntity:Everything) @location:Location?
 
   - name: reverse-2-passive
     label: ${label}
@@ -30,7 +30,7 @@ rules:
     type: token
     pattern: |
       (@location:Location [tag=/,/]?)?  (the order of)?
-      (@musicalEntity:Note|@musicalEntity:Chord|@everything:Everything) @location:Location?
+      (@musicalEntity:Note|@musicalEntity:Chord|@musicalEntity:Everything) @location:Location?
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/(?i)^(${reverse_triggers})/])
       @location:Location?
 
@@ -40,7 +40,7 @@ rules:
     example: "Take the notes in the first measure and reverse their order."
     type: token
     pattern: |
-      (@location:Location [tag=/,/])? [tag=/^VB/] (@musicalEntity:Note|@musicalEntity:Chord|@everything:Everything)
+      (@location:Location [tag=/,/])? [tag=/^VB/] (@musicalEntity:Note|@musicalEntity:Chord|@musicalEntity:Everything)
       @location:Location? and (?<trigger>[word=/(?i)^(${reverse_triggers})/]) ([] order?)? @location:Location?
 
   - name: reverse-4-passive-interveningverb
@@ -49,7 +49,7 @@ rules:
     example: "In the first measure, the notes should be taken and their order should be reversed"
     type: token
     pattern: |
-      (@location:Location [tag=/,/])? (@musicalEntity:Note|@musicalEntity:Chord|@everything:Everything)
+      (@location:Location [tag=/,/])? (@musicalEntity:Note|@musicalEntity:Chord|@musicalEntity:Everything)
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]
       @location:Location? and ([] order?) [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${reverse_triggers})/]) @location:Location?

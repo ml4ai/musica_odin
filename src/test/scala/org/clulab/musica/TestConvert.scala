@@ -391,7 +391,6 @@ class TestConvert extends ExtractionTest {
     convertEvents should have length(1)
     val found = convertEvents.head
 
-    // val spec = Specifier("everything")
     val sourceEntity = Note(Some(Duration("half")), None, Some(Specifier("The")))
     val destEntity = Note(Some(Duration("quarter")), None, None)
 

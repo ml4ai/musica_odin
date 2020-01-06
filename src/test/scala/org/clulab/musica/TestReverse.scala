@@ -66,4 +66,42 @@ class TestReverse extends ExtractionTest {
 
     testReverseEvent(found, desired)
   }
+
+  val t4 = "Reverse everything in measure 1"
+
+  passingTest should s"extract correctly from $t4" in {
+    val mentions = extractMentions(t4)
+    val reverseEvents = mentions.filter(_ matches "Reverse")
+
+    reverseEvents should have length(1)
+    val found = reverseEvents.head
+
+    val musicalEntity = Everything("everything")
+    val location = Location(Some(LocationTerm("in")), None, Some(Measure("measure 1")), None, None, None)
+    val desired = Reverse(
+      Some(musicalEntity),
+      Some(location)
+    )
+
+    testReverseEvent(found, desired)
+  }
+
+  val t5 = "Everything in the first two measures should be reversed"
+
+  passingTest should s"extract correctly from $t5" in {
+    val mentions = extractMentions(t5)
+    val reverseEvents = mentions.filter(_ matches "Reverse")
+
+    reverseEvents should have length(1)
+    val found = reverseEvents.head
+
+    val musicalEntity = Everything("Everything")
+    val location = Location(Some(LocationTerm("in")), None, Some(Measure("the first two measures")), None, None, None)
+    val desired = Reverse(
+      Some(musicalEntity),
+      Some(location)
+    )
+
+    testReverseEvent(found, desired)
+  }
 }

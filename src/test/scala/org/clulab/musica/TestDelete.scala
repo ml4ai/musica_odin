@@ -67,10 +67,10 @@ class TestDelete extends ExtractionTest {
     testDeleteEvent(found, desired)
   }
 
-  // needs 'everything' handling
+  // todo: needs 'everything' handling
   val t4 = "Delete everything in the first two bars"
 
-  failingTest should s"extract correctly from $t4" in {
+  passingTest should s"extract correctly from $t4" in {
     val mentions = extractMentions(t4)
     val deleteEvents = mentions.filter(_ matches "Delete")
     //    println(ConversionUtils.mentionToString(convertEvents.head))
@@ -108,10 +108,10 @@ class TestDelete extends ExtractionTest {
     testDeleteEvent(found, desired)
   }
 
-  // needs 'everything' AND relative location handling
+  // todo: needs 'everything' AND relative location handling
   val t6 = "Delete everything before the first half note"
 
-  failingTest should s"extract correctly from $t6" in {
+  passingTest should s"extract correctly from $t6" in {
     val mentions = extractMentions(t6)
     val deleteEvents = mentions.filter(_ matches "Delete")
     //    println(ConversionUtils.mentionToString(convertEvents.head))

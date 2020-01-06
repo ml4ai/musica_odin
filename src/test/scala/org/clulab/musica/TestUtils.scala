@@ -88,13 +88,13 @@ object TestUtils {
       // Test the source entity
       if (desired.sourceEntity.nonEmpty) {
         val sourceEntArgs = m.arguments.getOrElse("sourceEntity", Seq())
-        shouldHaveDesired("EntityMusic", sourceEntArgs, desired.sourceEntity.get)
+        shouldHaveDesired("Entity", sourceEntArgs, desired.sourceEntity.get)
       }
 
       // Test the destination entity
       if (desired.destEntity.nonEmpty) {
         val destEntArgs = m.arguments.getOrElse("destEntity", Seq())
-        shouldHaveDesired("EntityMusic", destEntArgs, desired.destEntity.get)
+        shouldHaveDesired("Entity", destEntArgs, desired.destEntity.get)
       }
 
       // Test the source location
@@ -117,7 +117,7 @@ object TestUtils {
       // Test the musical entity
       if (desired.musicalEntity.nonEmpty) {
         val musicalEntArgs = m.arguments.getOrElse("musicalEntity", Seq())
-        shouldHaveDesired("EntityMusic", musicalEntArgs, desired.musicalEntity.get)
+        shouldHaveDesired("Entity", musicalEntArgs, desired.musicalEntity.get)
       }
 
       // Test the location
@@ -134,7 +134,7 @@ object TestUtils {
       // Test the musical entity
       if (desired.musicalEntity.nonEmpty) {
         val musicalEntArgs = m.arguments.getOrElse("musicalEntity", Seq())
-        shouldHaveDesired("EntityMusic", musicalEntArgs, desired.musicalEntity.get)
+        shouldHaveDesired("Entity", musicalEntArgs, desired.musicalEntity.get)
       }
 
       // Test the location
@@ -152,7 +152,7 @@ object TestUtils {
       // Test the musical entity
       if (desired.musicalEntity.nonEmpty) {
         val musicalEntArgs = m.arguments.getOrElse("musicalEntity", Seq())
-        shouldHaveDesired("EntityMusic", musicalEntArgs, desired.musicalEntity.get)
+        shouldHaveDesired("Entity", musicalEntArgs, desired.musicalEntity.get)
       }
 
       // Test the location
@@ -164,7 +164,7 @@ object TestUtils {
       // Test the axis
       if (desired.axis.nonEmpty) {
         val axisArgs = m.arguments.getOrElse("axis", Seq())
-        shouldHaveDesired("EntityMusic", axisArgs, desired.axis.get)
+        shouldHaveDesired("Entity", axisArgs, desired.axis.get)
       }
     }
 
@@ -174,7 +174,7 @@ object TestUtils {
       // Test the musical entity
       if (desired.musicalEntity.nonEmpty) {
         val musicalEntArgs = m.arguments.getOrElse("musicalEntity", Seq())
-        shouldHaveDesired("EntityMusic", musicalEntArgs, desired.musicalEntity.get)
+        shouldHaveDesired("Entity", musicalEntArgs, desired.musicalEntity.get)
       }
 
       // Test the location
@@ -190,13 +190,13 @@ object TestUtils {
       // Test the source entity
       if (desired.sourceEntity.nonEmpty) {
         val sourceEntArgs = m.arguments.getOrElse("sourceEntity", Seq())
-        shouldHaveDesired("EntityMusic", sourceEntArgs, desired.sourceEntity.get)
+        shouldHaveDesired("Entity", sourceEntArgs, desired.sourceEntity.get)
       }
 
       // Test the destination entity
       if (desired.destEntity.nonEmpty) {
         val destEntArgs = m.arguments.getOrElse("destEntity", Seq())
-        shouldHaveDesired("EntityMusic", destEntArgs, desired.destEntity.get)
+        shouldHaveDesired("Entity", destEntArgs, desired.destEntity.get)
       }
 
       // Test the source location
@@ -215,7 +215,7 @@ object TestUtils {
       // Test the musical entity
       if (desired.musicalEntity.nonEmpty) {
         val musicalEntArgs = m.arguments.getOrElse("musicalEntity", Seq())
-        shouldHaveDesired("EntityMusic", musicalEntArgs, desired.musicalEntity.get)
+        shouldHaveDesired("Entity", musicalEntArgs, desired.musicalEntity.get)
       }
 
       // Test the location

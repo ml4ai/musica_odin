@@ -139,10 +139,9 @@ class TestInvert extends ExtractionTest {
     testInvertEvent(found, desired)
   }
 
-  // todo: needs everything handling
   val t7 = "Invert everything in measure 1"
 
-  failingTest should s"extract correctly from $t7" in {
+  passingTest should s"extract correctly from $t7" in {
     val mentions = extractMentions(t7)
 
     val invertEvents = mentions.filter(_ matches "Invert")

@@ -80,7 +80,7 @@ rules:
 #    action: transpose2Convert
     pattern: |
       (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${transpose_triggers})/])
-      @everything:Everything @direction:Direction? @step:Step @location:Location?
+      @musicalEntity:Everything @direction:Direction? @step:Step @location:Location?
 
   - name: ${label}-7-everything-passive
     label: ${label}
@@ -88,7 +88,7 @@ rules:
     type: token
 #    action: transpose2Convert
     pattern: |
-      (@location:Location [tag=/,/]?)? @everything:Everything @location:Location? [word=/^(${modals})/] to?
+      (@location:Location [tag=/,/]?)? @musicalEntity:Everything @location:Location? [word=/^(${modals})/] to?
       [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${transpose_triggers})/]) @direction:Direction? @step:Step?
 
   - name: ${label}-8-active-fuller

@@ -24,7 +24,7 @@ rules:
     action: replace2Convert
     pattern: |
       (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${replace_triggers})/])
-      (@sourceEntity:EntityMusic|@everything:Everything) @location:Location? (with|by)
+      (@sourceEntity:EntityMusic|@sourceEntity:Everything) @location:Location? (with|by)
       @destEntity:EntityMusic @location:Location?
 
   - name: replace-2-passive
@@ -34,7 +34,7 @@ rules:
     type: token
     action: replace2Convert
     pattern: |
-      (@location:Location [tag=/,/]?)? (@sourceEntity:EntityMusic|@everything:Everything) @location:Location?
+      (@location:Location [tag=/,/]?)? (@sourceEntity:EntityMusic|@sourceEntity:Everything) @location:Location?
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/(?i)^(${replace_triggers})/]) (with|by)
       @destEntity:EntityMusic @location:Location?
 
@@ -45,7 +45,7 @@ rules:
     type: token
     action: replace2Convert
     pattern: |
-      (@location:Location [tag=/,/])? [tag=/^VB/] (@everything:Everything|@sourceEntity:EntityMusic)
+      (@location:Location [tag=/,/])? [tag=/^VB/] (@sourceEntity:Everything|@sourceEntity:EntityMusic)
       @location:Location? and (?<trigger>[word=/(?i)^(${replace_triggers})/]) []? (with|by) @destEntity:EntityMusic
       @location:Location?
 
@@ -56,7 +56,7 @@ rules:
     type: token
     action: replace2Convert
     pattern: |
-      (@location:Location [tag=/,/])? (@everything:Everything|@sourceEntity:EntityMusic)
+      (@location:Location [tag=/,/])? (@sourceEntity:Everything|@sourceEntity:EntityMusic)
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]
       @location:Location? and (?<trigger>[word=/(?i)^(${replace_triggers})/]) (with|by) @destEntity:EntityMusic
       @location:Location?

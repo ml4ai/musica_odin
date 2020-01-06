@@ -346,10 +346,9 @@ class TestTranspose extends ExtractionTest {
 
   }
 
-  // todo: get 'everything' working as a musicalEntity
   val t19 = "Everything should be moved up one step"
 
-  failingTest should s"extract correctly from $t19" in {
+  passingTest should s"extract correctly from $t19" in {
     val mentions = extractMentions(t19)
     val transposeEvents = mentions.filter(_ matches "Transpose")
 
@@ -370,10 +369,9 @@ class TestTranspose extends ExtractionTest {
 
   }
 
-  // todo: get 'everything' working
   val t20 = "Transpose everything down 1 half step"
 
-  failingTest should s"extract correctly from $t20" in {
+  passingTest should s"extract correctly from $t20" in {
     val mentions = extractMentions(t20)
     val transposeEvents = mentions.filter(_ matches "Transpose")
 
@@ -1166,10 +1164,9 @@ class TestTranspose extends ExtractionTest {
 
   }
 
-  // todo: needs 'everything' handling
   val t59 = "Transpose everything up 5 half steps"
 
-  failingTest should s"extract correctly from $t59" in {
+  passingTest should s"extract correctly from $t59" in {
     val mentions = extractMentions(t59)
     val transposeEvents = mentions.filter(_ matches "Transpose")
 

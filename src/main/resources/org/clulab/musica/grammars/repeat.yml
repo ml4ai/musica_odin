@@ -26,7 +26,7 @@ rules:
     action: repeat2Insert
     pattern: |
       (@destLocation:Location [tag=/,/]?)? (?<trigger>[word=/^(${repeat_triggers})/])
-      (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure)
+      (@musicalEntity:Note|@musicalEntity:Everything|@musicalEntity:Measure)
       @sourceLocation:Location? @frequency:Frequency? @destLocation:Location?
 
   - name: repeat-2
@@ -37,7 +37,7 @@ rules:
     action: repeat2Insert
     pattern: |
       (?<trigger>[word=/^(${repeat_triggers})/])
-      (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure)
+      (@musicalEntity:Note|@musicalEntity:Everything|@musicalEntity:Measure)
       @sourceLocation:Location? @destLocation:Location? @frequency:Frequency?
 
   # todo: why does repeat-1 not capture this, but making frequency mandatory works?
@@ -49,7 +49,7 @@ rules:
     action: repeat2Insert
     pattern: |
       (?<trigger>[word=/^(${repeat_triggers})/])
-      (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure)
+      (@musicalEntity:Note|@musicalEntity:Everything|@musicalEntity:Measure)
       @sourceLocation:Location? @frequency:Frequency @destLocation:Location?
 
   - name: repeat-4-passive
@@ -59,7 +59,7 @@ rules:
     type: token
     action: repeat2Insert
     pattern: |
-      (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure) @sourceLocation:Location?
+      (@musicalEntity:Note|@musicalEntity:Everything|@musicalEntity:Measure) @sourceLocation:Location?
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/^(${repeat_triggers})/])
       @frequency:Frequency? @destLocation:Location?
 
@@ -71,7 +71,7 @@ rules:
     action: repeat2Insert
     pattern: |
       (@sourcelocation:Location [tag=/,/])? [tag=/^VB/]
-      (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure) @sourceLocation:Location?
+      (@musicalEntity:Note|@musicalEntity:Everything|@musicalEntity:Measure) @sourceLocation:Location?
       and (?<trigger>[word=/(?i)^(${repeat_triggers})/]) []? @frequency:Frequency @destLocation:Location?
 
   - name: repeat-6-passive-interveningverb
@@ -81,7 +81,7 @@ rules:
     type: token
     action: repeat2Insert
     pattern: |
-      (@sourceLocation:Location [tag=/,/])? (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure)
+      (@sourceLocation:Location [tag=/,/])? (@musicalEntity:Note|@musicalEntity:Everything|@musicalEntity:Measure)
       @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]
       @sourceLocation:Location? and (?<trigger>[word=/(?i)^(${repeat_triggers})/]) @frequency:Frequency
       @destLocation:Location?

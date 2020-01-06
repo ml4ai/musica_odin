@@ -27,7 +27,7 @@ rules:
     action: changeDur2Convert
     pattern: |
       (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
-      (@sourceEntity:EntityMusic|@everything:Everything) @location:Location?
+      (@sourceEntity:EntityMusic|@sourceEntity:Everything) @location:Location?
       (from (@sourceEntity:EntityMusic))? ((to|into) (@destEntity:Rest|@destEntity:PitchSequence))?
       @location:Location?
 
@@ -39,7 +39,7 @@ rules:
     action: changeDur2Convert
     pattern: |
       (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
-      (@sourceEntity:EntityMusic|@everything:Everything) @location:Location?
+      (@sourceEntity:EntityMusic|@sourceEntity:Everything) @location:Location?
       from (@sourceEntity:EntityMusic) ((to|into) (@destEntity:EntityMusic))? @location:Location?
 
   - name: changeduration-3-passive
@@ -49,7 +49,7 @@ rules:
     type: token
     action: changeDur2Convert
     pattern: |
-      (@sourceEntity:EntityMusic|@everything:Everything) @location:Location? [word=/^(${modals})/]?
+      (@sourceEntity:EntityMusic|@sourceEntity:Everything) @location:Location? [word=/^(${modals})/]?
       to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
       @location:Location? (from @sourceEntity:EntityMusic)? ((to|into) @destEntity:EntityMusic)?
       @location:Location?
@@ -63,7 +63,7 @@ rules:
     pattern: |
       @location:Location [tag=/,/]? @location:Location [tag=/,/]?
       (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
-      (@sourceEntity:EntityMusic|@everything:Everything) (from @sourceEntity:EntityMusic)?
+      (@sourceEntity:EntityMusic|@sourceEntity:Everything) (from @sourceEntity:EntityMusic)?
       ((to|into) (@note:Note|@rest:Rest|@pitchsequence:PitchSequence))?
 
   - name: changeduration-5-with-appositive
@@ -74,7 +74,7 @@ rules:
     action: changeDur2Convert
     pattern: |
       @location:Location [tag=/,/]? (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
-      (@sourceEntity:EntityMusic|@everything:Everything) (from @sourceEntity:EntityMusic)?
+      (@sourceEntity:EntityMusic|@sourceEntity:Everything) (from @sourceEntity:EntityMusic)?
       ((to|into) @destEntity:EntityMusic)?
 
   - name: changeduration-6-passive-with-appositive
@@ -84,7 +84,7 @@ rules:
     type: token
     action: changeDur2Convert
     pattern: |
-      @location:Location [tag=/,/] (@sourceEntity:EntityMusic|@everything:Everything) [word=/^(${modals})/]?
+      @location:Location [tag=/,/] (@sourceEntity:EntityMusic|@sourceEntity:Everything) [word=/^(${modals})/]?
       to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
       (from @sourceEntity:EntityMusic)?
       ((to|into) @destEntity:EntityMusic)?
@@ -108,7 +108,7 @@ rules:
     action: changeDur2Convert
     pattern: |
       (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${change_duration_triggers})/])
-      (@sourceEntity:EntityMusic|@everything:Everything) @location:Location?
+      (@sourceEntity:EntityMusic|@sourceEntity:Everything) @location:Location?
       (from @sourceEntity:EntityMusic)? ((to|into) @destEntity:EntityMusic)?
 
   - name: changeduration-9-interveningverb
@@ -118,7 +118,7 @@ rules:
     type: token
     action: changeDur2Convert
     pattern: |
-      (@location:Location [tag=/,/])? [tag=/^VB/] (@sourceEntity:EntityMusic|@everything:Everything)
+      (@location:Location [tag=/,/])? [tag=/^VB/] (@sourceEntity:EntityMusic|@sourceEntity:Everything)
       @location:Location? and (?<trigger>[word=/(?i)^(${change_duration_triggers})/]) []
       (from @sourceEntity:EntityMusic)? ((to|into) @destEntity:EntityMusic)?
 
@@ -129,7 +129,7 @@ rules:
     type: token
     action: changeDur2Convert
     pattern: |
-      (@location:Location [tag=/,/])? (@sourceEntity:EntityMusic|@everything:Everything)
+      (@location:Location [tag=/,/])? (@sourceEntity:EntityMusic|@sourceEntity:Everything)
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] and
       (?<trigger>[word=/(?i)^(${change_duration_triggers})/]) @location:Location?
       (from @sourceEntity:EntityMusic)? ((to|into) @destEntity:EntityMusic)? @location:Location?

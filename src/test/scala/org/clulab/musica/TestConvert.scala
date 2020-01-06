@@ -463,4 +463,113 @@ class TestConvert extends ExtractionTest {
 
     testConvertEvent(found, desired)
   }
+
+  val t23 = "Change the G quarter note to an F"
+
+  passingTest should s"extract correctly from $t23" in {
+    val mentions = extractMentions(t23)
+    val convertEvents = mentions.filter(_ matches "Convert")
+
+    convertEvents should have length(1)
+    val found = convertEvents.head
+
+    val sourceEntity = Note(Some(Duration("quarter")), Some(Pitch("G")), Some(Specifier("the")))
+    val destEntity = Note(None, Some(Pitch("F")), Some(Specifier("an")))
+    val desired = Convert(
+      Some(sourceEntity),
+      None,
+      Some(destEntity)
+    )
+
+    testConvertEvent(found, desired)
+  }
+
+    // todo: not captured by rules
+    val t24 = "The three notes in the third bar changed."
+
+    failingTest should s"extract correctly from $t24" in {
+      val mentions = extractMentions(t24)
+      val transposeEvents = mentions.filter(_ matches "Transpose")
+
+      transposeEvents should have length(1)
+      val found = transposeEvents.head
+
+      val sourceEntity = Note(None, None, Some(Specifier("The three")))
+      val sourceLocation = Location(Some(LocationTerm("in")), None, Some(Measure("3rd bar")), None, None, None)
+      val desired = Convert(
+        Some(sourceEntity),
+        Some(sourceLocation)
+      )
+
+      testConvertEvent(found, desired)
+    }
+
+  val t25 = "The A quarter note in measure 1 should be taken and changed to a G"
+
+  failingTest should s"extract correctly from $t25" in {
+    val mentions = extractMentions(t25)
+    val transposeEvents = mentions.filter(_ matches "Transpose")
+
+    transposeEvents should have length(1)
+    val found = transposeEvents.head
+
+    val sourceEntity = Note(Some(Duration("quarter")), Some(Pitch("A")), Some(Specifier("The")))
+    val sourceLocation = Location(Some(LocationTerm("in")), None, Some(Measure("measure 1")), None, None, None)
+    val destEntity = Note(None, Some(Pitch("G")), Some(Specifier("a")))
+    val desired = Convert(
+      Some(sourceEntity),
+      Some(sourceLocation),
+      Some(destEntity)
+    )
+
+    testConvertEvent(found, desired)
+
+  }
+
+
+  //  // todo: requires 3 notes, and recognizing lowercase pitch
+//  val t9 = "In the 3rd bar you want to change the 3rd note from a d to an a"
+//
+//  failingTest should s"extract correctly from $t9" in {
+//    val mentions = extractMentions(t9)
+//    val transposeEvents = mentions.filter(_ matches "Transpose")
+//
+//    transposeEvents should have length(1)
+//    val found = transposeEvents.head
+//
+//    val musicalEntity = Note(None, None, Some(Specifier("the 3rd")))
+//    val location = Location(Some(LocationTerm("In")), None, Some(Measure("3rd bar")), None, None, None)
+//    val step = Step(cardinality = Some("two"), None)
+//    val desired = Transpose(
+//      Some(musicalEntity),
+//      Some(location),
+//      None,
+//      Some(step)
+//    )
+//
+//    testTransposeEvent(found, desired)
+//  }
+//
+//  // todo: Needs 3 notes
+//  val t18 = "the half note in measure 1 should be taken and changed from an A to a D"
+//
+//  failingTest should s"extract correctly from $t18" in {
+//    val mentions = extractMentions(t18)
+//    val transposeEvents = mentions.filter(_ matches "Transpose")
+//
+//    transposeEvents should have length(1)
+//    val found = transposeEvents.head
+//
+//    val note = Note(Some(Duration("half")), None, Some(Specifier("the")))
+//    val onset = Onset(Some(Measure("1")), None)
+//    val final_note = Note(None, Some(Pitch("D")), Some(Specifier("a")))
+//    val desired = Transpose(
+//      note = Some(note),
+//      onset = Some(onset),
+//      final_note = Some(final_note)
+//    )
+//
+//    testTransposeEvent(found, desired)
+//
+//  }
 }

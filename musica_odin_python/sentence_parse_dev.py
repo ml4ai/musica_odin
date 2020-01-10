@@ -48,9 +48,13 @@ def get_and_print_actions(sentence):
 
 
 if __name__ == '__main__':
-    SENTENCE = "transpose all the notes up 1 whole step"
-    # SENTENCE = "Move the A up three steps"
+    SENTENCES = ["transpose the first quarter note down 1 half step"]
+    # SENTENCES = [
+    #              "transpose all the notes up 1 whole step",
+    #              "transpose the first quarter note down 1 half step",
+    #              "move the A up three steps"]
 
-    print(f'\nSentence: \"{SENTENCE}\"')
-    get_and_print_actions(SENTENCE)
-    antlr_sentence_parse(SENTENCE)
+    for SENTENCE in SENTENCES:
+        print(f'\nSentence: \"{SENTENCE}\"')
+        get_and_print_actions(SENTENCE)
+        antlr_sentence_parse(SENTENCE)

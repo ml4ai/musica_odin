@@ -483,7 +483,6 @@ class TestConvert extends ExtractionTest {
     testConvertEvent(found, desired)
   }
 
-    // todo: not captured by rules
     val t24 = "The three notes in the third bar changed."
 
     failingTest should s"extract correctly from $t24" in {
@@ -494,7 +493,7 @@ class TestConvert extends ExtractionTest {
       val found = transposeEvents.head
 
       val sourceEntity = Note(None, None, Some(Specifier("The three")))
-      val sourceLocation = Location(Some(LocationTerm("in")), None, Some(Measure("3rd bar")), None, None, None)
+      val sourceLocation = Location(Some(LocationTerm("in")), None, Some(Measure("the third bar")), None, None, None)
       val desired = Convert(
         Some(sourceEntity),
         Some(sourceLocation)

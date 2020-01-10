@@ -36,8 +36,8 @@ rules:
     example: "Convert the quarter note in measure 1 into a quarter rest"
     pattern: |
       trigger = [word=/(?i)^(${convert_triggers})/]
-      sourceEntity: Note = >nsubjpass
-      location: Location = (>nsubjpass)? >/nmod_in|nmod_at/
+      sourceEntity: Note = >/nsubjpass|nsubj/
+      location: Location = (>/nsubjpass|nsubj/)? >/nmod_in|nmod_at/
       destEntity: EntityMusic? = >/nmod_into|nmod_to/
 
   - name: convert-1
@@ -89,3 +89,9 @@ rules:
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] and
       (?<trigger>[word=/(?i)^(${convert_triggers})/]) []? (to|into)
       @destEntity:EntityMusic @location:Location?
+#
+#  - name: convert-no-object
+#    label: ${label}
+#    priority: ${rulepriority}
+#    example: "The three notes in the third bar changed"
+#    pattern: |

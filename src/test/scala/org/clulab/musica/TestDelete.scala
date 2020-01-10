@@ -67,7 +67,6 @@ class TestDelete extends ExtractionTest {
     testDeleteEvent(found, desired)
   }
 
-  // todo: needs 'everything' handling
   val t4 = "Delete everything in the first two bars"
 
   passingTest should s"extract correctly from $t4" in {
@@ -108,7 +107,6 @@ class TestDelete extends ExtractionTest {
     testDeleteEvent(found, desired)
   }
 
-  // todo: needs 'everything' AND relative location handling
   val t6 = "Delete everything before the first half note"
 
   passingTest should s"extract correctly from $t6" in {
@@ -131,7 +129,6 @@ class TestDelete extends ExtractionTest {
     testDeleteEvent(found, desired)
   }
 
-  // needs 'everything' AND relative location handling
   val t7 = "Delete all the quarter notes before the first half note"
 
   passingTest should s"extract correctly from $t7" in {

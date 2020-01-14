@@ -52,7 +52,9 @@ if __name__ == '__main__':
     # SENTENCES = [
     #              "transpose all the notes up 1 whole step",
     #              "transpose the first quarter note down 1 half step",
-    #              "move the A up three steps"]
+    #              "move the A up three steps",
+    #              "transpose the minor second up 1 whole step"]
+
 
     for SENTENCE in SENTENCES:
         print(f'\nSentence: \"{SENTENCE}\"')

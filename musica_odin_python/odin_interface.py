@@ -105,7 +105,7 @@ def process_action_mention(action_mention: dict):
         op = 'Invert'
         # NOTE: delete handler covers many cases, except...
         # TODO: add handling of axis of Inversion.
-        args = handle_delete(action_mention)
+        args = handle_invert(action_mention)
     elif 'Reverse' in action_mention['labels']:
         op = 'Reverse'
         # TODO: add handling of axis of Retrograde
@@ -186,6 +186,32 @@ def handle_delete(mention: dict):
                                      'Onset': note['onset'],
                                      'Duration': note['duration']}}}
 
+def handle_invert(mention: dict):
+    # musEnt, location, axis
+    mus_ent = get_musicalEntity(mention)
+
+    if note['onset'] is None and onset is not None:
+        note['onset'] = onset
+    else:
+        if note['onset'] is None and onset is None:
+            # onset not required
+            pass
+        else:
+            print('UNHANDLED CASE: handle_delete() onset:', mention)
+            sys.exit()
+
+    # todo: Axis is not yet handled in MusECI but we have it from Odin
+
+    specifier = None
+    if note['specifier'] is not None:
+        specifier = note['specifier']
+
+
+    return {'MusicEntity': {'Specifier': specifier,
+                            'Note': {'Pitch': note['pitch'],
+                                     'Onset': note['onset'],
+                                     'Duration': note['duration']}}}
+
 
 def handle_reverse(mention: dict):
     onset = get_onset(mention)
@@ -217,7 +243,6 @@ def handle_reverse(mention: dict):
 
 def handle_transpose(mention: dict):
     loc = get_location(mention)
-    # onset = get_onset(mention)
     musicalEntity = get_musicalEntity(mention)
     direction = get_direction(mention)
     step = get_step(mention)
@@ -235,6 +260,7 @@ def handle_transpose(mention: dict):
     specifier = None
     if musicalEntity['specifier'] is not None:
         specifier = musicalEntity['specifier']
+        resolve_location(specifier, loc)
 
     # pprint.pprint(mention)
     #
@@ -256,6 +282,11 @@ def handle_transpose(mention: dict):
                                 'Chord': {'chord_type': musicalEntity['chord_type']}},
                 'Direction': direction,
                 'Step': step}
+
+
+def resolve_location(specifier, loc):
+    if 'relativePos' in loc:
+        specifier['relative_location'] = loc['relativePos']
 
 
 # ------------------------------------------------------------------------
@@ -435,23 +466,48 @@ def get_location(mention: dict, arg_name: str = "location"):
     :return:
     """
     if arg_name in mention['arguments']:
-        lm = mention['arguments'][arg_name][0]['arguments']
+        lm = mention['arguments'][arg_name][0]
+        lm_args = lm['arguments']
+        # get the trigger if there is one
+        location_term = None
+        if 'trigger' in lm:
+            location_term = lm['trigger']['words']
 
         # find beat
         beat = None
         # TODO: add verbose failure conditions
-        if 'beat' in lm:
-            om_beat_args = lm['beat'][0]['arguments']
+        if 'beat' in lm_args:
+            om_beat_args = lm_args['beat'][0]['arguments']
             beat = get_property_value(om_beat_args, 'cardinality')
 
         # find measure
         measure = None
         # TODO: add verbose failure conditions
-        if 'measure' in lm:
-            om_measure_args = lm['measure'][0]['arguments']
+        if 'measure' in lm_args:
+            om_measure_args = lm_args['measure'][0]['arguments']
             measure = get_property_value(om_measure_args, 'cardinality')
 
-        return {'beat': beat, 'measure': measure}
+        rel_pos = {'relation': location_term}
+
+        # find note, if any
+        note = None
+        if 'note' in lm_args:
+            om_note = lm_args['note'][0]
+            rel_pos['music_ent'] = get_note(om_note)
+
+        # find chord, if any
+        chord = None
+        if 'chord' in lm_args:
+            om_chord = lm_args['chord'][0]
+            rel_pos['music_ent'] = get_chord(om_chord)
+
+        # find chord, if any
+        rest = None
+        if 'rest' in lm_args:
+            om_rest = lm_args['rest'][0]
+            rel_pos['music_ent'] = get_rest(om_rest)
+
+        return {'beat': beat, 'measure': measure, 'relativePos': rel_pos}
     else:
         # print('NO Onset')
         return None

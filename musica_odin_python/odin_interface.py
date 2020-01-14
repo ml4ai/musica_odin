@@ -202,15 +202,16 @@ def handle_reverse(mention: dict):
 # Handle Transpose
 
 def handle_transpose(mention: dict):
-    onset = get_onset(mention)
+    loc = get_location(mention)
+    # onset = get_onset(mention)
     musicalEntity = get_musicalEntity(mention)
     direction = get_direction(mention)
     step = get_step(mention)
 
-    if musicalEntity['onset'] is None and onset is not None:
-        musicalEntity['onset'] = onset
+    if musicalEntity['onset'] is None and loc is not None:
+        musicalEntity['onset'] = resolve_onset(musicalEntity, loc)
     else:
-        if musicalEntity['onset'] is None and onset is None:
+        if musicalEntity['onset'] is None and loc is None:
             # onset not required
             pass
         else:
@@ -335,8 +336,9 @@ def get_property_value(arguments: dict, property_name: str, value_key='words'):
     property_value = None
     if property_name in arguments:
         property_args = arguments[property_name][0]
-        if 'words' in property_args:
-            property_value = property_args[value_key][0]
+        if value_key in property_args:
+            # fixme: prob make a list
+            property_value = ", ".join(property_args[value_key])
     return property_value
 
 
@@ -369,51 +371,106 @@ def get_onset(mention: dict):
         # print('NO Onset')
         return None
 
-def get_musicalEntity(mention: dict):
+def get_location(mention: dict, arg_name: str = "location"):
+    """
+    Extract location info from a musica_odin mention
+    Includes (optional): beat, measure, location term, Note, Rest, Chord
+    :param mention: musica_odin mention
+    :return:
+    """
+    if arg_name in mention['arguments']:
+        lm = mention['arguments'][arg_name][0]['arguments']
+
+        # find beat
+        beat = None
+        # TODO: add verbose failure conditions
+        if 'beat' in lm:
+            om_beat_args = lm['beat'][0]['arguments']
+            beat = get_property_value(om_beat_args, 'cardinality')
+
+        # find measure
+        measure = None
+        # TODO: add verbose failure conditions
+        if 'measure' in lm:
+            om_measure_args = lm['measure'][0]['arguments']
+            measure = get_property_value(om_measure_args, 'cardinality')
+
+        return {'beat': beat, 'measure': measure}
+    else:
+        # print('NO Onset')
+        return None
+
+def resolve_onset(mus_ent, loc):
+    # fixme: currently this method does essentially nothing, but we're thinking that we may need to reason a little here
+    # ... if not, delete
+    beat = loc['beat']
+    measure = loc['measure']
+
+    return {'beat': beat, 'measure': measure}
+
+def get_musicalEntity(mention: dict, arg_name: str = "musicalEntity"):
     """
     Extract musicalEntity info from a musica_odin mention
     musicalEntity may be a note, rest, chord, measure
     Initial assumption is NOTE -- needs updating later
     :param mention: musica_odin mention
+    :param arg_name: string name of the musical entity's argument role
     :return:
     """
-    if 'musicalEntity' in mention['arguments']:
-        nm = mention['arguments']['musicalEntity'][0]['arguments']
+    if arg_name in mention['arguments']:
+        assert(len(mention['arguments'][arg_name]) == 1)
+        mus_ent = mention['arguments'][arg_name][0]
+        # nm = mention['arguments']['musicalEntity'][0]['arguments']
 
-        pitch_info = None
-        # find pitch
-        if 'pitch' in nm:
-            pitch_info = get_property_value(nm, 'pitch')
-            pitch_info = parse_pitch(pitch_info)
+        mlabel = mus_ent['labels'][0]
+        print(mlabel)
 
-        onset_info = None
-        # I don't think this will ever happen
-        if 'onset' in nm:
-            onset_info = get_property_value(nm, 'onset')
+        #try using label to run different musicalEntities
+        if mlabel == 'Note':
+            return get_note(mus_ent)
+        elif mlabel == 'Rest':
+            return get_rest(mention)
+        # elif mlabel == 'Chord':
+        #     get_chord(mention)
+        # elif mlabel == 'Measure':
+        #     get_measure(mention)
+        else:
+            pass
 
-        duration_info = None
-        if 'duration' in nm:
-            duration_info = get_property_value(nm, 'duration')
-            duration_info = parse_duration(duration_info)
-
-        specifier_info = None
-        if 'specifier' in nm:
-            specifier_info = get_specifier(nm)
-
-        return {'pitch': pitch_info,
-                'onset': onset_info,
-                'duration': duration_info,
-                'specifier': specifier_info}
-
-    else:
-        # If no note found, return an unspecified note
-        # TODO: if no note is mentioned, then perhaps this should be None?
-        #       But if return None, that breaks Action handlers that expect Notes to exist
-        #       Really this depends on PyECI expectations.
-        return {'pitch': None,
-                'onset': None,
-                'duration': None,
-                'specifier': None}
+    #     pitch_info = None
+    #     # find pitch
+    #     if 'pitch' in nm:
+    #         pitch_info = get_property_value(nm, 'pitch')
+    #         pitch_info = parse_pitch(pitch_info)
+    #
+    #     onset_info = None
+    #     # I don't think this will ever happen
+    #     if 'onset' in nm:
+    #         onset_info = get_property_value(nm, 'onset')
+    #
+    #     duration_info = None
+    #     if 'duration' in nm:
+    #         duration_info = get_property_value(nm, 'duration')
+    #         duration_info = parse_duration(duration_info)
+    #
+    #     specifier_info = None
+    #     if 'specifier' in nm:
+    #         specifier_info = get_specifier(nm)
+    #
+    #     return {'pitch': pitch_info,
+    #             'onset': onset_info,
+    #             'duration': duration_info,
+    #             'specifier': specifier_info}
+    #
+    # else:
+    #     # If no note found, return an unspecified note
+    #     # TODO: if no note is mentioned, then perhaps this should be None?
+    #     #       But if return None, that breaks Action handlers that expect Notes to exist
+    #     #       Really this depends on PyECI expectations.
+    #     return {'pitch': None,
+    #             'onset': None,
+    #             'duration': None,
+    #             'specifier': None}
 
 def get_note(mention: dict):
     """
@@ -422,43 +479,62 @@ def get_note(mention: dict):
     :param mention: musica_odin mention
     :return:
     """
-    if 'note' in mention['arguments']:
-        nm = mention['arguments']['note'][0]['arguments']
 
-        pitch_info = None
-        # find pitch
-        if 'pitch' in nm:
-            pitch_info = get_property_value(nm, 'pitch')
-            pitch_info = parse_pitch(pitch_info)
+    note_args = mention['arguments']
 
-        onset_info = None
-        # I don't think this will ever happen
-        if 'onset' in nm:
-            onset_info = get_property_value(nm, 'onset')
+    pitch_info = None
+    # find pitch
+    if 'pitch' in note_args:
+        pitch_info = get_property_value(note_args, 'pitch')
+        pitch_info = parse_pitch(pitch_info)
 
-        duration_info = None
-        if 'duration' in nm:
-            duration_info = get_property_value(nm, 'duration')
-            duration_info = parse_duration(duration_info)
+    # onset_info = None
+    # # I don't think this will ever happen
+    # if 'onset' in nm:
+    #     onset_info = get_property_value(nm, 'onset')
 
-        specifier_info = None
-        if 'specifier' in nm:
-            specifier_info = get_specifier(nm)
+    duration_info = None
+    if 'duration' in note_args:
+        duration_info = get_property_value(note_args, 'duration')
+        duration_info = parse_duration(duration_info)
 
-        return {'pitch': pitch_info,
-                'onset': onset_info,
-                'duration': duration_info,
-                'specifier': specifier_info}
+    specifier_info = None
+    if 'specifier' in note_args:
+        specifier_info = get_specifier(note_args)
 
-    else:
-        # If no note found, return an unspecified note
-        # TODO: if no note is mentioned, then perhaps this should be None?
-        #       But if return None, that breaks Action handlers that expect Notes to exist
-        #       Really this depends on PyECI expectations.
-        return {'pitch': None,
-                'onset': None,
-                'duration': None,
-                'specifier': None}
+    return {'pitch': pitch_info,
+            'onset': None,  # todo: revisit
+            'duration': duration_info,
+            'specifier': specifier_info}
+
+
+def get_rest(mention: dict):
+    """
+    Extract note info from a musica_odin mention
+    Includes (optional): pitch, onset, duration, specifier (associated with note)
+    :param mention: musica_odin mention
+    :return:
+    """
+
+    args = mention['arguments']
+
+    # onset_info = None
+    # # I don't think this will ever happen
+    # if 'onset' in nm:
+    #     onset_info = get_property_value(nm, 'onset')
+
+    duration_info = None
+    if 'duration' in args:
+        duration_info = get_property_value(args, 'duration')
+        duration_info = parse_duration(duration_info)
+
+    specifier_info = None
+    if 'specifier' in args:
+        specifier_info = get_specifier(args)
+
+    return {'onset': None,  # todo: revisit
+            'duration': duration_info,
+            'specifier': specifier_info}
 
 
 def parse_duration(duration_info: str) -> dict:
@@ -539,6 +615,7 @@ def get_specifier(mention: dict) -> dict:
         cardinality = attempt_cardinality_to_int(cardinality)
 
     set_choice = None
+    # todo: does this exist in the Odin/scala side?
     if 'set_choice' in specifier_args:
         set_choice = get_property_value(specifier_args, 'set_choice')
 

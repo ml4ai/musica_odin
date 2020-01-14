@@ -4,12 +4,6 @@ vars: org/clulab/musica/grammars/triggers.yml
 
 rules:
 
-# RE typing (previously convert-note, convert-chord, and convert-rest)
-  # todo: we can either NOT CARE if it's covert or X
-  # todo: OR we can pass this to an action--if they are different labels, keep it; otherwise, change the type
-  # todo: e.g. ensure type conversion
-
-  # works for both active and passive
   - name: convert-0a-syntax-that-is-in
     label: ${label}
     priority: ${rulepriority}
@@ -36,8 +30,8 @@ rules:
     example: "Convert the quarter note in measure 1 into a quarter rest"
     pattern: |
       trigger = [word=/(?i)^(${convert_triggers})/]
-      sourceEntity: Note = >nsubjpass
-      location: Location = (>nsubjpass)? >/nmod_in|nmod_at/
+      sourceEntity: Note = >/nsubjpass|nsubj/
+      location: Location = (>/nsubjpass|nsubj/)? >/nmod_in|nmod_at/
       destEntity: EntityMusic? = >/nmod_into|nmod_to/
 
   - name: convert-1
@@ -46,7 +40,7 @@ rules:
     type: token
     pattern: |
       (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${convert_triggers})/])
-      @musicalEntity:EntityMusic @location:Location? (from @sourceEntity:EntityMusic)? (to|into)
+      @sourceEntity:EntityMusic @location:Location? (from @sourceEntity:EntityMusic)? (to|into)
       @destEntity:EntityMusic @location:Location?
 
   # todo: will need to be handled later by all event types

@@ -23,7 +23,7 @@ rules:
     type: token
     pattern: |
       (?<trigger>[word=/(?i)^(${invert_triggers})/])
-      (@everything:Everything|@musicalEntity:Note|@musicalEntity:Chord|@musicalEntity:Measure)
+      (@musicalEntity:Everything|@musicalEntity:Note|@musicalEntity:Chord|@musicalEntity:Measure)
       @location:Location? (around (@axis:Note|@axis:Pitch))? @location:Location?
 
   - name: invert-2-location-at-start
@@ -33,7 +33,7 @@ rules:
     type: token
     pattern: |
       (@location:Location [tag=/,/]?) (?<trigger>[word=/(?i)^(${invert_triggers})/])
-      (@everything:Everything|@musicalEntity:Note|@musicalEntity:Chord) (around (@axis:Note|@axis:Pitch))?
+      (@musicalEntity:Everything|@musicalEntity:Note|@musicalEntity:Chord) (around (@axis:Note|@axis:Pitch))?
 
   - name: invert-3-passive
     label: ${label}
@@ -41,7 +41,7 @@ rules:
     example: "The first measure should be inverted around middle C"
     type: token
     pattern: |
-      (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure|@musicalEntity:Chord)
+      (@musicalEntity:Note|@musicalEntity:Everything|@musicalEntity:Measure|@musicalEntity:Chord)
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
       (?<trigger>[word=/^(${invert_triggers})/]) (around (@axis:Note|@axis:Pitch))?
       @location:Location?
@@ -53,7 +53,7 @@ rules:
     type: token
     pattern: |
       (@location:Location [tag=/,/]?)
-      (@musicalEntity:Note|@everything:Everything|@musicalEntity:Measure|@musicalEntity:Chord)
+      (@musicalEntity:Note|@musicalEntity:Everything|@musicalEntity:Measure|@musicalEntity:Chord)
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/^(${invert_triggers})/])
       (around (@axis:Note|@axis:Pitch))?
 
@@ -64,7 +64,7 @@ rules:
     type: token
     pattern: |
       (@location:Location [tag=/,/])? [tag=/^VB/]
-      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@musicalEntity:Everything)
       @location:Location? and (?<trigger>[word=/(?i)^(${invert_triggers})/]) []?
       (@axis:Note|@axis:Pitch)?
 
@@ -74,6 +74,6 @@ rules:
     example: "The first quarter note should be taken and inverted around A4 in measure 1"
     type: token
     pattern: |
-      (@location:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      (@location:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@musicalEntity:Everything)
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] @location:Location?
       and (?<trigger>[word=/(?i)^(${invert_triggers})/]) (@axis:Note|@axis:Pitch)? @location:Location?

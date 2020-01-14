@@ -21,7 +21,7 @@ rules:
     type: token
     pattern: |
       (@location:Location [tag=/,/]?)? (?<trigger>[word=/(?i)^(${delete_triggers})/])
-      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@musicalEntity:Everything)
       @location:Location?
 
   - name: delete-2-passive
@@ -31,7 +31,7 @@ rules:
     type: token
     pattern: |
       (@location:Location [tag=/,/])?
-      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@musicalEntity:Everything)
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${delete_triggers})/]) @location:Location?
 
@@ -75,7 +75,7 @@ rules:
     type: token
     pattern: |
       (@location:Location [tag=/,/])? [tag=/^VB/]
-      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@musicalEntity:Everything)
       @location:Location? and (?<trigger>[word=/(?i)^(${delete_triggers})/]) @location:Location?
 
   - name: delete-7-passive-interveningverb
@@ -84,6 +84,6 @@ rules:
     example: "The first quarter note should be taken and deleted from measure 1"
     type: token
     pattern: |
-      (@location:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      (@location:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@musicalEntity:Everything)
       @location:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] @location:Location?
       and (?<trigger>[word=/(?i)^(${delete_triggers})/]) @location:Location?

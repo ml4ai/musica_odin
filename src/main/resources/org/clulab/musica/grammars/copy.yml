@@ -61,7 +61,7 @@ rules:
     action: copy2Insert
     pattern: |
       (?<trigger>[word=/(?i)^(${copy_triggers})/])
-      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@musicalEntity:Everything)
       @sourceLocation:Location? @destLocation:Location? @frequency:Frequency?
 
   - name: copy-2-passive
@@ -71,7 +71,7 @@ rules:
     type: token
     action: copy2Insert
     pattern: |
-      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@musicalEntity:Everything)
       @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location? @frequency:Frequency?
 
@@ -83,7 +83,7 @@ rules:
     action: copy2Insert
     pattern: |
       @sourceLocation:Location [tag=/,/]? (?<trigger>[word=/(?i)^(${copy_triggers})/])
-      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything) @frequency:Frequency?
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@musicalEntity:Everything) @frequency:Frequency?
 
   - name: copy-4-passive-underspecified
     label: ${label}
@@ -92,7 +92,7 @@ rules:
     type: token
     action: copy2Insert
     pattern: |
-      @sourceLocation:Location [tag=/,/]? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      @sourceLocation:Location [tag=/,/]? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@musicalEntity:Everything)
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/] (?<trigger>[word=/(?i)^(${copy_triggers})/])
       @frequency:Frequency?
 
@@ -104,7 +104,7 @@ rules:
     action: copy2Insert
     pattern: |
       (@sourceLocation:Location [tag=/,/])? [tag=/^VB/]
-      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      (@musicalEntity:EntityMusic|@musicalEntity:Measure|@musicalEntity:Everything)
       @sourceLocation:Location? and (?<trigger>[word=/(?i)^(${copy_triggers})/]) []
       @destLocation:Location? @frequency:Frequency?
 
@@ -115,6 +115,6 @@ rules:
     type: token
     action: copy2Insert
     pattern: |
-      (@sourceLocation:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@everything:Everything)
+      (@sourceLocation:Location [tag=/,/])? (@musicalEntity:EntityMusic|@musicalEntity:Measure|@musicalEntity:Everything)
       @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/] @sourceLocation:Location?
       and (?<trigger>[word=/(?i)^(${copy_triggers})/]) @destLocation:Location? @frequency:Frequency?

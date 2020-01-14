@@ -54,7 +54,7 @@ rules:
     type: token
     action: move2Convert
     pattern: |
-      (?<trigger>[word=/(?i)^(${move_triggers})/]) (@everything:Everything|@musicalEntity:EntityMusic)
+      (?<trigger>[word=/(?i)^(${move_triggers})/]) (@musicalEntity:Everything|@musicalEntity:EntityMusic)
       @timestep:TimeStep
 
   - name: move-4-passive
@@ -64,7 +64,7 @@ rules:
     type: token
     action: move2Convert
     pattern: |
-      (@everything:Everything|@musicalEntity:EntityMusic) @sourceLocation:Location?
+      (@musicalEntity:Everything|@musicalEntity:EntityMusic) @sourceLocation:Location?
       [word=/^(${modals})/]? to? [word=/^(${aux_be})/]? (?<trigger>[word=/(?i)^(${move_triggers})/])
       @sourceLocation:Location? (@destLocation:Location|@timestep:TimeStep)
 
@@ -75,7 +75,7 @@ rules:
     type: token
     action: move2Convert
     pattern: |
-      (@sourcelocation:Location [tag=/,/])? [tag=/^VB/] (@everything:Everything|@musicalEntity:EntityMusic)
+      (@sourcelocation:Location [tag=/,/])? [tag=/^VB/] (@musicalEntity:Everything|@musicalEntity:EntityMusic)
       @sourceLocation:Location? and (?<trigger>[word=/(?i)^(${move_triggers})/]) []? @destLocation:Location?
 
   - name: move-6-passive-interveningverb
@@ -85,6 +85,6 @@ rules:
     type: token
     action: move2Convert
     pattern: |
-      (@sourceLocation:Location [tag=/,/])? (@everything:Everything|@musicalEntity:EntityMusic)
+      (@sourceLocation:Location [tag=/,/])? (@musicalEntity:Everything|@musicalEntity:EntityMusic)
       @sourceLocation:Location? [word=/^(${modals})/]? to? [word=/^(${aux_be})/] [tag=/^VB/]
       @sourceLocation:Location? and (?<trigger>[word=/(?i)^(${move_triggers})/]) @destLocation:Location?

@@ -134,24 +134,33 @@ def action_spec_to_ecito(spec):
 
 
 def handle_insert(mention: dict):
-    onset = get_onset(mention)
-    note = get_note(mention)
+    loc = get_location(mention)
+    # onset = get_onset(mention)
+    musical_entity = get_musicalEntity(mention)
+    freq = get_frequency(mention)
 
-    if note['onset'] is None and onset is not None:
-        note['onset'] = onset
+    if musical_entity['onset'] is None and loc is not None:
+        musical_entity['onset'] = resolve_onset(musical_entity, loc)
     else:
         # Appears to require an onset ?
         print('UNHANDLED CASE: handle_insert() onset:', mention)
         sys.exit()
 
     specifier = None
-    if note['specifier'] is not None:
-        specifier = note['specifier']
+    if musical_entity['specifier'] is not None:
+        specifier = musical_entity['specifier']
 
-    return {'MusicEntity': {'Specifier': specifier,
-                            'Note': {'Pitch': note['pitch'],
-                                     'Onset': note['onset'],
-                                     'Duration': note['duration']}}}
+    #fixme
+    mus_ent_type = mention['arguments']['musicalEntity'][0]['labels'][0]
+
+    if mus_ent_type == 'Note':
+        return {'MusicEntity': {'Specifier': specifier,
+                                'Note': {'Pitch': musical_entity['pitch'],
+                                         'Onset': musical_entity['onset'],
+                                         'Duration': musical_entity['duration']}}}
+    elif mus_ent_type == 'Chord':
+        return {'MusicEntity': {'Specifier': specifier,
+                                'Chord': {'chord_type': musical_entity['chord_type']}}}
 
 
 def handle_delete(mention: dict):

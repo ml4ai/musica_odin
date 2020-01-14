@@ -33,6 +33,10 @@ import PyECI
 # (2) Create translator from PyECI_spec to *actual* PyECI (help from Donya)
 
 
+class OdinInterfaceException(Exception):
+    pass
+
+
 # ------------------------------------------------------------------------
 # Single Odin processing request functionality
 # ------------------------------------------------------------------------
@@ -201,6 +205,7 @@ def handle_reverse(mention: dict):
 # ------------------------------------------------------------------------
 # Handle Transpose
 
+
 def handle_transpose(mention: dict):
     loc = get_location(mention)
     # onset = get_onset(mention)
@@ -243,6 +248,7 @@ def handle_transpose(mention: dict):
                 'Direction': direction,
                 'Step': step}
 
+
 # ------------------------------------------------------------------------
 
 def eci_direction(spec):
@@ -280,13 +286,16 @@ def eci_amount(spec):
     return ExtraTypes.PitchInterval(value=PyECI.Abstractions.Integer(value=value), unit=unit)
 
 
-def eci_music_entity(spec):
-
-    # print('eci_music_entity()')
-
-    specifier = None
-    if 'Specifier' in spec and spec['Specifier'] is not None:
-        specifier_spec = spec['Specifier']
+def handle_specifier(specifier_spec):
+    # TODO: Donya's working example of parsing "transpose all notes up 1 whole step"
+    #       returns
+    #       Transpose(target=Note(specifier=Specifier(determiner=All())),
+    #                 direction=Up(),
+    #                 amount=PitchInterval(value=Integer(value=1), unit=WholeStep()))
+    #       Note that
+    if specifier_spec['quantifier'] == 'all' and specifier_spec['cardinality'] is None and specifier_spec['set_choice'] is None:
+        return PyECI.Abstractions.All()
+    else:
         determiner = None
         if 'Determiner' in specifier_spec:
             determiner_spec = specifier_spec['Determiner']
@@ -302,9 +311,21 @@ def eci_music_entity(spec):
         #     chord_type = specifier_spec['chord_type']
         if 'SetChoice' in specifier_spec:
             set_choice = specifier_spec['SetChoice']
-        specifier = PyECI.Abstractions.Specifier(determiner=determiner,
-                                                 cardinality=cardinality,
-                                                 setChoice=set_choice)
+        return PyECI.Abstractions.Specifier(determiner=determiner,
+                                            cardinality=cardinality,
+                                            setChoice=set_choice)
+    # TODO: add proper error handling...
+    # raise OdinInterfaceException(f"ERROR: Unknown Specifier \'{specifier}\'")
+
+
+def eci_music_entity(spec):
+
+    # print('eci_music_entity()')
+
+    specifier = None
+    if 'Specifier' in spec and spec['Specifier'] is not None:
+        specifier_spec = spec['Specifier']
+        specifier = handle_specifier(specifier_spec)
 
     music_entity = None
     if 'Note' in spec:
@@ -396,6 +417,7 @@ def get_onset(mention: dict):
         # print('NO Onset')
         return None
 
+
 def get_location(mention: dict, arg_name: str = "location"):
     """
     Extract location info from a musica_odin mention
@@ -425,6 +447,7 @@ def get_location(mention: dict, arg_name: str = "location"):
         # print('NO Onset')
         return None
 
+
 def resolve_onset(mus_ent, loc):
     # fixme: currently this method does essentially nothing, but we're thinking that we may need to reason a little here
     # ... if not, delete
@@ -432,6 +455,7 @@ def resolve_onset(mus_ent, loc):
     measure = loc['measure']
 
     return {'beat': beat, 'measure': measure}
+
 
 def get_musicalEntity(mention: dict, arg_name: str = "musicalEntity"):
     """

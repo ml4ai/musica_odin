@@ -180,17 +180,16 @@ def handle_delete(mention: dict):
 def handle_invert(mention: dict):
     # musEnt, location, axis
     loc = get_location(mention)
-    musicalEntity = get_musicalEntity(mention)
+    musicalEntity, m_type = get_musicalEntity(mention)
     # todo: Axis is not yet handled in MusECI but we have it from Odin
     axis = get_axis(mention)
+
     resolve_music_ent(musicalEntity, loc, mention)
-
-
+    specifier = mk_specifier(musicalEntity, loc)
+    mus_ent_dict = mk_music_entity_dict(musicalEntity, m_type)
 
     return {'MusicEntity': {'Specifier': specifier,
-                            'Note': {'Pitch': note['pitch'],
-                                     'Onset': note['onset'],
-                                     'Duration': note['duration']}}}
+                            m_type: mus_ent_dict}}
 
 
 def handle_reverse(mention: dict):
@@ -261,10 +260,10 @@ def handle_transpose(mention: dict):
     # mus_ent_type = mention['arguments']['musicalEnti ty'][0]['labels'][0]
 
     return {'MusicEntity': {'Specifier': specifier,
-                            m_type: mus_ent_dict,
-                            'Direction': direction,
-                            'Step': step}
-            }
+                            m_type: mus_ent_dict},
+            'Direction': direction,
+            'Step': step}
+            
 
 
 def resolve_location(specifier, loc):

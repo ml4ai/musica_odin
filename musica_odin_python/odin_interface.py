@@ -6,6 +6,7 @@ import requests
 import MusECI
 import ExtraTypes
 import PyECI
+import warnings
 
 
 # ------------------------------------------------------------------------
@@ -119,6 +120,8 @@ def process_action_mention(action_mention: dict):
 
 def action_spec_to_ecito(spec):
     ecito = None
+    if spec['action'] == 'Insert':
+        ecito = eci_insert(spec)
     if spec['action'] == 'Transpose':
         ecito = eci_transpose(spec)
     return ecito
@@ -136,46 +139,19 @@ def action_spec_to_ecito(spec):
 def handle_insert(mention: dict):
     loc = get_location(mention)
     # onset = get_onset(mention)
-    musical_entity = get_musicalEntity(mention)
+    musical_entity, m_type = get_musicalEntity(mention)
+    #fixme
+    freq = None
     # freq = get_frequency(mention)
 
-    if musical_entity['onset'] is None and loc is not None:
-        musical_entity['onset'] = resolve_onset(musical_entity, loc)
-    else:
-        if musical_entity['onset'] is None and loc is None:
-            # onset not required
-            pass
-        else:
-            print('UNHANDLED CASE: handle_transpose() onset:', mention)
-            sys.exit()
+    resolve_music_ent(musical_entity, loc, mention)
+    specifier = mk_specifier(musical_entity, loc)
 
-    # if musical_entity['onset'] is None and loc is not None:
-    #     musical_entity['onset'] = resolve_onset(musical_entity, loc)
-    # else:
-    #     # Appears to require an onset ?
-    #     print('UNHANDLED CASE: handle_insert() onset:', mention)
-    #     sys.exit()
+    mus_ent_dict = mk_music_entity_dict(musical_entity, m_type)
 
-    specifier = None
-    if musical_entity['specifier'] is not None:
-        specifier = musical_entity['specifier']
-        # resolve_location(specifier, loc)
-
-    #fixme
-    mus_ent_type = mention['arguments']['musicalEntity'][0]['labels'][0]
-
-    if mus_ent_type == 'Note':
-        return {'MusicEntity': {'Specifier': specifier,
-                                'Note': {'Pitch': musical_entity['pitch'],
-                                         'Onset': musical_entity['onset'],
-                                         'Duration': musical_entity['duration']}}}
-    elif mus_ent_type == 'Chord':
-        return {'MusicEntity': {'Specifier': specifier,
-                                'Chord': {'chord_type': musical_entity['chord_type']}}}
-    elif mus_ent_type == 'Rest':
-        return {'MusicEntity': {'Specifier': specifier,
-                                'Rest': {'Onset': musical_entity['onset'],
-                                         'Duration': musical_entity['duration']}}}
+    return {'MusicEntity': {'Specifier': specifier,
+                            m_type: mus_ent_dict},
+            'Frequency': freq}
 
 
 def handle_delete(mention: dict):
@@ -261,8 +237,6 @@ def mk_specifier(musicalEntity, loc):
         resolve_location(specifier, loc)
     return specifier
 
-<<<<<<< HEAD
-=======
 def mk_music_entity_dict(musicalEntity, m_type):
     if m_type == 'Note':
         return {'Pitch': musicalEntity['pitch'],
@@ -282,10 +256,6 @@ def handle_transpose(mention: dict):
 
     mus_ent_dict = mk_music_entity_dict(musicalEntity, m_type)
 
->>>>>>> 0dba63050a9367e85bf24c0e954d55d973c30c13
-    #fixme
-    # mus_ent_type = mention['arguments']['musicalEnti ty'][0]['labels'][0]
-
     return {'MusicEntity': {'Specifier': specifier,
                             m_type: mus_ent_dict},
             'Direction': direction,
@@ -294,8 +264,9 @@ def handle_transpose(mention: dict):
 
 
 def resolve_location(specifier, loc):
-    if 'relativePos' in loc:
-        specifier['relative_location'] = loc['relativePos']
+    if loc:
+        if 'relativePos' in loc:
+            specifier['relative_location'] = loc['relativePos']
 
 
 # ------------------------------------------------------------------------
@@ -413,6 +384,16 @@ def eci_transpose(spec):
     target = eci_music_entity(args['MusicEntity'])
     amount = eci_amount(args['Step'])
     return ExtraTypes.Transpose(target=target, direction=direction, amount=amount)
+
+def eci_insert(spec):
+    warnings.warn("TODO: Clay. eci_insert not fully implemented: eci_frequency and eci_location don't exist; antlr code doesn't yet support insert")
+    args = spec['arguments']
+    return None
+    target = eci_music_entity(args['MusicEntity'])
+    location = eci_location(args['Location'])
+    frequency = eci_frequency(args['Frequency'])
+    return ExtraTypes.Insert(target=target, location=location, frequency=frequency)
+
 
 
 # ------------------------------------------------------------------------

@@ -20,7 +20,7 @@ def get_and_print_actions(sentence):
     print('\n----- Musica Odin -----')
     r = odin_interface.odin_request(sentence)
     mentions = json.loads(r.text)
-    pprint.pprint(mentions)
+    # pprint.pprint(mentions)
     action_mentions = odin_interface.filter_actions(mentions)
     actions = list()
     for filtered_action in action_mentions:

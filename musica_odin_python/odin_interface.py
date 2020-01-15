@@ -179,23 +179,12 @@ def handle_delete(mention: dict):
 
 def handle_invert(mention: dict):
     # musEnt, location, axis
-    mus_ent = get_musicalEntity(mention)
-
-    if note['onset'] is None and onset is not None:
-        note['onset'] = onset
-    else:
-        if note['onset'] is None and onset is None:
-            # onset not required
-            pass
-        else:
-            print('UNHANDLED CASE: handle_delete() onset:', mention)
-            sys.exit()
-
+    loc = get_location(mention)
+    musicalEntity = get_musicalEntity(mention)
     # todo: Axis is not yet handled in MusECI but we have it from Odin
+    axis = get_axis(mention)
 
-    specifier = None
-    if note['specifier'] is not None:
-        specifier = note['specifier']
+
 
 
     return {'MusicEntity': {'Specifier': specifier,
@@ -231,13 +220,7 @@ def handle_reverse(mention: dict):
 # ------------------------------------------------------------------------
 # Handle Transpose
 
-
-def handle_transpose(mention: dict):
-    loc = get_location(mention)
-    musicalEntity = get_musicalEntity(mention)
-    direction = get_direction(mention)
-    step = get_step(mention)
-
+def resolve_music_ent(musicalEntity, loc, mention):
     if musicalEntity['onset'] is None and loc is not None:
         musicalEntity['onset'] = resolve_onset(musicalEntity, loc)
     else:
@@ -248,31 +231,40 @@ def handle_transpose(mention: dict):
             print('UNHANDLED CASE: handle_transpose() onset:', mention)
             sys.exit()
 
+def mk_specifier(musicalEntity, loc):
     specifier = None
     if musicalEntity['specifier'] is not None:
         specifier = musicalEntity['specifier']
         resolve_location(specifier, loc)
+    return specifier
 
-    # pprint.pprint(mention)
-    #
-    # print(mention['arguments']['musicalEntity'][0]['labels'])
-    # sys.exit(1)
+def mk_music_entity_dict(musicalEntity, m_type):
+    if m_type == 'Note':
+        return {'Pitch': musicalEntity['pitch'],
+                'Onset': musicalEntity['onset'],
+                'Duration': musicalEntity['duration']}
+    elif m_type == 'Chord':
+        return  {'chord_type': musicalEntity['chord_type']}
+
+def handle_transpose(mention: dict):
+    loc = get_location(mention)
+    musicalEntity, m_type = get_musicalEntity(mention)
+    direction = get_direction(mention)
+    step = get_step(mention)
+
+    resolve_music_ent(musicalEntity, loc, mention)
+    specifier = mk_specifier(musicalEntity, loc)
+
+    mus_ent_dict = mk_music_entity_dict(musicalEntity, m_type)
 
     #fixme
-    mus_ent_type = mention['arguments']['musicalEntity'][0]['labels'][0]
+    # mus_ent_type = mention['arguments']['musicalEnti ty'][0]['labels'][0]
 
-    if mus_ent_type == 'Note':
-        return {'MusicEntity': {'Specifier': specifier,
-                                'Note': {'Pitch': musicalEntity['pitch'],
-                                         'Onset': musicalEntity['onset'],
-                                         'Duration': musicalEntity['duration']}},
-                'Direction': direction,
-                'Step': step}
-    elif mus_ent_type == 'Chord':
-        return {'MusicEntity': {'Specifier': specifier,
-                                'Chord': {'chord_type': musicalEntity['chord_type']}},
-                'Direction': direction,
-                'Step': step}
+    return {'MusicEntity': {'Specifier': specifier,
+                            m_type: mus_ent_dict,
+                            'Direction': direction,
+                            'Step': step}
+            }
 
 
 def resolve_location(specifier, loc):
@@ -532,13 +524,13 @@ def get_musicalEntity(mention: dict, arg_name: str = "musicalEntity"):
 
         #try using label to run different musicalEntities
         if mlabel == 'Note':
-            return get_note(mus_ent)
+            return get_note(mus_ent), mlabel
         elif mlabel == 'Rest':
-            return get_rest(mus_ent)
+            return get_rest(mus_ent), mlabel
         elif mlabel == 'Chord':
-            return get_chord(mus_ent)
+            return get_chord(mus_ent), mlabel
         elif mlabel == 'Measure':
-            return get_measure(mention)
+            return get_measure(mention), mlabel
         else:
             pass
 
@@ -652,6 +644,25 @@ def get_measure(mention: dict):
         specifier_info = get_specifier(args)
 
     return {'specifier': specifier_info}
+
+def get_axis(mention: dict):
+    """
+    Get the axis of inversion
+    :param mention:
+    :return: axis dict
+    """
+    args = mention['arguments']
+
+    pitch_info = None
+    # find pitch
+    if 'pitch' in args:
+        pitch_info = get_property_value(args, 'pitch')
+        pitch_info = parse_pitch(pitch_info)
+    elif 'note' in args:
+        note_info = get_note(args['note'])
+        pitch_info = note_info['pitch']
+    # either a pitch or note, if it's a note, dig in and get the note's pitch, return a string
+    return {'axis': pitch_info}
 
 
 def parse_duration(duration_info: str) -> dict:

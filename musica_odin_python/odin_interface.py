@@ -183,7 +183,7 @@ def handle_invert(mention: dict):
     musicalEntity = get_musicalEntity(mention)
     # todo: Axis is not yet handled in MusECI but we have it from Odin
     axis = get_axis(mention)
-
+    resolve_music_ent(musicalEntity, loc, mention)
 
 
 

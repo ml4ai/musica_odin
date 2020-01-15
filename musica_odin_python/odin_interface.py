@@ -6,6 +6,7 @@ import requests
 import MusECI
 import ExtraTypes
 import PyECI
+import warnings
 
 
 # ------------------------------------------------------------------------
@@ -121,6 +122,8 @@ def action_spec_to_ecito(spec):
     ecito = None
     if spec['action'] == 'Transpose':
         ecito = eci_transpose(spec)
+    elif spec['action'] == 'Invert':
+        ecito = eci_invert(spec)
     return ecito
 
 
@@ -189,7 +192,9 @@ def handle_invert(mention: dict):
     mus_ent_dict = mk_music_entity_dict(musicalEntity, m_type)
 
     return {'MusicEntity': {'Specifier': specifier,
-                            m_type: mus_ent_dict}}
+                            m_type: mus_ent_dict},
+            'Axis': axis
+            }
 
 
 def handle_reverse(mention: dict):
@@ -386,6 +391,14 @@ def eci_transpose(spec):
     target = eci_music_entity(args['MusicEntity'])
     amount = eci_amount(args['Step'])
     return ExtraTypes.Transpose(target=target, direction=direction, amount=amount)
+
+def eci_invert(spec):
+    warnings.warn("TODO: Clay.  The antlr code doesn't support Invert yet, so eci_invert not fully implemented...")
+    return None
+    args = spec['arguments']
+    axis = eci_axis(args['Axis'])
+    target = eci_music_entity(args['MusicEntity'])
+    return ExtraTypes.Invert(target=target, axis=axis)
 
 
 # ------------------------------------------------------------------------
@@ -650,18 +663,18 @@ def get_axis(mention: dict):
     :param mention:
     :return: axis dict
     """
-    args = mention['arguments']
+    args = mention['arguments']['axis'][0]['arguments']
 
+    # either a pitch or note, if it's a note, dig in and get the note's pitch, return a string
     pitch_info = None
-    # find pitch
     if 'pitch' in args:
         pitch_info = get_property_value(args, 'pitch')
         pitch_info = parse_pitch(pitch_info)
     elif 'note' in args:
         note_info = get_note(args['note'])
         pitch_info = note_info['pitch']
-    # either a pitch or note, if it's a note, dig in and get the note's pitch, return a string
-    return {'axis': pitch_info}
+
+    return pitch_info
 
 
 def parse_duration(duration_info: str) -> dict:

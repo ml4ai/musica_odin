@@ -137,18 +137,29 @@ def handle_insert(mention: dict):
     loc = get_location(mention)
     # onset = get_onset(mention)
     musical_entity = get_musicalEntity(mention)
-    freq = get_frequency(mention)
+    # freq = get_frequency(mention)
 
     if musical_entity['onset'] is None and loc is not None:
         musical_entity['onset'] = resolve_onset(musical_entity, loc)
     else:
-        # Appears to require an onset ?
-        print('UNHANDLED CASE: handle_insert() onset:', mention)
-        sys.exit()
+        if musical_entity['onset'] is None and loc is None:
+            # onset not required
+            pass
+        else:
+            print('UNHANDLED CASE: handle_transpose() onset:', mention)
+            sys.exit()
+
+    # if musical_entity['onset'] is None and loc is not None:
+    #     musical_entity['onset'] = resolve_onset(musical_entity, loc)
+    # else:
+    #     # Appears to require an onset ?
+    #     print('UNHANDLED CASE: handle_insert() onset:', mention)
+    #     sys.exit()
 
     specifier = None
     if musical_entity['specifier'] is not None:
         specifier = musical_entity['specifier']
+        # resolve_location(specifier, loc)
 
     #fixme
     mus_ent_type = mention['arguments']['musicalEntity'][0]['labels'][0]
@@ -161,6 +172,10 @@ def handle_insert(mention: dict):
     elif mus_ent_type == 'Chord':
         return {'MusicEntity': {'Specifier': specifier,
                                 'Chord': {'chord_type': musical_entity['chord_type']}}}
+    elif mus_ent_type == 'Rest':
+        return {'MusicEntity': {'Specifier': specifier,
+                                'Rest': {'Onset': musical_entity['onset'],
+                                         'Duration': musical_entity['duration']}}}
 
 
 def handle_delete(mention: dict):
@@ -261,11 +276,6 @@ def handle_transpose(mention: dict):
     if musicalEntity['specifier'] is not None:
         specifier = musicalEntity['specifier']
         resolve_location(specifier, loc)
-
-    # pprint.pprint(mention)
-    #
-    # print(mention['arguments']['musicalEntity'][0]['labels'])
-    # sys.exit(1)
 
     #fixme
     mus_ent_type = mention['arguments']['musicalEntity'][0]['labels'][0]
@@ -662,6 +672,9 @@ def get_measure(mention: dict):
 
     return {'specifier': specifier_info}
 
+def get_frequency(mention: dict):
+    #todo: add get frequency
+    return None
 
 def parse_duration(duration_info: str) -> dict:
     """

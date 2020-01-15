@@ -48,7 +48,7 @@ def get_and_print_actions(sentence):
 
 
 if __name__ == '__main__':
-    SENTENCES = ["transpose all notes after the first B up 1 whole step"]
+    SENTENCES = ["insert a half rest"]
     # SENTENCES = [
     #              "transpose all the notes up 1 whole step",
     #              "transpose the first quarter note down 1 half step",

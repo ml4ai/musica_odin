@@ -20,7 +20,7 @@ def get_and_print_actions(sentence):
     print('\n----- Musica Odin -----')
     r = odin_interface.odin_request(sentence)
     mentions = json.loads(r.text)
-    pprint.pprint(mentions)
+    # pprint.pprint(mentions)
     action_mentions = odin_interface.filter_actions(mentions)
     actions = list()
     for filtered_action in action_mentions:
@@ -48,7 +48,10 @@ def get_and_print_actions(sentence):
 
 
 if __name__ == '__main__':
-    SENTENCES = ["transpose all notes after the first B up 1 whole step"]
+    SENTENCES = [
+                 # "transpose all notes after the first B up 1 whole step",
+                 "Invert the notes in measure 4 around middle C."
+                 ]
     # SENTENCES = [
     #              "transpose all the notes up 1 whole step",
     #              "transpose the first quarter note down 1 half step",

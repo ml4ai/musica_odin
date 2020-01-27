@@ -96,12 +96,15 @@ def process_action_mention(action_mention: dict):
     """
     op = None
     args = None
-    if 'Insert' in action_mention['labels']:
-        op = 'Insert'
-        args = handle_insert(action_mention)
+    if 'Convert' in action_mention['labels']:
+        op = 'Convert'
+        args = handle_convert(action_mention)
     elif 'Delete' in action_mention['labels']:
         op = 'Delete'
         args = handle_delete(action_mention)
+    elif 'Insert' in action_mention['labels']:
+        op = 'Insert'
+        args = handle_insert(action_mention)
     elif 'Invert' in action_mention['labels']:
         op = 'Invert'
         # NOTE: delete handler covers many cases, except...
@@ -111,6 +114,9 @@ def process_action_mention(action_mention: dict):
         op = 'Reverse'
         # TODO: add handling of axis of Retrograde
         args = handle_reverse(action_mention)
+    elif 'Switch' in action_mention['labels']:
+        op = 'Switch'
+        args = handle_switch(action_mention)
     elif 'Transpose' in action_mention['labels']:
         op = 'Transpose'
         args = handle_transpose(action_mention)
@@ -137,11 +143,42 @@ def action_spec_to_ecito(spec):
 #       likely be resolved/combined.
 # ------------------------------------------------------------------------
 
+def handle_convert(mention: dict):
+    src_loc = get_location(mention, "sourceLocation")
+    dest_loc = get_location(mention, "destLocation")
+    src_ent, s_type = get_musical_entity(mention, "sourceEntity")
+    dest_ent, d_type = get_musical_entity(mention, "destEntity")
+
+    resolve_music_ent(src_ent, src_loc, mention)
+    resolve_music_ent(dest_ent, dest_loc, mention)
+
+    src_spec = mk_specifier(src_ent, src_loc)
+    dest_spec = mk_specifier(dest_ent, dest_loc)
+
+    src_ent_dict = mk_music_entity_dict(src_ent, s_type)
+    dest_ent_dict = mk_music_entity_dict(dest_ent, d_type)
+
+    return {'SourceEntity': {'Specifier': src_spec,
+                             s_type: src_ent_dict},
+            'DestEntity': {'Specifier': dest_spec,
+                           d_type: dest_ent_dict}}
+
+
+def handle_delete(mention: dict):
+    loc = get_location(mention)
+    musical_entity, m_type = get_musical_entity(mention)
+
+    resolve_music_ent(musical_entity, loc, mention)
+    specifier = mk_specifier(musical_entity, loc)
+    mus_ent_dict = mk_music_entity_dict(musical_entity, m_type)
+
+    return {'MusicEntity': {'Specifier': specifier,
+                            m_type: mus_ent_dict}}
+
 
 def handle_insert(mention: dict):
     loc = get_location(mention)
-    # onset = get_onset(mention)
-    musical_entity, m_type = get_musicalEntity(mention)
+    musical_entity, m_type = get_musical_entity(mention)
     #fixme
     freq = None
     # freq = get_frequency(mention)
@@ -156,33 +193,10 @@ def handle_insert(mention: dict):
             'Frequency': freq}
 
 
-def handle_delete(mention: dict):
-    onset = get_onset(mention)
-    note = get_note(mention)
-
-    if note['onset'] is None and onset is not None:
-        note['onset'] = onset
-    else:
-        if note['onset'] is None and onset is None:
-            # onset not required
-            pass
-        else:
-            print('UNHANDLED CASE: handle_delete() onset:', mention)
-            sys.exit()
-
-    specifier = None
-    if note['specifier'] is not None:
-        specifier = note['specifier']
-
-    return {'MusicEntity': {'Specifier': specifier,
-                            'Note': {'Pitch': note['pitch'],
-                                     'Onset': note['onset'],
-                                     'Duration': note['duration']}}}
-
 def handle_invert(mention: dict):
     # musEnt, location, axis
     loc = get_location(mention)
-    musicalEntity, m_type = get_musicalEntity(mention)
+    musicalEntity, m_type = get_musical_entity(mention)
     # todo: Axis is not yet handled in MusECI but we have it from Odin
     axis = get_axis(mention)
 
@@ -197,74 +211,87 @@ def handle_invert(mention: dict):
 
 
 def handle_reverse(mention: dict):
-    onset = get_onset(mention)
-    note = get_note(mention)
+    loc = get_location(mention)
+    musical_entity, m_type = get_musical_entity(mention)
 
-    if note['onset'] is None and onset is not None:
-        note['onset'] = onset
-    else:
-        if note['onset'] is None and onset is None:
-            # onset not required
-            pass
-        else:
-            print('UNHANDLED CASE: handle_reverse() onset:', mention)
-            sys.exit()
-
-    specifier = None
-    if note['specifier'] is not None:
-        specifier = note['specifier']
+    resolve_music_ent(musical_entity, loc, mention)
+    specifier = mk_specifier(musical_entity, loc)
+    mus_ent_dict = mk_music_entity_dict(musical_entity, m_type)
 
     return {'MusicEntity': {'Specifier': specifier,
-                            'Note': {'Pitch': note['pitch'],
-                                     'Onset': note['onset'],
-                                     'Duration': note['duration']}}}
+                            m_type: mus_ent_dict}
+            }
 
+
+def handle_switch(mention: dict):
+    src_loc = get_location(mention, "sourceLocation")
+    dest_loc = get_location(mention, "destLocation")
+    src_ent, s_type = get_musical_entity(mention, "sourceEntity")
+    dest_ent, d_type = get_musical_entity(mention, "destEntity")
+
+    resolve_music_ent(src_ent, src_loc, mention)
+    resolve_music_ent(dest_ent, dest_loc, mention)
+
+    src_spec = mk_specifier(src_ent, src_loc)
+    dest_spec = mk_specifier(dest_ent, dest_loc)
+
+    src_ent_dict = mk_music_entity_dict(src_ent, s_type)
+    dest_ent_dict = mk_music_entity_dict(dest_ent, d_type)
+
+    return {'SourceEntity': {'Specifier': src_spec,
+                             s_type: src_ent_dict},
+            'DestEntity': {'Specifier': dest_spec,
+                           d_type: dest_ent_dict}}
+
+
+def handle_transpose(mention: dict):
+    loc = get_location(mention)
+    musical_entity, m_type = get_musical_entity(mention)
+    direction = get_direction(mention)
+    step = get_step(mention)
+
+    resolve_music_ent(musical_entity, loc, mention)
+    specifier = mk_specifier(musical_entity, loc)
+
+    mus_ent_dict = mk_music_entity_dict(musical_entity, m_type)
+
+    return {'MusicEntity': {'Specifier': specifier,
+                            m_type: mus_ent_dict},
+            'Direction': direction,
+            'Step': step}
 
 # ------------------------------------------------------------------------
-# Handle Transpose
 
-def resolve_music_ent(musicalEntity, loc, mention):
-    if musicalEntity['onset'] is None and loc is not None:
-        musicalEntity['onset'] = resolve_onset(musicalEntity, loc)
+
+def resolve_music_ent(musical_entity, loc, mention):
+    if musical_entity['onset'] is None and loc is not None:
+        musical_entity['onset'] = resolve_onset(musical_entity, loc)
     else:
-        if musicalEntity['onset'] is None and loc is None:
+        if musical_entity['onset'] is None and loc is None:
             # onset not required
             pass
         else:
             print('UNHANDLED CASE: handle_transpose() onset:', mention)
             sys.exit()
 
-def mk_specifier(musicalEntity, loc):
+
+def mk_specifier(musical_entity, loc):
     specifier = None
-    if musicalEntity['specifier'] is not None:
-        specifier = musicalEntity['specifier']
+    if musical_entity['specifier'] is not None:
+        specifier = musical_entity['specifier']
         resolve_location(specifier, loc)
     return specifier
 
-def mk_music_entity_dict(musicalEntity, m_type):
+
+def mk_music_entity_dict(musical_entity, m_type):
     if m_type == 'Note':
-        return {'Pitch': musicalEntity['pitch'],
-                'Onset': musicalEntity['onset'],
-                'Duration': musicalEntity['duration']}
+        return {'Pitch': musical_entity['pitch'],
+                'Onset': musical_entity['onset'],
+                'Duration': musical_entity['duration']}
     elif m_type == 'Chord':
-        return  {'chord_type': musicalEntity['chord_type']}
-
-def handle_transpose(mention: dict):
-    loc = get_location(mention)
-    musicalEntity, m_type = get_musicalEntity(mention)
-    direction = get_direction(mention)
-    step = get_step(mention)
-
-    resolve_music_ent(musicalEntity, loc, mention)
-    specifier = mk_specifier(musicalEntity, loc)
-
-    mus_ent_dict = mk_music_entity_dict(musicalEntity, m_type)
-
-    return {'MusicEntity': {'Specifier': specifier,
-                            m_type: mus_ent_dict},
-            'Direction': direction,
-            'Step': step}
-            
+        return  {'chord_type': musical_entity['chord_type']}
+    elif m_type == 'Rest':
+        return {'Duration': musical_entity['duration']}
 
 
 def resolve_location(specifier, loc):
@@ -377,17 +404,32 @@ def eci_music_entity(spec):
     #     duration = chord_spec['Duration']
     #     chord_type = chord_spec['chord_type']
 
+    if 'Rest' in spec:
+        rest_spec = spec['Rest']
+        duration = rest_spec['Duration']
 
+        music_entity = ExtraTypes.Rest(pitch=None, dur=duration, onset=None)
+
+        music_entity.specifier = specifier
 
     return music_entity
 
 
-def eci_transpose(spec):
+# ------------------------------------------------------------------------
+
+
+def eci_convert(spec):
     args = spec['arguments']
-    direction = eci_direction(args['Direction'])
+    target = eci_music_entity(args['SourceEntity'])
+    destination = eci_music_entity(args['DestEntity'])
+    return ExtraTypes.Change(target=target, destination=destination)
+
+
+def eci_delete(spec):
+    args = spec['arguments']
     target = eci_music_entity(args['MusicEntity'])
-    amount = eci_amount(args['Step'])
-    return ExtraTypes.Transpose(target=target, direction=direction, amount=amount)
+    return ExtraTypes.Delete(target=target)
+
 
 def eci_insert(spec):
     warnings.warn("TODO: Clay. eci_insert not fully implemented: eci_frequency and eci_location don't exist; antlr code doesn't yet support insert")
@@ -406,6 +448,28 @@ def eci_invert(spec):
     axis = eci_axis(args['Axis'])
     target = eci_music_entity(args['MusicEntity'])
     return ExtraTypes.Invert(target=target, axis=axis)
+
+
+def eci_reverse(spec):
+    args = spec['arguments']
+    context = eci_music_entity(args['MusicEntity'])
+    # todo: specifier, attributes, and words?
+    return ExtraTypes.Reverse(context=context)
+
+
+def eci_switch(spec):
+    args = spec['arguments']
+    source = eci_music_entity(args['SourceEntity'])
+    destination = eci_music_entity(args['DestEntity'])
+    return ExtraTypes.Swap(item1=source, item2=destination)
+
+
+def eci_transpose(spec):
+    args = spec['arguments']
+    direction = eci_direction(args['Direction'])
+    target = eci_music_entity(args['MusicEntity'])
+    amount = eci_amount(args['Step'])
+    return ExtraTypes.Transpose(target=target, direction=direction, amount=amount)
 
 
 # ------------------------------------------------------------------------
@@ -524,7 +588,7 @@ def resolve_onset(mus_ent, loc):
     return {'beat': beat, 'measure': measure}
 
 
-def get_musicalEntity(mention: dict, arg_name: str = "musicalEntity"):
+def get_musical_entity(mention: dict, arg_name: str = "musicalEntity"):
     """
     Extract musicalEntity info from a musica_odin mention
     musicalEntity may be a note, rest, chord, measure

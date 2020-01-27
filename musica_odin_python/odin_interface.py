@@ -126,12 +126,20 @@ def process_action_mention(action_mention: dict):
 
 def action_spec_to_ecito(spec):
     ecito = None
-    if spec['action'] == 'Insert':
+    if spec['action'] == 'Convert':
+        ecito = eci_convert(spec)
+    elif spec['action'] == 'Delete':
+        ecito = eci_delete(spec)
+    elif spec['action'] == 'Insert':
         ecito = eci_insert(spec)
-    if spec['action'] == 'Transpose':
-        ecito = eci_transpose(spec)
     elif spec['action'] == 'Invert':
         ecito = eci_invert(spec)
+    elif spec['action'] == 'Reverse':
+        ecito = eci_reverse(spec)
+    elif spec['action'] == 'Switch':
+        ecito = eci_switch(spec)
+    elif spec['action'] == 'Transpose':
+        ecito = eci_transpose(spec)
     return ecito
 
 
@@ -310,6 +318,12 @@ def eci_direction(spec):
         step = PyECI.Relations.Down()
     return step
 
+# fixme
+def eci_frequency(spec):
+    times = None
+    if spec is not None:
+        times = spec
+    return times
 
 def string_to_int(string):
     string_to_int_map = {'one':1, 'two':2, 'three':3, 'four':4, 'five':5,
@@ -434,11 +448,11 @@ def eci_delete(spec):
 def eci_insert(spec):
     warnings.warn("TODO: Clay. eci_insert not fully implemented: eci_frequency and eci_location don't exist; antlr code doesn't yet support insert")
     args = spec['arguments']
-    return None
+    #return None
     target = eci_music_entity(args['MusicEntity'])
-    location = eci_location(args['Location'])
+    #location = eci_location(args['Location'])
     frequency = eci_frequency(args['Frequency'])
-    return ExtraTypes.Insert(target=target, location=location, frequency=frequency)
+    return ExtraTypes.Insert(context=target, specifier=None, attributes=frequency, words=None)
 
 
 def eci_invert(spec):
@@ -524,6 +538,20 @@ def get_onset(mention: dict):
         return None
 
 
+#todo: is this needed?
+def get_pitch(mention: dict):
+    note_args = mention['arguments']
+
+    pitch_info = None
+
+    # find pitch
+    if 'pitch' in note_args:
+        pitch_info = get_property_value(note_args, 'pitch')
+        pitch_info = parse_pitch(pitch_info)
+
+    return {'pitch': pitch_info}
+
+
 def get_location(mention: dict, arg_name: str = "location"):
     """
     Extract location info from a musica_odin mention
@@ -532,8 +560,11 @@ def get_location(mention: dict, arg_name: str = "location"):
     :return:
     """
     if arg_name in mention['arguments']:
-        lm = mention['arguments'][arg_name][0]
-        lm_args = lm['arguments']
+        try:
+            lm = mention['arguments'][arg_name][0]
+            lm_args = lm['arguments']
+        except:
+            return None
         # get the trigger if there is one
         location_term = None
         if 'trigger' in lm:
@@ -592,12 +623,12 @@ def get_musical_entity(mention: dict, arg_name: str = "musicalEntity"):
     """
     Extract musicalEntity info from a musica_odin mention
     musicalEntity may be a note, rest, chord, measure
-    Initial assumption is NOTE -- needs updating later
     :param mention: musica_odin mention
     :param arg_name: string name of the musical entity's argument role
     :return:
     """
     if arg_name in mention['arguments']:
+
         assert(len(mention['arguments'][arg_name]) == 1)
         mus_ent = mention['arguments'][arg_name][0]
         # nm = mention['arguments']['musicalEntity'][0]['arguments']
@@ -614,6 +645,8 @@ def get_musical_entity(mention: dict, arg_name: str = "musicalEntity"):
             return get_chord(mus_ent), mlabel
         elif mlabel == 'Measure':
             return get_measure(mention), mlabel
+        elif mlabel == 'Pitch':
+            return get_pitch(mention), mlabel
         else:
             pass
 

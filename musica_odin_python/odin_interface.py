@@ -376,6 +376,9 @@ def handle_specifier(specifier_spec):
         #     chord_type = specifier_spec['chord_type']
         if 'SetChoice' in specifier_spec:
             set_choice = specifier_spec['SetChoice']
+        # TODO: add the ability to handle RELATIVE LOCATION
+        if 'relative_location' in specifier_spec:
+            warnings.warn(f"The equito has a relative location which isn't being handled!")
         return PyECI.Abstractions.Specifier(determiner=determiner,
                                             cardinality=cardinality,
                                             setChoice=set_choice)

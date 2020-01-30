@@ -25,8 +25,17 @@ rules:
     example: "Switch the D and the C in measure 1"
     type: token
     pattern: |
-      (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${switch_triggers})/]) @sourceEntity:EntityMusic
-      and @destEntity:EntityMusic @location:Location?
+      (@sourceLocation:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${switch_triggers})/]) @sourceEntity:EntityMusic
+      (and|with) @destEntity:EntityMusic @sourceLocation:Location?
+
+  - name: switch-2-2locs
+    label: ${label}
+    priority: ${rulepriority}
+    example: "Switch the D in measure 1 with the C in measure 2"
+    type: token
+    pattern: |
+      (@sourceLocation:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${switch_triggers})/]) @sourceEntity:EntityMusic
+      @sourceLocation:Location? (and|with) @destEntity:EntityMusic @sourceLocation:Location
 
   - name: switch-2
     label: ${label}
@@ -34,8 +43,8 @@ rules:
     example: "Swap the first and third notes in measure 2"
     type: token
     pattern: |
-      (@location:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${switch_triggers})/])
-      @sourceEntity:EntityMusic @location:Location?
+      (@sourceLocation:Location [tag=/,/])? (?<trigger>[word=/(?i)^(${switch_triggers})/])
+      @sourceEntity:EntityMusic @sourceLocation:Location?
 
   - name: switch-3-passive
     label: ${label}
@@ -43,9 +52,19 @@ rules:
     example: "The first C and the first D in measure 2 should be switched"
     type: token
     pattern: |
-      (@location:Location [tag=/,/])? @sourceEntity:EntityMusic and @destEntity:EntityMusic
-      @location:Location? [word=/^(${modals})/] to? [word=/^(${aux_be})/]
+      (@sourceLocation:Location [tag=/,/])? @sourceEntity:EntityMusic and @destEntity:EntityMusic
+      @sourceLocation:Location? [word=/^(${modals})/] to? [word=/^(${aux_be})/]
       (?<trigger>[word=/(?i)^(${switch_triggers})/]) @location:Location?
+
+  - name: switch-4-passive-2locs
+    label: ${label}
+    priority: ${rulepriority}
+    example: "The first C in measure 1 and the first D in measure 2 should be switched"
+    type: token
+    pattern: |
+      (@sourceLocation:Location [tag=/,/])? @sourceEntity:EntityMusic @sourceLocation:Location? and
+      @destEntity:EntityMusic @destLocation:Location? [word=/^(${modals})/] to? [word=/^(${aux_be})/]
+      (?<trigger>[word=/(?i)^(${switch_triggers})/])
 
   # could avoid having the AND as part of the specifier --> do this now
   # may need an action for this; don't worry about the rule right now

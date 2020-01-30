@@ -21,7 +21,6 @@ rules:
 
   # Extract the events
 
-#  # todo: change this from change_duration to separate shorten and lengthen--do the same with testing
   - import: org/clulab/musica/grammars/change_duration.yml
     vars:
       rulepriority: "6"
@@ -67,10 +66,10 @@ rules:
       label: Repeat
       trigger: ${repeat_triggers}
 
-#  - import: org/clulab/musica/grammars/replace.yml
-#    vars:
-#      rulepriority: "6"
-#      label: Replace
+  - import: org/clulab/musica/grammars/replace.yml
+    vars:
+      rulepriority: "6"
+      label: Replace
 
   - import: org/clulab/musica/grammars/reverse.yml
     vars:
@@ -87,36 +86,4 @@ rules:
       rulepriority: "6"
       trigger: ${repeat_triggers}
       label: Transpose
-
-#  - import: org/clulab/musica/grammars/transpose.yml
-#    vars:
-#      rulepriority: "6"
-#      trigger: ${repeat_triggers}
-#      label: TransposeUp
-#
-#  - import: org/clulab/musica/grammars/transpose.yml
-#    vars:
-#      rulepriority: "6"
-#      trigger: ${repeat_triggers}
-#      label: TransposeDown
-#
-#  - import: org/clulab/musica/grammars/transpose.yml
-#    vars:
-#      rulepriority: "6"
-#      trigger: ${repeat_triggers}
-#      label: TransposeNaturalize
-#      # todo: exist in tax?
-
-
-
-
-  # ---------------------------------------------------
-
-  - import: org/clulab/musica/grammars/extra_arguments.yml
-    vars:
-      rulepriority: "8"
-      mention_type: Invert
-      action: addArgument
-      label: Invert
-      addlabel: "Invert"
 

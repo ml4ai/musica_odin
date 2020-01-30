@@ -6,6 +6,7 @@ import requests
 import MusECI
 import ExtraTypes
 import PyECI
+import warnings
 
 
 # ------------------------------------------------------------------------
@@ -31,6 +32,10 @@ import PyECI
 #       See sentence_parse_dev and Google doc: Sentence Corpus with PyECI)
 # (1) Create top-level main
 # (2) Create translator from PyECI_spec to *actual* PyECI (help from Donya)
+
+
+class OdinInterfaceException(Exception):
+    pass
 
 
 # ------------------------------------------------------------------------
@@ -91,21 +96,27 @@ def process_action_mention(action_mention: dict):
     """
     op = None
     args = None
-    if 'Insert' in action_mention['labels']:
-        op = 'Insert'
-        args = handle_insert(action_mention)
+    if 'Convert' in action_mention['labels']:
+        op = 'Convert'
+        args = handle_convert(action_mention)
     elif 'Delete' in action_mention['labels']:
         op = 'Delete'
         args = handle_delete(action_mention)
+    elif 'Insert' in action_mention['labels']:
+        op = 'Insert'
+        args = handle_insert(action_mention)
     elif 'Invert' in action_mention['labels']:
         op = 'Invert'
         # NOTE: delete handler covers many cases, except...
         # TODO: add handling of axis of Inversion.
-        args = handle_delete(action_mention)
+        args = handle_invert(action_mention)
     elif 'Reverse' in action_mention['labels']:
         op = 'Reverse'
         # TODO: add handling of axis of Retrograde
         args = handle_reverse(action_mention)
+    elif 'Switch' in action_mention['labels']:
+        op = 'Switch'
+        args = handle_switch(action_mention)
     elif 'Transpose' in action_mention['labels']:
         op = 'Transpose'
         args = handle_transpose(action_mention)
@@ -115,7 +126,19 @@ def process_action_mention(action_mention: dict):
 
 def action_spec_to_ecito(spec):
     ecito = None
-    if spec['action'] == 'Transpose':
+    if spec['action'] == 'Convert':
+        ecito = eci_convert(spec)
+    elif spec['action'] == 'Delete':
+        ecito = eci_delete(spec)
+    elif spec['action'] == 'Insert':
+        ecito = eci_insert(spec)
+    elif spec['action'] == 'Invert':
+        ecito = eci_invert(spec)
+    elif spec['action'] == 'Reverse':
+        ecito = eci_reverse(spec)
+    elif spec['action'] == 'Switch':
+        ecito = eci_switch(spec)
+    elif spec['action'] == 'Transpose':
         ecito = eci_transpose(spec)
     return ecito
 
@@ -128,105 +151,162 @@ def action_spec_to_ecito(spec):
 #       likely be resolved/combined.
 # ------------------------------------------------------------------------
 
+def handle_convert(mention: dict):
+    src_loc = get_location(mention, "sourceLocation")
+    dest_loc = get_location(mention, "destLocation")
+    src_ent, s_type = get_musical_entity(mention, "sourceEntity")
+    dest_ent, d_type = get_musical_entity(mention, "destEntity")
 
-def handle_insert(mention: dict):
-    onset = get_onset(mention)
-    note = get_note(mention)
+    resolve_music_ent(src_ent, src_loc, mention)
+    resolve_music_ent(dest_ent, dest_loc, mention)
 
-    if note['onset'] is None and onset is not None:
-        note['onset'] = onset
-    else:
-        # Appears to require an onset ?
-        print('UNHANDLED CASE: handle_insert() onset:', mention)
-        sys.exit()
+    src_spec = mk_specifier(src_ent, src_loc)
+    dest_spec = mk_specifier(dest_ent, dest_loc)
 
-    specifier = None
-    if note['specifier'] is not None:
-        specifier = note['specifier']
+    src_ent_dict = mk_music_entity_dict(src_ent, s_type)
+    dest_ent_dict = mk_music_entity_dict(dest_ent, d_type)
 
-    return {'MusicEntity': {'Specifier': specifier,
-                            'Note': {'Pitch': note['pitch'],
-                                     'Onset': note['onset'],
-                                     'Duration': note['duration']}}}
+    return {'SourceEntity': {'Specifier': src_spec,
+                             s_type: src_ent_dict},
+            'DestEntity': {'Specifier': dest_spec,
+                           d_type: dest_ent_dict}}
 
 
 def handle_delete(mention: dict):
-    onset = get_onset(mention)
-    note = get_note(mention)
+    loc = get_location(mention)
+    musical_entity, m_type = get_musical_entity(mention)
 
-    if note['onset'] is None and onset is not None:
-        note['onset'] = onset
-    else:
-        if note['onset'] is None and onset is None:
-            # onset not required
-            pass
-        else:
-            print('UNHANDLED CASE: handle_delete() onset:', mention)
-            sys.exit()
-
-    specifier = None
-    if note['specifier'] is not None:
-        specifier = note['specifier']
+    resolve_music_ent(musical_entity, loc, mention)
+    specifier = mk_specifier(musical_entity, loc)
+    mus_ent_dict = mk_music_entity_dict(musical_entity, m_type)
 
     return {'MusicEntity': {'Specifier': specifier,
-                            'Note': {'Pitch': note['pitch'],
-                                     'Onset': note['onset'],
-                                     'Duration': note['duration']}}}
+                            m_type: mus_ent_dict}}
+
+
+def handle_insert(mention: dict):
+    loc = get_location(mention)
+    musical_entity, m_type = get_musical_entity(mention)
+    #fixme
+    freq = None
+    # freq = get_frequency(mention)
+
+    resolve_music_ent(musical_entity, loc, mention)
+    specifier = mk_specifier(musical_entity, loc)
+
+    mus_ent_dict = mk_music_entity_dict(musical_entity, m_type)
+
+    return {'MusicEntity': {'Specifier': specifier,
+                            m_type: mus_ent_dict},
+            'Frequency': freq}
+
+
+def handle_invert(mention: dict):
+    # musEnt, location, axis
+    loc = get_location(mention)
+    musicalEntity, m_type = get_musical_entity(mention)
+    # todo: Axis is not yet handled in MusECI but we have it from Odin
+    axis = get_axis(mention)
+
+    resolve_music_ent(musicalEntity, loc, mention)
+    specifier = mk_specifier(musicalEntity, loc)
+    mus_ent_dict = mk_music_entity_dict(musicalEntity, m_type)
+
+    return {'MusicEntity': {'Specifier': specifier,
+                            m_type: mus_ent_dict},
+            'Axis': axis
+            }
 
 
 def handle_reverse(mention: dict):
-    onset = get_onset(mention)
-    note = get_note(mention)
+    loc = get_location(mention)
+    musical_entity, m_type = get_musical_entity(mention)
 
-    if note['onset'] is None and onset is not None:
-        note['onset'] = onset
-    else:
-        if note['onset'] is None and onset is None:
-            # onset not required
-            pass
-        else:
-            print('UNHANDLED CASE: handle_reverse() onset:', mention)
-            sys.exit()
-
-    specifier = None
-    if note['specifier'] is not None:
-        specifier = note['specifier']
+    resolve_music_ent(musical_entity, loc, mention)
+    specifier = mk_specifier(musical_entity, loc)
+    mus_ent_dict = mk_music_entity_dict(musical_entity, m_type)
 
     return {'MusicEntity': {'Specifier': specifier,
-                            'Note': {'Pitch': note['pitch'],
-                                     'Onset': note['onset'],
-                                     'Duration': note['duration']}}}
+                            m_type: mus_ent_dict}
+            }
 
 
-# ------------------------------------------------------------------------
-# Handle Transpose
+def handle_switch(mention: dict):
+    src_loc = get_location(mention, "sourceLocation")
+    dest_loc = get_location(mention, "destLocation")
+    src_ent, s_type = get_musical_entity(mention, "sourceEntity")
+    dest_ent, d_type = get_musical_entity(mention, "destEntity")
+
+    resolve_music_ent(src_ent, src_loc, mention)
+    resolve_music_ent(dest_ent, dest_loc, mention)
+
+    src_spec = mk_specifier(src_ent, src_loc)
+    dest_spec = mk_specifier(dest_ent, dest_loc)
+
+    src_ent_dict = mk_music_entity_dict(src_ent, s_type)
+    dest_ent_dict = mk_music_entity_dict(dest_ent, d_type)
+
+    return {'SourceEntity': {'Specifier': src_spec,
+                             s_type: src_ent_dict},
+            'DestEntity': {'Specifier': dest_spec,
+                           d_type: dest_ent_dict}}
+
 
 def handle_transpose(mention: dict):
-    onset = get_onset(mention)
-    musicalEntity = get_musicalEntity(mention)
+    loc = get_location(mention)
+    musical_entity, m_type = get_musical_entity(mention)
     direction = get_direction(mention)
     step = get_step(mention)
 
-    if musicalEntity['onset'] is None and onset is not None:
-        musicalEntity['onset'] = onset
+    resolve_music_ent(musical_entity, loc, mention)
+    specifier = mk_specifier(musical_entity, loc)
+
+    mus_ent_dict = mk_music_entity_dict(musical_entity, m_type)
+
+    return {'MusicEntity': {'Specifier': specifier,
+                            m_type: mus_ent_dict},
+            'Direction': direction,
+            'Step': step}
+
+# ------------------------------------------------------------------------
+
+
+def resolve_music_ent(musical_entity, loc, mention):
+    if musical_entity['onset'] is None and loc is not None:
+        musical_entity['onset'] = resolve_onset(musical_entity, loc)
     else:
-        if musicalEntity['onset'] is None and onset is None:
+        if musical_entity['onset'] is None and loc is None:
             # onset not required
             pass
         else:
             print('UNHANDLED CASE: handle_transpose() onset:', mention)
             sys.exit()
 
-    specifier = None
-    if musicalEntity['specifier'] is not None:
-        specifier = musicalEntity['specifier']
 
-    return {'MusicEntity': {'Specifier': specifier,
-                            'Note': {'Pitch': musicalEntity['pitch'],
-                                     'Onset': musicalEntity['onset'],
-                                     'Duration': musicalEntity['duration']}},
-            'Direction': direction,
-            'Step': step}
+def mk_specifier(musical_entity, loc):
+    specifier = None
+    if musical_entity['specifier'] is not None:
+        specifier = musical_entity['specifier']
+        resolve_location(specifier, loc)
+    return specifier
+
+
+def mk_music_entity_dict(musical_entity, m_type):
+    if m_type == 'Note':
+        return {'Pitch': musical_entity['pitch'],
+                'Onset': musical_entity['onset'],
+                'Duration': musical_entity['duration']}
+    elif m_type == 'Chord':
+        return  {'chord_type': musical_entity['chord_type']}
+    elif m_type == 'Rest':
+        return {'Duration': musical_entity['duration']}
+
+
+def resolve_location(specifier, loc):
+    if loc:
+        if 'relativePos' in loc:
+            specifier['relative_location'] = loc['relativePos']
+
 
 # ------------------------------------------------------------------------
 
@@ -238,6 +318,12 @@ def eci_direction(spec):
         step = PyECI.Relations.Down()
     return step
 
+# fixme
+def eci_frequency(spec):
+    times = None
+    if spec is not None:
+        times = spec
+    return times
 
 def string_to_int(string):
     string_to_int_map = {'one':1, 'two':2, 'three':3, 'four':4, 'five':5,
@@ -265,13 +351,16 @@ def eci_amount(spec):
     return ExtraTypes.PitchInterval(value=PyECI.Abstractions.Integer(value=value), unit=unit)
 
 
-def eci_music_entity(spec):
-
-    # print('eci_music_entity()')
-
-    specifier = None
-    if 'Specifier' in spec and spec['Specifier'] is not None:
-        specifier_spec = spec['Specifier']
+def handle_specifier(specifier_spec):
+    # TODO: Donya's working example of parsing "transpose all notes up 1 whole step"
+    #       returns
+    #       Transpose(target=Note(specifier=Specifier(determiner=All())),
+    #                 direction=Up(),
+    #                 amount=PitchInterval(value=Integer(value=1), unit=WholeStep()))
+    #       Note that
+    if specifier_spec['quantifier'] == 'all' and specifier_spec['cardinality'] is None and specifier_spec['set_choice'] is None:
+        return PyECI.Abstractions.All()
+    else:
         determiner = None
         if 'Determiner' in specifier_spec:
             determiner_spec = specifier_spec['Determiner']
@@ -283,11 +372,28 @@ def eci_music_entity(spec):
         if 'Cardinality' in specifier_spec:
             cardinality = specifier_spec['Cardinality']
         set_choice = None
+        # if 'chord_type' in specifier_spec:
+        #     chord_type = specifier_spec['chord_type']
         if 'SetChoice' in specifier_spec:
             set_choice = specifier_spec['SetChoice']
-        specifier = PyECI.Abstractions.Specifier(determiner=determiner,
-                                                 cardinality=cardinality,
-                                                 setChoice=set_choice)
+        # TODO: add the ability to handle RELATIVE LOCATION
+        if 'relative_location' in specifier_spec:
+            warnings.warn(f"The equito has a relative location which isn't being handled!")
+        return PyECI.Abstractions.Specifier(determiner=determiner,
+                                            cardinality=cardinality,
+                                            setChoice=set_choice)
+    # TODO: add proper error handling...
+    # raise OdinInterfaceException(f"ERROR: Unknown Specifier \'{specifier}\'")
+
+
+def eci_music_entity(spec):
+
+    # print('eci_music_entity()')
+
+    specifier = None
+    if 'Specifier' in spec and spec['Specifier'] is not None:
+        specifier_spec = spec['Specifier']
+        specifier = handle_specifier(specifier_spec)
 
     music_entity = None
     if 'Note' in spec:
@@ -308,7 +414,71 @@ def eci_music_entity(spec):
         # and ECIs have: context, specifier, attributes, words
         music_entity.specifier = specifier
 
+    # todo: we can get chords, but there needs to be an interface in MusECI created for it
+    # if 'Chord' in spec:
+    #
+    #     chord_spec = spec['Chord']
+    #     duration = chord_spec['Duration']
+    #     chord_type = chord_spec['chord_type']
+
+    if 'Rest' in spec:
+        rest_spec = spec['Rest']
+        duration = rest_spec['Duration']
+
+        music_entity = ExtraTypes.Rest(pitch=None, dur=duration, onset=None)
+
+        music_entity.specifier = specifier
+
     return music_entity
+
+
+# ------------------------------------------------------------------------
+
+
+def eci_convert(spec):
+    args = spec['arguments']
+    target = eci_music_entity(args['SourceEntity'])
+    destination = eci_music_entity(args['DestEntity'])
+    return ExtraTypes.Change(target=target, destination=destination)
+
+
+def eci_delete(spec):
+    args = spec['arguments']
+    target = eci_music_entity(args['MusicEntity'])
+    return ExtraTypes.Delete(target=target)
+
+
+def eci_insert(spec):
+    warnings.warn("TODO: Clay. eci_insert not fully implemented: eci_frequency and eci_location don't exist; antlr code doesn't yet support insert")
+    args = spec['arguments']
+    #return None
+    target = eci_music_entity(args['MusicEntity'])
+    #location = eci_location(args['Location'])
+    frequency = eci_frequency(args['Frequency'])
+    return ExtraTypes.Insert(context=target, specifier=None, attributes=frequency, words=None)
+
+
+def eci_invert(spec):
+    warnings.warn("TODO: Clay.  The antlr code doesn't support Invert yet, so eci_invert not fully implemented...")
+    return None
+    args = spec['arguments']
+    axis = eci_axis(args['Axis'])
+    target = eci_music_entity(args['MusicEntity'])
+    return ExtraTypes.Invert(target=target, axis=axis)
+
+
+def eci_reverse(spec):
+    args = spec['arguments']
+    context = eci_music_entity(args['MusicEntity'])
+    # todo: specifier, attributes, and words?
+    return ExtraTypes.Reverse(context=context)
+
+
+def eci_switch(spec):
+    args = spec['arguments']
+    source = eci_music_entity(args['SourceEntity'])
+    destination = eci_music_entity(args['DestEntity'])
+    return ExtraTypes.Swap(item1=source, item2=destination)
 
 
 def eci_transpose(spec):
@@ -335,8 +505,9 @@ def get_property_value(arguments: dict, property_name: str, value_key='words'):
     property_value = None
     if property_name in arguments:
         property_args = arguments[property_name][0]
-        if 'words' in property_args:
-            property_value = property_args[value_key][0]
+        if value_key in property_args:
+            # fixme: prob make a list
+            property_value = ", ".join(property_args[value_key])
     return property_value
 
 
@@ -369,51 +540,118 @@ def get_onset(mention: dict):
         # print('NO Onset')
         return None
 
-def get_musicalEntity(mention: dict):
+
+#todo: is this needed?
+def get_pitch(mention: dict):
+    note_args = mention['arguments']
+
+    pitch_info = None
+
+    # find pitch
+    if 'pitch' in note_args:
+        pitch_info = get_property_value(note_args, 'pitch')
+        pitch_info = parse_pitch(pitch_info)
+
+    return {'pitch': pitch_info}
+
+
+def get_location(mention: dict, arg_name: str = "location"):
     """
-    Extract musicalEntity info from a musica_odin mention
-    musicalEntity may be a note, rest, chord, measure
-    Initial assumption is NOTE -- needs updating later
+    Extract location info from a musica_odin mention
+    Includes (optional): beat, measure, location term, Note, Rest, Chord
     :param mention: musica_odin mention
     :return:
     """
-    if 'musicalEntity' in mention['arguments']:
-        nm = mention['arguments']['musicalEntity'][0]['arguments']
+    if arg_name in mention['arguments']:
+        try:
+            lm = mention['arguments'][arg_name][0]
+            lm_args = lm['arguments']
+        except:
+            return None
+        # get the trigger if there is one
+        location_term = None
+        if 'trigger' in lm:
+            location_term = lm['trigger']['words']
 
-        pitch_info = None
-        # find pitch
-        if 'pitch' in nm:
-            pitch_info = get_property_value(nm, 'pitch')
-            pitch_info = parse_pitch(pitch_info)
+        # find beat
+        beat = None
+        # TODO: add verbose failure conditions
+        if 'beat' in lm_args:
+            om_beat_args = lm_args['beat'][0]['arguments']
+            beat = get_property_value(om_beat_args, 'cardinality')
 
-        onset_info = None
-        # I don't think this will ever happen
-        if 'onset' in nm:
-            onset_info = get_property_value(nm, 'onset')
+        # find measure
+        measure = None
+        # TODO: add verbose failure conditions
+        if 'measure' in lm_args:
+            om_measure_args = lm_args['measure'][0]['arguments']
+            measure = get_property_value(om_measure_args, 'cardinality')
 
-        duration_info = None
-        if 'duration' in nm:
-            duration_info = get_property_value(nm, 'duration')
-            duration_info = parse_duration(duration_info)
+        rel_pos = {'relation': location_term}
 
-        specifier_info = None
-        if 'specifier' in nm:
-            specifier_info = get_specifier(nm)
+        # find note, if any
+        note = None
+        if 'note' in lm_args:
+            om_note = lm_args['note'][0]
+            rel_pos['music_ent'] = get_note(om_note)
 
-        return {'pitch': pitch_info,
-                'onset': onset_info,
-                'duration': duration_info,
-                'specifier': specifier_info}
+        # find chord, if any
+        chord = None
+        if 'chord' in lm_args:
+            om_chord = lm_args['chord'][0]
+            rel_pos['music_ent'] = get_chord(om_chord)
 
+        # find chord, if any
+        rest = None
+        if 'rest' in lm_args:
+            om_rest = lm_args['rest'][0]
+            rel_pos['music_ent'] = get_rest(om_rest)
+
+        return {'beat': beat, 'measure': measure, 'relativePos': rel_pos}
     else:
-        # If no note found, return an unspecified note
-        # TODO: if no note is mentioned, then perhaps this should be None?
-        #       But if return None, that breaks Action handlers that expect Notes to exist
-        #       Really this depends on PyECI expectations.
-        return {'pitch': None,
-                'onset': None,
-                'duration': None,
-                'specifier': None}
+        # print('NO Onset')
+        return None
+
+
+def resolve_onset(mus_ent, loc):
+    # fixme: currently this method does essentially nothing, but we're thinking that we may need to reason a little here
+    # ... if not, delete
+    beat = loc['beat']
+    measure = loc['measure']
+
+    return {'beat': beat, 'measure': measure}
+
+
+def get_musical_entity(mention: dict, arg_name: str = "musicalEntity"):
+    """
+    Extract musicalEntity info from a musica_odin mention
+    musicalEntity may be a note, rest, chord, measure
+    :param mention: musica_odin mention
+    :param arg_name: string name of the musical entity's argument role
+    :return:
+    """
+    if arg_name in mention['arguments']:
+
+        assert(len(mention['arguments'][arg_name]) == 1)
+        mus_ent = mention['arguments'][arg_name][0]
+        # nm = mention['arguments']['musicalEntity'][0]['arguments']
+
+        mlabel = mus_ent['labels'][0]
+        print(mlabel)
+
+        #try using label to run different musicalEntities
+        if mlabel == 'Note':
+            return get_note(mus_ent), mlabel
+        elif mlabel == 'Rest':
+            return get_rest(mus_ent), mlabel
+        elif mlabel == 'Chord':
+            return get_chord(mus_ent), mlabel
+        elif mlabel == 'Measure':
+            return get_measure(mention), mlabel
+        elif mlabel == 'Pitch':
+            return get_pitch(mention), mlabel
+        else:
+            pass
 
 def get_note(mention: dict):
     """
@@ -422,44 +660,132 @@ def get_note(mention: dict):
     :param mention: musica_odin mention
     :return:
     """
-    if 'note' in mention['arguments']:
-        nm = mention['arguments']['note'][0]['arguments']
 
-        pitch_info = None
-        # find pitch
-        if 'pitch' in nm:
-            pitch_info = get_property_value(nm, 'pitch')
-            pitch_info = parse_pitch(pitch_info)
+    note_args = mention['arguments']
 
-        onset_info = None
-        # I don't think this will ever happen
-        if 'onset' in nm:
-            onset_info = get_property_value(nm, 'onset')
+    pitch_info = None
+    # find pitch
+    if 'pitch' in note_args:
+        pitch_info = get_property_value(note_args, 'pitch')
+        pitch_info = parse_pitch(pitch_info)
 
-        duration_info = None
-        if 'duration' in nm:
-            duration_info = get_property_value(nm, 'duration')
-            duration_info = parse_duration(duration_info)
+    # onset_info = None
+    # # I don't think this will ever happen
+    # if 'onset' in nm:
+    #     onset_info = get_property_value(nm, 'onset')
 
-        specifier_info = None
-        if 'specifier' in nm:
-            specifier_info = get_specifier(nm)
+    duration_info = None
+    if 'duration' in note_args:
+        duration_info = get_property_value(note_args, 'duration')
+        duration_info = parse_duration(duration_info)
 
-        return {'pitch': pitch_info,
-                'onset': onset_info,
-                'duration': duration_info,
-                'specifier': specifier_info}
+    specifier_info = None
+    if 'specifier' in note_args:
+        specifier_info = get_specifier(note_args)
 
-    else:
-        # If no note found, return an unspecified note
-        # TODO: if no note is mentioned, then perhaps this should be None?
-        #       But if return None, that breaks Action handlers that expect Notes to exist
-        #       Really this depends on PyECI expectations.
-        return {'pitch': None,
-                'onset': None,
-                'duration': None,
-                'specifier': None}
+    return {'pitch': pitch_info,
+            'onset': None,  # todo: revisit
+            'duration': duration_info,
+            'specifier': specifier_info}
 
+
+def get_rest(mention: dict):
+    """
+    Extract note info from a musica_odin mention
+    Includes (optional): pitch, onset, duration, specifier (associated with note)
+    :param mention: musica_odin mention
+    :return:
+    """
+
+    args = mention['arguments']
+
+    # onset_info = None
+    # # I don't think this will ever happen
+    # if 'onset' in nm:
+    #     onset_info = get_property_value(nm, 'onset')
+
+    duration_info = None
+    if 'duration' in args:
+        duration_info = get_property_value(args, 'duration')
+        duration_info = parse_duration(duration_info)
+
+    specifier_info = None
+    if 'specifier' in args:
+        specifier_info = get_specifier(args)
+
+    return {'onset': None,  # todo: revisit
+            'duration': duration_info,
+            'specifier': specifier_info}
+
+def get_chord(mention: dict):
+    """
+    Extract note info from a musica_odin mention
+    Includes (optional): chordtype, specifier (associated with note)
+    :param mention: musica_odin mention
+    :return:
+    """
+    args = mention['arguments']
+
+    # need trigger bc in instances where 'chord' not stated expicitly
+    # trigger gives info on the chord type
+    trigger_info = None
+    if "chord" not in mention['trigger']['words']:
+        trigger_info = " ".join(mention['trigger']['words'])
+
+    chordtype_info = None
+    if 'chordType' in args:
+        # todo: change from join to list representation?
+        chordtype_info = " ".join(args['chordType'][0]['words'])
+
+    if trigger_info != None:
+        chordtype_info = chordtype_info + " " + trigger_info
+
+    specifier_info = None
+    if 'specifier' in args:
+        specifier_info = get_specifier(args)
+
+    return {'onset': None,  # todo: revisit
+            'chord_type': chordtype_info,
+            'specifier': specifier_info}
+
+
+def get_measure(mention: dict):
+    """
+    Extract measure when used as a musical entity
+    E.g. 'Insert two measures'
+    :param mention: musica_odin mention
+    :return:
+    """
+    args = mention['arguments']
+
+    specifier_info = None
+    if 'specifier' in args:
+        specifier_info = get_specifier(args)
+
+    return {'specifier': specifier_info}
+
+def get_frequency(mention: dict):
+    #todo: add get frequency
+    return None
+
+def get_axis(mention: dict):
+    """
+    Get the axis of inversion
+    :param mention:
+    :return: axis dict
+    """
+    args = mention['arguments']['axis'][0]['arguments']
+
+    # either a pitch or note, if it's a note, dig in and get the note's pitch, return a string
+    pitch_info = None
+    if 'pitch' in args:
+        pitch_info = get_property_value(args, 'pitch')
+        pitch_info = parse_pitch(pitch_info)
+    elif 'note' in args:
+        note_info = get_note(args['note'])
+        pitch_info = note_info['pitch']
+
+    return pitch_info
 
 def parse_duration(duration_info: str) -> dict:
     """
@@ -539,6 +865,7 @@ def get_specifier(mention: dict) -> dict:
         cardinality = attempt_cardinality_to_int(cardinality)
 
     set_choice = None
+    # todo: does this exist in the Odin/scala side?
     if 'set_choice' in specifier_args:
         set_choice = get_property_value(specifier_args, 'set_choice')
 

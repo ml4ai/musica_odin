@@ -48,11 +48,19 @@ def get_and_print_actions(sentence):
 
 
 if __name__ == '__main__':
-    SENTENCES = ["transpose the first quarter note down 1 half step"]
-    # SENTENCES = [
-    #              "transpose all the notes up 1 whole step",
-    #              "transpose the first quarter note down 1 half step",
-    #              "move the A up three steps"]
+    SENTENCES = ["delete the note in measure 1",
+                 "insert a half rest",
+                 "transpose all the notes up 1 whole step",
+                 "transpose the quarter note in measure 2 down 2 half steps",
+                 "reverse the notes in measure 2",
+                 "transpose the first quarter note down 1 half step"
+                 # "transpose the minor second up 1 whole step", #works in odin, not in antlr
+                 # "convert the quarter note in measure 1 to a half note", #works in odin, not in antlr
+                 # "move the A up three steps" #processed as both convert and transpose, convert fails
+                 # "change the C in measure 1 to a D", # assertion error, because this is runs both convert + TRANSPOSE
+                 # "take the first note in measure 1 and switch it with the second note in measure 2", #works in odin
+                 ]
+
 
     for SENTENCE in SENTENCES:
         print(f'\nSentence: \"{SENTENCE}\"')

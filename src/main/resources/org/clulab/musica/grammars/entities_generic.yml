@@ -138,7 +138,8 @@ rules:
     priority: 4
     type: token
     pattern: |
-      [word=/(?i)(at|to)/]? @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/]) of (@measure:Measure|@score:Score)
+      [word=/(?i)(at|to|before|after)/]? @specifier:Specifier? (?<trigger>[word=/^(start|end|begin)/])
+      of (@measure:Measure|@score:Score)
 
   - name: location-3-relative
     label: Location

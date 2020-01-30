@@ -142,7 +142,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     var objectToReturn = ""
 
     // Entities
-    val entities = mentions.filter(_ matches "Entity")
+    val entities = mentions.filter(m => m.labels.contains("Entity") || m.labels.contains("Location"))
     if (entities.nonEmpty){
       objectToReturn += "<h2>Found Entities:</h2>"
       for (entity <- entities) {
